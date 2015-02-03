@@ -1,4 +1,4 @@
-package com.notifica.notifica;
+package com.fabb.notifica;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
