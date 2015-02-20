@@ -1,11 +1,9 @@
 package com.fabb.notifica;
 
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
@@ -72,7 +70,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + ROUTINE_TABLE);
         db.execSQL(ROUTINE_TABLE_CREATE);
-        Collections.sort(routines, rcompare);
+        //Collections.sort(routines, rcompare);
         for (Routine r: routines) {
             r.ID = db.insert(ROUTINE_TABLE, null, r.GetValues());
         }
@@ -97,7 +95,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + ASSIGNMENTS_TABLE);
         db.execSQL(ASSIGNMENTS_TABLE_CREATE);
-        Collections.sort(assignments, acompare);
+        //Collections.sort(assignments, acompare);
         for (Assignment r: assignments) {
             r.ID = db.insert(ASSIGNMENTS_TABLE, null, r.GetValues());
         }
@@ -106,7 +104,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + EVENTS_TABLE);
         db.execSQL(EVENTS_TABLE_CREATE);
-        Collections.sort(events, ecompare);
+        //Collections.sort(events, ecompare);
         for (Event r: events) {
             r.ID = db.insert(EVENTS_TABLE, null, r.GetValues());
         }
@@ -192,7 +190,7 @@ public class Database extends SQLiteOpenHelper{
 
     public List<Event> GetEvents() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE, null);
+        Cursor c = db.rawQuery("SELECT * FROM " + EVENTS_TABLE, null);
         List<Event> rs = new ArrayList<Event>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
@@ -209,6 +207,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE id = ?", new String[]{id+""});
         Subject t = null;
+        c.moveToFirst();
         if (c.getCount() > 0)
         {
             t = new Subject();
@@ -221,6 +220,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE name=?", new String[]{name});
         Subject t = null;
+        c.moveToFirst();
         if (c.getCount() > 0)
         {
             t = new Subject();
@@ -234,6 +234,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE id = ?", new String[]{id+""});
         Teacher t = null;
+        c.moveToFirst();
         if (c.getCount() > 0)
         {
             t = new Teacher();
@@ -245,6 +246,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE name=?", new String[]{name});
         Teacher t = null;
+        c.moveToFirst();
         if (c.getCount() > 0)
         {
             t = new Teacher();
@@ -257,6 +259,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE + " WHERE id = ?", new String[]{id+""});
         Assignment t = null;
+        c.moveToFirst();
         if (c.getCount() > 0)
         {
             t = new Assignment();
@@ -270,6 +273,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + EVENTS_TABLE + " WHERE id = ?", new String[]{id+""});
         Event t = null;
+        c.moveToFirst();
         if (c.getCount() > 0)
         {
             t = new Event();

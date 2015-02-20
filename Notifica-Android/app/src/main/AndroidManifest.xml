@@ -18,7 +18,6 @@
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,6 +26,15 @@
             android:name=".UpdateService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".AssignmentActivity"
+            android:label="Assignments" >
+        </activity>
+        <activity
+            android:name=".EventActivity"
+            android:label="Events" >
+        </activity>
     </application>
 
 </manifest>

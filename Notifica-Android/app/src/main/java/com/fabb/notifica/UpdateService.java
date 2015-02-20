@@ -24,12 +24,12 @@ public class UpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Database db = new Database(this);
-        AddNewData(db);
+        AddNewData(this);
     }
 
     // Test Function
-    private void AddNewData(Database db) {
+    public static void AddNewData(Context ctx) {
+        Database db = new Database(ctx);
         List<Teacher> teachers = new ArrayList<>();
         List<Subject> subjects = new ArrayList<>();
         List<Routine> routines = new ArrayList<>();
