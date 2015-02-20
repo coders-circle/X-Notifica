@@ -108,6 +108,49 @@ public class Database extends SQLiteOpenHelper{
         return rs;
     }
 
+    public List<Assignment> GetAssignments() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE, null);
+        List<Assignment> rs = new ArrayList<Assignment>();
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Assignment r = new Assignment();
+            r.FromCursor(c);
+            r.subject = GetSubject(c.getLong(2));
+            rs.add(r);
+            c.moveToNext();
+        }
+        Collections.sort(rs, new Comparator<Assignment>() {
+            @Override
+            public int compare(Assignment lhs, Assignment rhs) {
+                long dt = lhs.time - rhs.time;
+                return (int)dt;
+            }
+        });
+        return rs;
+    }
+
+    public List<Event> GetEvents() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE, null);
+        List<Event> rs = new ArrayList<Event>();
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Event r = new Event();
+            r.FromCursor(c);
+            rs.add(r);
+            c.moveToNext();
+        }
+        Collections.sort(rs, new Comparator<Event>() {
+            @Override
+            public int compare(Event lhs, Event rhs) {
+                long dt = lhs.time - rhs.time;
+                return (int)dt;
+            }
+        });
+        return rs;
+    }
+
     public Subject GetSubject(long id) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE id = ?", new String[]{id+""});
@@ -165,6 +208,18 @@ public class Database extends SQLiteOpenHelper{
             t = new Assignment();
             t.FromCursor(c);
             t.subject = GetSubject(c.getLong(2));
+        }
+        return t;
+    }
+
+    public Event GetEvent(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + EVENTS_TABLE + " WHERE id = ?", new String[]{id+""});
+        Event t = null;
+        if (c.getCount() > 0)
+        {
+            t = new Event();
+            t.FromCursor(c);
         }
         return t;
     }
