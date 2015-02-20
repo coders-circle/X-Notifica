@@ -1,12 +1,15 @@
 package com.fabb.notifica;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class UpdateService extends IntentService {
 
@@ -145,6 +148,20 @@ public class UpdateService extends IntentService {
         db.UpdateRoutines(routines);
         db.UpdateAssignments(assignments);
         db.UpdateEvents(events);
+    }
+
+    public static void SetPeriodicService(Context context) {
+        Calendar updateTime = Calendar.getInstance();
+
+        updateTime.setTimeZone(TimeZone.getDefault());
+        updateTime.set(Calendar.HOUR_OF_DAY, 12);
+        updateTime.set(Calendar.MINUTE, 30);
+
+        Intent receiver = new Intent(context, UpdateServiceReceiver.class);
+        receiver.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, receiver, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, updateTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 }
 
