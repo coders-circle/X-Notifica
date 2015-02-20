@@ -12,6 +12,7 @@ public class Assignment {
 
     ContentValues GetValues() {
         ContentValues c = new ContentValues();
+        c.put("id", ID);
         c.put("subject", subject.ID);
         c.put("summary", summary);
         c.put("details", details);

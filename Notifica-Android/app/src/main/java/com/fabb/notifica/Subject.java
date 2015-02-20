@@ -11,6 +11,7 @@ public class Subject {
 
     ContentValues GetValues() {
         ContentValues c = new ContentValues();
+        c.put("id", ID);
         c.put("teacher", teacher.ID);
         c.put("details", details);
         c.put("name", name);

@@ -14,6 +14,7 @@ public class Routine {
 
     ContentValues GetValues() {
         ContentValues c = new ContentValues();
+        c.put("id", ID);
         c.put("subject", subject.ID);
         c.put("day", day.ordinal());
         c.put("startTime", startTime);

@@ -10,6 +10,7 @@ public class Teacher {
 
     ContentValues GetValues() {
         ContentValues c = new ContentValues();
+        c.put("id", ID);
         c.put("name", name);
         c.put("details", details);
 

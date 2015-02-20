@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class Database extends SQLiteOpenHelper{
@@ -64,12 +65,50 @@ public class Database extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    /*
+    TODO: UPDATE ONLY WHEN CHANGED
+     */
     public void UpdateRoutines(List<Routine> routines) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + ROUTINE_TABLE);
         db.execSQL(ROUTINE_TABLE_CREATE);
+        Collections.sort(routines, rcompare);
         for (Routine r: routines) {
             r.ID = db.insert(ROUTINE_TABLE, null, r.GetValues());
+        }
+    }
+    public void UpdateSubjects(List<Subject> subjects) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + SUBJECTS_TABLE);
+        db.execSQL(SUBJECTS_TABLE_CREATE);
+        for (Subject r: subjects) {
+            r.ID = db.insert(SUBJECTS_TABLE, null, r.GetValues());
+        }
+    }
+    public void UpdateTeachers(List<Teacher> teachers) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TEACHERS_TABLE);
+        db.execSQL(TEACHERS_TABLE_CREATE);
+        for (Teacher r: teachers) {
+            r.ID = db.insert(TEACHERS_TABLE, null, r.GetValues());
+        }
+    }
+    public void UpdateAssignments(List<Assignment> assignments) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + ASSIGNMENTS_TABLE);
+        db.execSQL(ASSIGNMENTS_TABLE_CREATE);
+        Collections.sort(assignments, acompare);
+        for (Assignment r: assignments) {
+            r.ID = db.insert(ASSIGNMENTS_TABLE, null, r.GetValues());
+        }
+    }
+    public void UpdateEvents(List<Event> events) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + EVENTS_TABLE);
+        db.execSQL(EVENTS_TABLE_CREATE);
+        Collections.sort(events, ecompare);
+        for (Event r: events) {
+            r.ID = db.insert(EVENTS_TABLE, null, r.GetValues());
         }
     }
 
@@ -86,6 +125,28 @@ public class Database extends SQLiteOpenHelper{
         return t;
     }
 
+    private Comparator<Routine> rcompare = new Comparator<Routine>() {
+        @Override
+        public int compare(Routine lhs, Routine rhs) {
+            long dt = lhs.startTime - rhs.startTime;
+            return (int)dt;
+        }
+    };
+    private Comparator<Assignment> acompare = new Comparator<Assignment>() {
+        @Override
+        public int compare(Assignment lhs, Assignment rhs) {
+            long dt = lhs.time - rhs.time;
+            return (int)dt;
+        }
+    };
+    private Comparator<Event> ecompare = new Comparator<Event>() {
+        @Override
+        public int compare(Event lhs, Event rhs) {
+            long dt = lhs.time - rhs.time;
+            return (int)dt;
+        }
+    };
+
     public List<Routine> GetRoutines() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ROUTINE_TABLE, null);
@@ -98,13 +159,18 @@ public class Database extends SQLiteOpenHelper{
             rs.add(r);
             c.moveToNext();
         }
-        Collections.sort(rs, new Comparator<Routine>() {
-            @Override
-            public int compare(Routine lhs, Routine rhs) {
-                long dt = lhs.startTime - rhs.startTime;
-                return (int)dt;
-            }
-        });
+        Collections.sort(rs, rcompare);
+        return rs;
+    }
+
+    public List<Routine> GetRoutines(Routine.Day day){
+        List<Routine> rs = GetRoutines();
+        Iterator<Routine> i = rs.iterator();
+        while (i.hasNext()) {
+            Routine o = i.next();
+            if (o.day != day)
+                i.remove();
+        }
         return rs;
     }
 
@@ -120,13 +186,7 @@ public class Database extends SQLiteOpenHelper{
             rs.add(r);
             c.moveToNext();
         }
-        Collections.sort(rs, new Comparator<Assignment>() {
-            @Override
-            public int compare(Assignment lhs, Assignment rhs) {
-                long dt = lhs.time - rhs.time;
-                return (int)dt;
-            }
-        });
+        Collections.sort(rs, acompare);
         return rs;
     }
 
@@ -141,13 +201,7 @@ public class Database extends SQLiteOpenHelper{
             rs.add(r);
             c.moveToNext();
         }
-        Collections.sort(rs, new Comparator<Event>() {
-            @Override
-            public int compare(Event lhs, Event rhs) {
-                long dt = lhs.time - rhs.time;
-                return (int)dt;
-            }
-        });
+        Collections.sort(rs, ecompare);
         return rs;
     }
 

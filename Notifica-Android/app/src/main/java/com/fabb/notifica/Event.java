@@ -11,6 +11,7 @@ public class Event {
 
     ContentValues GetValues() {
         ContentValues c = new ContentValues();
+        c.put("id", ID);
         c.put("summary", summary);
         c.put("details", details);
         c.put("time", time);
