@@ -9,15 +9,11 @@
     <TextView android:id="@+id/section_label" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-<<<<<<< HEAD
         android:textColor="#ff161a23"
         android:text="@android:string/ok"
         android:textStyle="bold"
-        android:textSize="20sp"
-        />
-=======
-        android:text="@android:string/ok" />
->>>>>>> bd241f55419da3071e6bdcac5468055f24478d0c
+        android:textSize="20sp" />
+
 
     <ListView
         android:layout_width="wrap_content"
