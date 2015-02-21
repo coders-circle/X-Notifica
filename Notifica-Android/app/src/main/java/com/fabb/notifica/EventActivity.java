@@ -1,5 +1,6 @@
 package com.fabb.notifica;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,11 +32,10 @@ public class EventActivity extends ActionBarActivity {
     }
 
     private void prepareListData() {
-        UpdateService.AddNewData(this);
-        Database db = new Database(this);
-        List<Event> ass = db.GetEvents();
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
+        Database db = new Database(this);
+        List<Event> ass = db.GetEvents();
         int i = 0;
         for (Event as: ass){
             Calendar cal = Calendar.getInstance();
@@ -59,9 +59,10 @@ public class EventActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_events, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -72,6 +73,22 @@ public class EventActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_routine) {
+            startActivity(new Intent(this, RoutineActivity.class));
+            return true;
+        }
+        if (id == R.id.action_assignments) {
+            startActivity(new Intent(this, AssignmentActivity.class));
+            return true;
+        }
+        if (id == R.id.action_events) {
+            startActivity(new Intent(this, EventActivity.class));
+            return true;
+        }
+        if (id == R.id.action_study_info) {
+            //startActivity(new Intent(this, StudyInfoActivity.class));
             return true;
         }
 

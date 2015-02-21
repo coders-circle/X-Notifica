@@ -26,7 +26,10 @@
             android:name=".UpdateService"
             android:exported="false" >
         </service>
-
+        <activity
+            android:name=".RoutineActivity"
+            android:label="Routine">
+        </activity>
         <activity
             android:name=".AssignmentActivity"
             android:label="Assignments" >

@@ -3,12 +3,14 @@ package com.fabb.notifica;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class UpdateService extends IntentService {
@@ -30,124 +32,82 @@ public class UpdateService extends IntentService {
     // Test Function
     public static void AddNewData(Context ctx) {
         Database db = new Database(ctx);
-        List<Teacher> teachers = new ArrayList<>();
-        List<Subject> subjects = new ArrayList<>();
-        List<Routine> routines = new ArrayList<>();
-        List<Assignment> assignments = new ArrayList<>();
-        List<Event> events = new ArrayList<>();
 
-        Teacher t1, t2, t3;
-        t1 = new Teacher();
-        t1.name = "Bibek";
-        t1.details = "Great man indeed";
-        t1.ID = 0;
-        teachers.add(t1);
-        t2 = new Teacher();
-        t2.name = "Aditya";
-        t2.details = "Not too great";
-        t2.ID = 1;
-        teachers.add(t2);
-        t3 = new Teacher();
-        t3.name = "Ankit";
-        t3.details = "Considered great as well";
-        t3.ID = 2;
-        teachers.add(t3);
+        db.DeleteSubjectsTeachers();
+        db.DeleteFaculties();
+        db.DeleteRoutine();
 
-        Subject s1, s2, s3;
-        s1 = new Subject();
-        s1.name = "COA";
-        s1.teacher = t2;
-        s1.details = "Nice";
-        s1.ID = 0;
-        subjects.add(s1);
-        s2 = new Subject();
-        s2.name = "Software Engineering";
-        s2.teacher = t3;
-        s2.details = "Nice";
-        s2.ID = 1;
-        subjects.add(s2);
-        s3 = new Subject();
-        s3.name = "Computer Graphics";
-        s3.teacher = t1;
-        s3.details = "Nice";
-        s3.ID = 2;
-        subjects.add(s3);
+        db.AddTeacher(1000, "Bibek");
+        db.AddTeacher(2000, "Aditya");
+        db.AddTeacher(3000, "Ankit");
+
+
+
+
+        long f1 = db.AddFaculty("BCT");
+        long f2 = db.AddFaculty("BEX");
+        long f3 = db.AddFaculty("BEL");
+
+        String s[] = new String[7];
+        s[0] = "Computer Organization & Architecture";
+        s[1] = "Computer Graphics";
+        s[2] = "Data Communication";
+        s[3] = "Statistics and Probability";
+        s[4] = "Communication English";
+        s[5] = "Instrumentation";
+        s[6] = "Software Engineering";
+        long sids[] = new long[7];
+        for (int i=0; i<7; ++i) {
+            if (i % 3 == 0) {
+                sids[i] = db.AddSubject("BCT"+i, s[i], f1);
+                db.AddSubjectTeacherRelation(sids[i], 1000);
+            }
+            else if (i % 3 == 1) {
+                sids[i] = db.AddSubject("BCT"+i, s[i], f2);
+                db.AddSubjectTeacherRelation(sids[i], 2000);
+            }
+            else {
+                sids[i] = db.AddSubject("BCT"+i, s[i], f3);
+                db.AddSubjectTeacherRelation(sids[i], 3000);
+            }
+        }
+
+        for (int i=0; i<7; ++i)
+        {
+            for (int j=0; j<6; ++j)
+            {
+                long subject = sids[(j+i*6)%7];
+                int startTime = (j+10)*60+30;
+                db.AddRoutineElement(subject,
+                        db.GetTeachersForSubject(db.GetSubject(subject))[0].id,
+                        i,
+                        startTime,
+                        startTime + 60);
+            }
+        }
+
+        db.DeleteAssignments();
+        db.DeleteEvents();
 
         Calendar cal = Calendar.getInstance();
-        Assignment a1, a2;
-        a1 = new Assignment();
-        a1.subject = s1;
-        a1.summary = "Assignment 1 summary";
-        a1.details = "Assignment 1 details";
-        a1.ID = 0;
-        cal.set(2015, 1, 23);
-        a1.time = cal.getTimeInMillis()/1000/60;
-        assignments.add(a1);
-        a2 = new Assignment();
-        a2.subject = s1;
-        a2.summary = "Assignment 2 summary";
-        a2.details = "Assignment 2 details";
-        a2.ID = 1;
-        cal.set(2015, 2, 14);
-        a2.time = cal.getTimeInMillis()/1000/60;
-        assignments.add(a2);
+        String summary = "Complete the classwork";
+        String details = "Interface 8085 with 8255ppi to any ADC. Use your own declarations.";
+        db.AddAssignment(cal.getTimeInMillis(), sids[0], summary, details);
+        summary = "Lab 3 details";
+        details = "Interface 8085 using booth algorithm.";
+        db.AddAssignment(cal.getTimeInMillis(), sids[0], summary, details);
 
-        Event e1, e2;
-        e1 = new Event();
-        e1.summary = "Event 1 summary";
-        e1.details = "Event 1 details";
+
+        summary = "Computer Graphics Assessment";
+        details = "We are having computer graphics assessment from chapter 3";
         cal.set(2015, 1, 20);
-        e1.time = cal.getTimeInMillis()/1000/60;
-        e1.ID = 0;
-        events.add(e1);
-        e2 = new Event();
-        e2.summary = "Event 2 summary";
-        e2.details = "Event 2 details";
+        db.AddEvent(cal.getTimeInMillis(), summary, details);
+
+        summary = "COA Assessment";
+        details = "We are having COA assessment form chapter 12";
         cal.set(2015, 2, 10);
-        e2.time = cal.getTimeInMillis()/1000/60;
-        e2.ID = 1;
-        events.add(e2);
+        db.AddEvent(cal.getTimeInMillis(), summary, details);
 
-        for (int i=0; i<7; ++i) {
-            Routine r1, r2, r3, r4;
-            r1 = new Routine();
-            r1.startTime = 10 * 24 + 15;
-            r1.endTime = 11 * 24 + 5;
-            r1.subject = s1;
-            r1.ID = i*4;
-            r1.day = Routine.Day.values()[i];
-
-            r2 = new Routine();
-            r2.startTime = 10 * 24 + 15;
-            r2.endTime = 11 * 24 + 5;
-            r2.subject = s2;
-            r2.ID = i*4+1;
-            r2.day = Routine.Day.values()[i];
-
-            r3 = new Routine();
-            r3.startTime = 10 * 24 + 15;
-            r3.endTime = 11 * 24 + 5;
-            r3.subject = s3;
-            r3.ID = i*4+2;
-            r3.day = Routine.Day.values()[i];
-
-            r4 = new Routine();
-            r4.startTime = 10 * 24 + 15;
-            r4.endTime = 11 * 24 + 5;
-            r4.subject = s1;
-            r4.ID = i*4+3;
-            r4.day = Routine.Day.values()[i];
-
-            routines.add(r1);
-            routines.add(r2);
-            routines.add(r3);
-            routines.add(r4);
-        }
-        db.UpdateTeachers(teachers);
-        db.UpdateSubjects(subjects);
-        db.UpdateRoutines(routines);
-        db.UpdateAssignments(assignments);
-        db.UpdateEvents(events);
     }
 
     public static void SetPeriodicService(Context context) {
