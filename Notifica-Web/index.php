@@ -2,19 +2,18 @@
 
 include 'pages.php';
 
-
 $pageID = 'loginpage';
 if(isset($_GET['page'])){
     $pageID = $_GET['page'];
 }
 
 if($pageID == 'loginpage'){
-    $loginPage->GeneratePage();
+    $g_loginPage->GeneratePage();
 }else if($pageID == 'adminpage'){
-	$adminPage->GeneratePage();
+	$g_adminPage->GeneratePage();
 }
 else{
-    $forbiddenPage->GeneratePage();
+    $g_forbiddenPage->GeneratePage();
 }
 
 

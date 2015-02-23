@@ -14,7 +14,7 @@ class Page extends Navbar{
     private $controllerSet;
     public function Page(){
         // 0 = general public, anyone can visit the page
-        $this->styleSheetURIs = array("css/bootstrap.min.css");
+        $this->styleSheetURIs = array("css/bootstrap.min.css", "css/common.css");
         $this->jsURIs = array("js/jquery.min.js", "js/bootstrap.min.js");
         $this->bodyURI = "";
         $this->requiredAccessLevel = 0;

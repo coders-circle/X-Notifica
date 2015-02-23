@@ -1,0 +1,13 @@
+> import the database(fabb-notifica.sql) first 
+> edit the definitions of "USER" and "PASSWORD" according to your mysql username & password in "classes/User.php"
+
+
+Users in the database
+===================
+
+Username = Ankit
+Password = Ankit123
+
+
+> Use this username and password to log into the Notifica-Web
+

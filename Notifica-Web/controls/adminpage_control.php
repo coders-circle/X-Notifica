@@ -5,7 +5,7 @@ if(isset($_GET['tab'])){
     $tabID = $_GET['tab'];
 }
 
-$adminPage = $GLOBALS['adminPage'];
+$adminPage = $GLOBALS['g_adminPage'];
 
 if($tabID == 'home') {
     $adminPage->SetActiveTab(0);
