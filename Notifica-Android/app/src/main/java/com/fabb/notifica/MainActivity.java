@@ -78,18 +78,21 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    private Fragment routine_fragment = new RoutineFragment();
+    private Fragment assignment_fragment = new AssignmentFragment();
+    private Fragment event_fragment = new EventFragment();
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
         Fragment fragment;
         switch (position) {
             case 0:
-                fragment = new RoutineFragment();
+                fragment = routine_fragment;
                 break;
             case 1:
-                fragment = new AssignmentFragment();
+                fragment = assignment_fragment;
                 break;
             case 2:
-                fragment = new EventFragment();
+                fragment = event_fragment;
                 break;
             default:
                 fragment = null;

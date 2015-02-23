@@ -22,6 +22,13 @@ public class EventFragment extends Fragment {
     HashMap<String, List<String>> listDataChild;
 
     @Override
+    public void onCreate(Bundle save)
+    {
+        super.onCreate(save);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_events, container, false);
