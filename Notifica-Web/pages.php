@@ -6,9 +6,9 @@ require_once 'classes/Page.php';
 $g_user = new User;
 
 $g_loginPage = new Page;
-$g_loginPage->AddStyleSheet("css/loginPage.css");
-$g_loginPage->SetView("views/loginPage_view.php");
-$g_loginPage->SetController("controls/loginPage_control.php");
+$g_loginPage->AddStyleSheet("css/loginpage.css");
+$g_loginPage->SetView("views/loginpage_view.php");
+$g_loginPage->SetController("controls/loginpage_control.php");
 $g_loginPage->DisableNavbar();
 $g_loginPage->AddJScript("js/sha512.js");
 $g_loginPage->AddJScript("js/forms.js");

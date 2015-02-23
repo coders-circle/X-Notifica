@@ -7,7 +7,7 @@ require_once 'Database.php';
 // @TODO: move these definitions to vars.php
 define("HOST", "localhost");
 define("USER", "root");
-define("PASSWORD", "");
+define("PASSWORD", "root");
 define("DATABASE", "fabb-notifica");
 define("SECURE", false);	// make true to enable https
 
