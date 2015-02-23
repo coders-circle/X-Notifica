@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -87,12 +88,27 @@ public class RoutineFragment extends Fragment {
 
             int day = args.getInt(ARG_DAY);
 
-            for (RoutineElement r : routine.get(day)) {
+            for (final RoutineElement r : routine.get(day)) {
                 TableRow tr =  new TableRow(getActivity());
                 TextView c1 = new TextView(getActivity());
                 TableRow tr1 =  new TableRow(getActivity());
                 TextView c2 = new TextView(getActivity());
 
+                /*if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    c2.setBackgroundDrawable(getResources().getDrawable(R.drawable.focus));
+                } else {
+                    c2.setBackground(getResources().getDrawable(R.drawable.focus));
+                }
+                c2.setClickable(true);*/
+                c2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Database db = new Database(getActivity());
+                        Toast.makeText(getActivity(),
+                                r.subject.name + "\nTeacher: " + r.teacher.name+"\nFaculty: "+db.GetFaculty(r.subject).name,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
 
                 c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);

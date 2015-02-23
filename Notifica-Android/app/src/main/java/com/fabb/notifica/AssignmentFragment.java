@@ -2,6 +2,8 @@ package com.fabb.notifica;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +46,10 @@ public class AssignmentFragment extends Fragment {
         listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
 
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            expListView.setIndicatorBounds(expListView.getRight() - GetPixelFromDips(50), expListView.getWidth() - GetPixelFromDips(10));
-        } else {
-            expListView.setIndicatorBoundsRelative(expListView.getRight()- 40, expListView.getWidth());
-        }
+        DisplayMetrics metrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        expListView.setIndicatorBounds(width - GetPixelFromDips(70), width - GetPixelFromDips(20));
     }
 
     private void prepareListData() {
@@ -74,7 +75,6 @@ public class AssignmentFragment extends Fragment {
             i++;
         }
     }
-
 
     public int GetPixelFromDips(float pixels) {
         // Get the screen's density scale

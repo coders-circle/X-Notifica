@@ -33,12 +33,9 @@ public class UpdateService extends IntentService {
         db.DeleteFaculties();
         db.DeleteRoutine();
 
-        db.AddTeacher(1000, "Bibek");
-        db.AddTeacher(2000, "Aditya");
-        db.AddTeacher(3000, "Ankit");
-
-
-
+        db.AddTeacher(1000, "Prof. Dr. Er. Bibek Dahal");
+        db.AddTeacher(2000, "Aditya Khatri");
+        db.AddTeacher(3000, "Dr. Ankit Mehta");
 
         long f1 = db.AddFaculty("BCT");
         long f2 = db.AddFaculty("BEX");

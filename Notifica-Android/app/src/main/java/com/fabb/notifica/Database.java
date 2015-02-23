@@ -355,6 +355,7 @@ public class Database extends SQLiteOpenHelper{
                     f.subjects[i].name = c2.getString(c2.getColumnIndex("name"));
                     f.subjects[i].code = c2.getString(c2.getColumnIndex("code"));
                     i++;
+                    c2.moveToNext();
                 }
                 c2.close();
             }

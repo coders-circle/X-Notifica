@@ -57,6 +57,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        TODO: Check if already logged in
+         */
+
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
