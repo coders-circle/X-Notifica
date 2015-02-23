@@ -237,7 +237,7 @@ public class Database extends SQLiteOpenHelper{
     public List<Assignment> GetAssignments() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE, null);
-        List<Assignment> rs = new ArrayList<Assignment>();
+        List<Assignment> rs = new ArrayList<>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Assignment r = new Assignment();
@@ -256,7 +256,7 @@ public class Database extends SQLiteOpenHelper{
     public List<Event> GetEvents() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + EVENTS_TABLE, null);
-        List<Event> rs = new ArrayList<Event>();
+        List<Event> rs = new ArrayList<>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Event r = new Event();

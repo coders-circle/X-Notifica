@@ -3,14 +3,10 @@ package com.fabb.notifica;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 import java.util.TimeZone;
 
 public class UpdateService extends IntentService {

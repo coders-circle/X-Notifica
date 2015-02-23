@@ -1,16 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context=".Main">
+    xmlns:tools="http://schemas.android.com/tools" tools:context="com.fabb.notifica.MainActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_routine" android:title="Routine"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_assignments" android:title="Assignments"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_events" android:title="Events"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_study_info" android:title="Study Info"
-        android:orderInCategory="100" app:showAsAction="never" />
-
-
 </menu>
