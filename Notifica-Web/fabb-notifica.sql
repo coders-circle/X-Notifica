@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Feb 23, 2015 at 10:34 AM
--- Server version: 5.5.32
--- PHP Version: 5.4.16
+-- Host: localhost
+-- Generation Time: Mar 01, 2015 at 05:15 PM
+-- Server version: 5.5.40-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,8 +19,107 @@ SET time_zone = "+00:00";
 --
 -- Database: `fabb-notifica`
 --
-CREATE DATABASE IF NOT EXISTS `fabb-notifica` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `fabb-notifica`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `faculties`
+--
+
+CREATE TABLE IF NOT EXISTS `faculties` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `routines`
+--
+
+CREATE TABLE IF NOT EXISTS `routines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` int(11) NOT NULL,
+  `year` int(11) NOT NULL,
+  `group` int(11) NOT NULL DEFAULT '0',
+  `section` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `routine_elements`
+--
+
+CREATE TABLE IF NOT EXISTS `routine_elements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `routine_id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  `teacher_id` int(11) NOT NULL,
+  `day` int(11) NOT NULL,
+  `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
+  `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `students`
+--
+
+CREATE TABLE IF NOT EXISTS `students` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) NOT NULL,
+  `roll` int(11) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  `year` int(11) NOT NULL,
+  `group` int(11) NOT NULL DEFAULT '0',
+  `section` int(11) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subjects`
+--
+
+CREATE TABLE IF NOT EXISTS `subjects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `teachers`
+--
+
+CREATE TABLE IF NOT EXISTS `teachers` (
+  `id` int(11) NOT NULL,
+  `user_id` varchar(256) NOT NULL,
+  `name` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `teachers_subjects`
+--
+
+CREATE TABLE IF NOT EXISTS `teachers_subjects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `teacher_id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

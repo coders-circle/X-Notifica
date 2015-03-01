@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -30,13 +30,13 @@ public class Database extends SQLiteOpenHelper{
     // Database creation sql statements
     private static final String ROUTINE_ELEMENTS_TABLE_CREATE = "CREATE TABLE "
             + ROUTINE_ELEMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "subject INTEGER, teacher INTEGER, day INTEGER, startTime INTEGER, endTime INTEGER);"; // times are stored as minute
+            + "subject INTEGER, teacher INTEGER, day INTEGER, startTime INTEGER, endTime INTEGER);"; // times are stored as minutes
     private static final String SUBJECTS_TABLE_CREATE = "CREATE TABLE "
             + SUBJECTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "code TEXT, name TEXT, faculty INTEGER);";
     private static final String TEACHERS_TABLE_CREATE = "CREATE TABLE "
             + TEACHERS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "name TEXT);";
+            + "user_id TEXT, name TEXT);";
     private static final String TS_RELATIONS_TABLE_CREATE = "CREATE TABLE "
             + TS_RELATIONS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "teacher INTEGER, subject INTEGER)";
@@ -119,17 +119,11 @@ public class Database extends SQLiteOpenHelper{
         return db.insert(TS_RELATIONS_TABLE, null, c);
     }
 
-    public long AddTeacher(long id, String name) {
+    public long AddTeacher(String userid, String name) {
         ContentValues c = new ContentValues();
         c.put("name", name);
-        c.put("id", id);
+        c.put("user_id", userid);
         SQLiteDatabase db = getWritableDatabase();
-        Cursor cs = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE id = ?", new String[]{id+""});
-        if (cs.getCount() > 0) {
-            cs.close();
-            return -1;
-        }
-        cs.close();
         return db.insert(TEACHERS_TABLE, null, c);
     }
 
@@ -293,11 +287,22 @@ public class Database extends SQLiteOpenHelper{
         if (c.getCount() > 0) {
             t = new Teacher();
             t.name = c.getString(c.getColumnIndex("name"));
-            t.id = id;
+            t.userId = c.getString(c.getColumnIndex("user_id"));
             t.subjects = GetSubjectsForTeacher(id);
         }
         c.close();
         return t;
+    }
+    public long GetTeacherId(String userId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE user_id = ?", new String[]{userId});
+        long tid = -1;
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            tid = c.getLong(c.getColumnIndex("id"));
+        }
+        c.close();
+        return tid;
     }
     public Subject[] GetSubjectsForTeacher(long teacherId) {
         SQLiteDatabase db = getReadableDatabase();

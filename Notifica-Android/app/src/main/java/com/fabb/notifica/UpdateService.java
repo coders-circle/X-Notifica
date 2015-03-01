@@ -33,9 +33,10 @@ public class UpdateService extends IntentService {
         db.DeleteFaculties();
         db.DeleteRoutine();
 
-        db.AddTeacher(1000, "Prof. Dr. Er. Bibek Dahal");
-        db.AddTeacher(2000, "Aditya Khatri");
-        db.AddTeacher(3000, "Dr. Ankit Mehta");
+        long tids[] = new long[3];
+        tids[0] = db.AddTeacher("bibekdahal20", "Prof. Dr. Er. Bibek Dahal");
+        tids[1] = db.AddTeacher("aditya55", "Aditya Khatri");
+        tids[2] = db.AddTeacher("ankitmehta111", "Dr. Ankit Mehta");
 
         long f1 = db.AddFaculty("BCT");
         long f2 = db.AddFaculty("BEX");
@@ -53,15 +54,15 @@ public class UpdateService extends IntentService {
         for (int i=0; i<7; ++i) {
             if (i % 3 == 0) {
                 sids[i] = db.AddSubject("BCT"+i, s[i], f1);
-                db.AddSubjectTeacherRelation(sids[i], 1000);
+                db.AddSubjectTeacherRelation(sids[i], tids[0]);
             }
             else if (i % 3 == 1) {
                 sids[i] = db.AddSubject("BCT"+i, s[i], f2);
-                db.AddSubjectTeacherRelation(sids[i], 2000);
+                db.AddSubjectTeacherRelation(sids[i], tids[1]);
             }
             else {
                 sids[i] = db.AddSubject("BCT"+i, s[i], f3);
-                db.AddSubjectTeacherRelation(sids[i], 3000);
+                db.AddSubjectTeacherRelation(sids[i], tids[2]);
             }
         }
 
@@ -72,7 +73,7 @@ public class UpdateService extends IntentService {
                 long subject = sids[(j+i*6)%7];
                 int startTime = (j+10)*60+30;
                 db.AddRoutineElement(subject,
-                        db.GetTeachersForSubject(db.GetSubject(subject))[0].id,
+                        db.GetTeacherId(db.GetTeachersForSubject(db.GetSubject(subject))[0].userId),
                         i,
                         startTime,
                         startTime + 60);
