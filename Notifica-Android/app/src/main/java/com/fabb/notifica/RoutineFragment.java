@@ -52,7 +52,7 @@ public class RoutineFragment extends Fragment {
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mDaysCollection);
 
-        PagerTitleStrip strip = (PagerTitleStrip) getActivity().findViewById(R.id.pager_title_strip);
+        PagerTitleStrip strip = (PagerTitleStrip) getActivity().findViewById(R.id.pager_tab_strip);
         strip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
         if (!mLoaded) {
