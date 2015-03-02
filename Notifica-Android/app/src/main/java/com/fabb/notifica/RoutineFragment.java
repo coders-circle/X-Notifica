@@ -6,7 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.PagerTabStrip;
+//import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -52,8 +53,11 @@ public class RoutineFragment extends Fragment {
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mDaysCollection);
 
-        PagerTitleStrip strip = (PagerTitleStrip) getActivity().findViewById(R.id.pager_tab_strip);
+        //PagerTitleStrip strip = (PagerTitleStrip) getActivity().findViewById(R.id.pager_tab_strip);
+        PagerTabStrip strip =(PagerTabStrip) getActivity().findViewById(R.id.pager_tab_strip);
         strip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        strip.setDrawFullUnderline(true);
+
 
         if (!mLoaded) {
             Database db = new Database(getActivity());
