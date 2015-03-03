@@ -6,4 +6,7 @@ public class Student {
     public int section = 0;
     public int roll;
     public int group = 0;
+
+    // To add
+    // boolean admin
 }

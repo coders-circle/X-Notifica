@@ -10,6 +10,7 @@ import android.support.v4.view.PagerTabStrip;
 //import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,14 +68,44 @@ public class RoutineFragment extends Fragment {
             mLoaded = true;
         }
 
-        Calendar cal = Calendar.getInstance();
-        mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
+        mViewPager.setCurrentItem(0);
+        //Calendar cal = Calendar.getInstance();
+        //mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
     }
 
 
     public static class DayFragment extends Fragment {
         public static final String ARG_DAY = "day";
         public static final String[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+        int startTime = 10*60+30;
+        int endTime = 16*60+50;
+
+        private void AddBreak(TableLayout table, int startTime, int endTime){
+            //TableRow tr =  new TableRow(getActivity());
+            //TextView c1 = new TextView(getActivity());
+            TableRow tr1 =  new TableRow(getActivity());
+            TextView c2 = new TextView(getActivity());
+
+            //c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            String sTime = startTime / 60 + ":" + startTime % 60;
+            String eTime = endTime / 60 + ":" + endTime % 60;
+
+            //c1.setGravity(Gravity.CENTER);
+            c2.setGravity(Gravity.CENTER);
+
+            //c1.setText(sTime + " - " + eTime);
+            //c1.setPadding(6, 2, 2, 2);
+            c2.setText("---- BREAK ----");
+            c2.setPadding(6, 2, 2, 10);
+            //tr.addView(c1);
+            tr1.addView(c2);
+
+            //table.addView(tr);
+            table.addView(tr1);
+
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,20 +121,17 @@ public class RoutineFragment extends Fragment {
             c.set(Calendar.MILLISECOND, 0);
             long passed = (now - c.getTimeInMillis())/1000/60;
 
-            int day = args.getInt(ARG_DAY);
+            int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
 
-            for (final RoutineElement r : routine.get(day)) {
+            List<RoutineElement> rtn = routine.get(day);
+            int lastTime = startTime;
+            for (final RoutineElement r : rtn) {
+
                 TableRow tr =  new TableRow(getActivity());
                 TextView c1 = new TextView(getActivity());
                 TableRow tr1 =  new TableRow(getActivity());
                 TextView c2 = new TextView(getActivity());
 
-                /*if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    c2.setBackgroundDrawable(getResources().getDrawable(R.drawable.focus));
-                } else {
-                    c2.setBackground(getResources().getDrawable(R.drawable.focus));
-                }
-                c2.setClickable(true);*/
                 c2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -120,17 +148,20 @@ public class RoutineFragment extends Fragment {
                 String sTime = r.startTime / 60 + ":" + r.startTime % 60;
                 String eTime = r.endTime / 60 + ":" + r.endTime % 60;
 
+                if (lastTime < r.startTime)
+                    AddBreak(table, lastTime, r.startTime);
+                lastTime = r.endTime;
                 // Highlight current period
-                if (r.startTime <= passed && r.endTime >= passed && day+1 == c.get(Calendar.DAY_OF_WEEK)) {
-                    tr.setBackgroundColor(Color.rgb(128, 128, 128));
-                    tr1.setBackgroundColor(Color.rgb(128, 128, 128));
-                    c1.setTextColor(Color.WHITE);
-                    c2.setTextColor(Color.WHITE);
+                if (r.startTime <= passed && r.endTime >= passed && day == c.get(Calendar.DAY_OF_WEEK)-1) {
+                    tr.setBackgroundColor(Color.rgb(210, 210, 210));
+                    tr1.setBackgroundColor(Color.rgb(210, 210, 210));
+                    /*c1.setTextColor(Color.WHITE);
+                    c2.setTextColor(Color.WHITE);*/
                 }
-                else {
+                //else {
                     c1.setTextColor(Color.DKGRAY);
                     c2.setTextColor(Color.DKGRAY);
-                }
+                //}
 
                 c1.setText(sTime + " - " + eTime);
                 c1.setPadding(6, 2, 2, 2);
@@ -141,6 +172,9 @@ public class RoutineFragment extends Fragment {
                 table.addView(tr);
                 table.addView(tr1);
             }
+
+            if (lastTime < endTime)
+                AddBreak(table, lastTime, endTime);
 
             return rootView;
         }
@@ -169,7 +203,8 @@ public class RoutineFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return DayFragment.days[position];
+            Calendar c = Calendar.getInstance();
+            return DayFragment.days[(c.get(Calendar.DAY_OF_WEEK)-1+position)%7];
         }
     }
 }

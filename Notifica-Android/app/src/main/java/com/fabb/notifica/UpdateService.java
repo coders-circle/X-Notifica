@@ -72,6 +72,8 @@ public class UpdateService extends IntentService {
             {
                 long subject = sids[(j+i*6)%7];
                 int startTime = (j+10)*60+30;
+                if (j>=3)
+                    startTime += 20;
                 db.AddRoutineElement(subject,
                         db.GetTeacherId(db.GetTeachersForSubject(db.GetSubject(subject))[0].userId),
                         i,

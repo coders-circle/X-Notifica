@@ -8,5 +8,9 @@ public class Routine {
     int group;
     int section;
     Faculty faculty;
+
+    // To ADD:
+    int startTime;
+    int endTime;
     */
 }
