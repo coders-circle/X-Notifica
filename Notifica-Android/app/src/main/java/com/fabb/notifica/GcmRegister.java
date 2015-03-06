@@ -13,6 +13,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 public class GcmRegister {
@@ -63,7 +66,7 @@ public class GcmRegister {
 
     private final String TAG = "GCM Client";
     private String getRegistrationId() {
-        final SharedPreferences prefs = getGCMPreferences();
+        final SharedPreferences prefs = GetGCMPreferences();
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
@@ -73,7 +76,7 @@ public class GcmRegister {
         // since the existing registration ID is not guaranteed to work with
         // the new app version.
         int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion();
+        int currentVersion = GetAppVersion();
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
             return "";
@@ -81,9 +84,9 @@ public class GcmRegister {
         return registrationId;
     }
 
-    private void storeRegistrationId(String regId) {
-        final SharedPreferences prefs = getGCMPreferences();
-        int appVersion = getAppVersion();
+    private void StoreRegistrationId(String regId) {
+        final SharedPreferences prefs = GetGCMPreferences();
+        int appVersion = GetAppVersion();
         Log.i(TAG, "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
@@ -91,11 +94,11 @@ public class GcmRegister {
         editor.apply();
     }
 
-    private SharedPreferences getGCMPreferences() {
+    public SharedPreferences GetGCMPreferences() {
         return mainActivity.getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
-    private int getAppVersion() {
+    public int GetAppVersion() {
         try {
             PackageInfo packageInfo = mainActivity.getPackageManager().getPackageInfo(mainActivity.getPackageName(), 0);
             return packageInfo.versionCode;
@@ -105,8 +108,19 @@ public class GcmRegister {
         }
     }
 
-    private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+    private void SendRegistrationIdToServer() {
+        Network network = new Network(mainActivity);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("user_type", "student");
+            json.put("faculty", "BCT");
+            json.put("year", 2069);
+            json.put("roll", 507);
+            json.put("reg_id", regid);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        network.PostJson("register-gcm.php", json);
     }
 
     String SENDER_ID = "30928798038";
@@ -122,21 +136,10 @@ public class GcmRegister {
                     regid = gcm.register(SENDER_ID);
                     msg = "Device registered, registration ID=" + regid;
 
-                    // You should send the registration ID to your server over HTTP, so it
-                    // can use GCM/HTTP or CCS to send messages to your app.
-                    sendRegistrationIdToBackend();
-
-                    // For this demo: we don't need to send it because the device will send
-                    // upstream messages to a server that echo back the message using the
-                    // 'from' address in the message.
-
-                    // Persist the regID - no need to register again.
-                    storeRegistrationId(regid);
+                    SendRegistrationIdToServer();
+                    StoreRegistrationId(regid);
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
-                    // If there is an error, don't just keep trying to register.
-                    // Require the user to click a button again, or perform
-                    // exponential back-off.
                 }
                 return msg;
             }
