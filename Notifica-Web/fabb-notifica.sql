@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 01, 2015 at 05:15 PM
+-- Generation Time: Mar 06, 2015 at 06:37 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -19,6 +19,18 @@ SET time_zone = "+00:00";
 --
 -- Database: `fabb-notifica`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `central_authorities`
+--
+
+CREATE TABLE IF NOT EXISTS `central_authorities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(256) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -76,8 +88,9 @@ CREATE TABLE IF NOT EXISTS `students` (
   `roll` int(11) NOT NULL,
   `faculty_id` int(11) NOT NULL,
   `year` int(11) NOT NULL,
-  `group` int(11) NOT NULL DEFAULT '0',
+  `group_number` int(11) NOT NULL DEFAULT '0',
   `section` int(11) NOT NULL DEFAULT '-1',
+  `is_privileged` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
