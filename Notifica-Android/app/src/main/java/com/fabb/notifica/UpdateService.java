@@ -1,29 +1,9 @@
 package com.fabb.notifica;
 
-import android.app.AlarmManager;
-import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-
 import java.util.Calendar;
-import java.util.TimeZone;
 
-public class UpdateService extends IntentService {
-
-    public UpdateService() {
-        super("Notifica-Update-Service");
-    }
-
-    public static void Launch(Context ctx) {
-        Intent it = new Intent(ctx, UpdateService.class);
-        ctx.startService(it);
-    }
-
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        AddNewData(this);
-    }
+public class UpdateService {
 
     // Test Function
     public static void AddNewData(Context ctx) {
@@ -66,7 +46,7 @@ public class UpdateService extends IntentService {
             }
         }
 
-        for (int i=0; i<7; ++i)
+        for (int i=0; i<6; ++i)
         {
             for (int j=0; j<6; ++j)
             {
@@ -104,20 +84,6 @@ public class UpdateService extends IntentService {
         cal.set(2015, 2, 10);
         db.AddEvent(cal.getTimeInMillis(), summary, details);
 
-    }
-
-    public static void SetPeriodicService(Context context) {
-        Calendar updateTime = Calendar.getInstance();
-
-        updateTime.setTimeZone(TimeZone.getDefault());
-        updateTime.set(Calendar.HOUR_OF_DAY, 12);
-        updateTime.set(Calendar.MINUTE, 30);
-
-        Intent receiver = new Intent(context, UpdateServiceReceiver.class);
-        receiver.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, receiver, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, updateTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 }
 

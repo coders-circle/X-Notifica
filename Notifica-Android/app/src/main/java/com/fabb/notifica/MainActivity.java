@@ -28,6 +28,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //GcmRegister.Register(this);
 
         mPageTitles = getResources().getStringArray(R.array.page_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
