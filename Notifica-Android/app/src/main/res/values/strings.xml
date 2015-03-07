@@ -8,6 +8,9 @@
 
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="option_teacher">Teacher</string>
+    <string name="option_student">Student</string>
+    <string name="action_logout">Log Out</string>
 
     <string-array name="page_titles">
         <item>Routine</item>

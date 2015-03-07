@@ -1,7 +1,6 @@
 package com.fabb.notifica;
 
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -66,7 +65,7 @@ public class GcmRegister {
 
     private final String TAG = "GCM Client";
     private String getRegistrationId() {
-        final SharedPreferences prefs = GetGCMPreferences();
+        final SharedPreferences prefs = MainActivity.GetPreferences(mainActivity);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
@@ -85,17 +84,13 @@ public class GcmRegister {
     }
 
     private void StoreRegistrationId(String regId) {
-        final SharedPreferences prefs = GetGCMPreferences();
+        final SharedPreferences prefs = MainActivity.GetPreferences(mainActivity);
         int appVersion = GetAppVersion();
         Log.i(TAG, "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.apply();
-    }
-
-    public SharedPreferences GetGCMPreferences() {
-        return mainActivity.getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
     public int GetAppVersion() {

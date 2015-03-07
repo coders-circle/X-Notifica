@@ -1,5 +1,8 @@
 package com.fabb.notifica;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -138,8 +141,24 @@ public class MainActivity extends FragmentActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.action_logout) {
+            LogOut();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void LogOut() {
+        SharedPreferences preferences = GetPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("user-name");
+        editor.remove("password");
+        editor.remove("user-type");
+        editor.apply();
+
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
     }
 
 
@@ -154,6 +173,11 @@ public class MainActivity extends FragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    public static SharedPreferences GetPreferences(Context context) {
+        return context.getSharedPreferences("Notifica_Main_Preferences", Context.MODE_PRIVATE);
     }
 
 }
