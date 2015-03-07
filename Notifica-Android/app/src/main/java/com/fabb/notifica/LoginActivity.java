@@ -4,39 +4,30 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -162,10 +153,10 @@ public class LoginActivity extends Activity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-
-            //Toast.makeText(this, GetLoginJson(userId, password, userType), Toast.LENGTH_LONG).show();
-
             showProgress(true);
+
+            // Encrypt the password before moving forward
+            password = Encrypt512(password);
             mAuthTask = new UserLoginTask(this, userId, password, userType);
             mAuthTask.execute((Void) null);
         }
@@ -217,6 +208,23 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
         return json.toString();
+    }
+
+    public static String Encrypt512(String password) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-512");
+            md.update(password.getBytes());
+            byte byteData[] = md.digest();
+            StringBuilder sb = new StringBuilder();
+            for (byte aByteData : byteData) {
+                sb.append(String.format("%02X", aByteData));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            Log.w("ERROR ENCRYPTING", "Could not load MessageDigest: SHA-512");
+            return "";
+        }
     }
 
     /**

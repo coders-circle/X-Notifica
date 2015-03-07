@@ -10,12 +10,18 @@ import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class MainActivity extends FragmentActivity {
