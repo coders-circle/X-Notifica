@@ -12,6 +12,10 @@
     <string name="option_student">Student</string>
     <string name="action_logout">Log Out</string>
 
+    <string name="login_motto">Everything You Need!</string>
+    <string name="login_rights">All Rights Reserved.</string>
+
+
     <string-array name="page_titles">
         <item>Routine</item>
         <item>Assignments</item>
