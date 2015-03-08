@@ -19,8 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -40,7 +38,6 @@ public class LoginActivity extends Activity {
     // UI references.
     private EditText mUserIdView;
     private EditText mPasswordView;
-    private RadioGroup mUserTypeView;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -73,8 +70,6 @@ public class LoginActivity extends Activity {
             }
         });
 
-        mUserTypeView = (RadioGroup) findViewById(R.id.userTypeView);
-
         Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -101,24 +96,9 @@ public class LoginActivity extends Activity {
         mUserIdView.setError(null);
         mPasswordView.setError(null);
 
-        RadioButton studentButton = (RadioButton) findViewById(R.id.studentOption);
-        studentButton.setError(null);
-
         // Store values at the time of the login attempt.
         String userId = mUserIdView.getText().toString();
         String password = mPasswordView.getText().toString();
-        UserType userType;
-        switch (mUserTypeView.getCheckedRadioButtonId()) {
-            case R.id.studentOption:
-                userType = UserType.Student;
-                break;
-            case R.id.teacherOption:
-                userType = UserType.Teacher;
-                break;
-            default:
-                userType = UserType.None;
-        }
-
 
         boolean cancel = false;
         View focusView = null;
@@ -138,13 +118,6 @@ public class LoginActivity extends Activity {
             cancel = true;
         }
 
-        // Check for a valid user type.
-        if (userType == UserType.None) {
-            studentButton.setError(getString(R.string.error_field_required));
-            focusView = mUserTypeView;
-            cancel = true;
-        }
-
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -157,7 +130,7 @@ public class LoginActivity extends Activity {
 
             // Encrypt the password before moving forward
             password = Encrypt512(password);
-            mAuthTask = new UserLoginTask(this, userId, password, userType);
+            mAuthTask = new UserLoginTask(this, userId, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -198,12 +171,11 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private String GetLoginJson(String userId, String password, UserType userType) {
+    private String GetLoginJson(String userId, String password) {
         JSONObject json = new JSONObject();
         try {
             json.put("user-id", userId);
             json.put("password", password);
-            json.put("user-type", userType.name());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -235,13 +207,11 @@ public class LoginActivity extends Activity {
 
         private final String mUserId;
         private final String mPassword;
-        private final UserType mUserType;
         private final Context mContext;
 
-        UserLoginTask(Context context, String userId, String password, UserType userType) {
+        UserLoginTask(Context context, String userId, String password) {
             mUserId = userId;
             mPassword = password;
-            mUserType = userType;
             mContext = context;
         }
 
@@ -272,7 +242,7 @@ public class LoginActivity extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("user-id", mUserId);
                 editor.putString("password", mPassword);
-                editor.putString("user-type", mUserType.name());
+                editor.putString("user-type", UserType.Student.name());
                 editor.apply();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();

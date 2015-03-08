@@ -2,7 +2,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_user_id">User Id</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
     <string name="action_sign_in">Log in</string>
 
     <string name="error_invalid_user_id">This user id is invalid</string>
