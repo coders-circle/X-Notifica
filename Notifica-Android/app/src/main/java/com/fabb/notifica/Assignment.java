@@ -6,4 +6,6 @@ public class Assignment {
     public String summary;
     public String details;
     public long time;
+
+    public String posterId;
 }

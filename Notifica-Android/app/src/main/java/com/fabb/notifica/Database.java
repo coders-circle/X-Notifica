@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -47,10 +47,10 @@ public class Database extends SQLiteOpenHelper{
 
     private static final String EVENTS_TABLE_CREATE = "CREATE TABLE "
             + EVENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "time INTEGER, summary TEXT, details TEXT);";
+            + "time INTEGER, summary TEXT, details TEXT, posterId TEXT);";
     private static final String ASSIGNMENTS_TABLE_CREATE = "CREATE TABLE "
             + ASSIGNMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "time INTEGER, subject INTEGER, summary TEXT, details TEXT);";
+            + "time INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT);";
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -142,12 +142,13 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ASSIGNMENTS_TABLE, null, null);
     }
-    public long AddAssignment(long time, long subject, String summary, String details) {
+    public long AddAssignment(long time, long subject, String summary, String details, String posterId) {
         ContentValues c = new ContentValues();
         c.put("time", time);
         c.put("subject", subject);
         c.put("summary", summary);
         c.put("details", details);
+        c.put("posterId", posterId);
         SQLiteDatabase db = getWritableDatabase();
         return db.insert(ASSIGNMENTS_TABLE, null, c);
     }
@@ -156,11 +157,12 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(EVENTS_TABLE, null, null);
     }
-    public long AddEvent(long time, String summary, String details) {
+    public long AddEvent(long time, String summary, String details, String posterId) {
         ContentValues c = new ContentValues();
         c.put("time", time);
         c.put("summary", summary);
         c.put("details", details);
+        c.put("posterId", posterId);
         SQLiteDatabase db = getWritableDatabase();
         return db.insert(EVENTS_TABLE, null, c);
     }
@@ -239,6 +241,7 @@ public class Database extends SQLiteOpenHelper{
             r.time = c.getLong(c.getColumnIndex("time"));
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
+            r.posterId = c.getString(c.getColumnIndex("posterId"));
             rs.add(r);
             c.moveToNext();
         }
@@ -257,6 +260,7 @@ public class Database extends SQLiteOpenHelper{
             r.time = c.getLong(c.getColumnIndex("time"));
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
+            r.posterId = c.getString(c.getColumnIndex("posterId"));
             rs.add(r);
             c.moveToNext();
         }

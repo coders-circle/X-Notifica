@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
-//import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -54,6 +53,7 @@ public class RoutineFragment extends Fragment {
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mDaysCollection);
 
+
         //PagerTitleStrip strip = (PagerTitleStrip) getActivity().findViewById(R.id.pager_tab_strip);
         PagerTabStrip strip =(PagerTabStrip) getActivity().findViewById(R.id.pager_tab_strip);
         strip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -73,6 +73,9 @@ public class RoutineFragment extends Fragment {
         //mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
     }
 
+    public void Refresh() {
+        mDaysCollection.notifyDataSetChanged();
+    }
 
     public static class DayFragment extends Fragment {
         public static final String ARG_DAY = "day";
@@ -110,6 +113,7 @@ public class RoutineFragment extends Fragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
+
             Bundle args = getArguments();
             TableLayout table = (TableLayout)rootView;
 

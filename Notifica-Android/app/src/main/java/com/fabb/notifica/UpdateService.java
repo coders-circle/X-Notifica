@@ -68,21 +68,21 @@ public class UpdateService {
         Calendar cal = Calendar.getInstance();
         String summary = "Complete the classwork";
         String details = "Interface 8085 with 8255ppi to any ADC. Use your own declarations.";
-        db.AddAssignment(cal.getTimeInMillis(), sids[0], summary, details);
+        db.AddAssignment(cal.getTimeInMillis(), sids[0], summary, details, "069bct509");
         summary = "Lab 3 details";
         details = "Interface 8085 using booth algorithm.";
-        db.AddAssignment(cal.getTimeInMillis(), sids[0], summary, details);
+        db.AddAssignment(cal.getTimeInMillis(), sids[0], summary, details, "aditya55");
 
 
         summary = "Computer Graphics Assessment";
         details = "We are having computer graphics assessment from chapter 3";
         cal.set(2015, 1, 20);
-        db.AddEvent(cal.getTimeInMillis(), summary, details);
+        db.AddEvent(cal.getTimeInMillis(), summary, details, "bibekdahal20");
 
         summary = "COA Assessment";
-        details = "We are having COA assessment form chapter 12";
+        details = "We are having COA assessment from chapter 12";
         cal.set(2015, 2, 10);
-        db.AddEvent(cal.getTimeInMillis(), summary, details);
+        db.AddEvent(cal.getTimeInMillis(), summary, details, "069bct509");
 
     }
 }
