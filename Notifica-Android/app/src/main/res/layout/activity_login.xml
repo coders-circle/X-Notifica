@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
@@ -16,7 +17,8 @@
 
 
     <LinearLayout android:id="@+id/login_form" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,7 +50,8 @@
             android:layout_height="2dp"
             android:background="#ffb6b6b6"/>
 
-        <EditText android:id="@+id/passwordView" android:layout_width="match_parent"
+        <EditText android:id="@+id/passwordView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/prompt_password"
             android:imeActionId="@+id/login"
             android:drawableStart="@drawable/ic_password"
@@ -74,6 +77,30 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:gravity="center|bottom"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textSize="12sp"
+                android:paddingBottom="5dp"
+                android:textColor="#fff"
+                android:text="@string/login_motto"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textSize="12sp"
+                android:paddingBottom="5dp"
+                android:textColor="#fff"
+                android:text="@string/login_rights"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 
