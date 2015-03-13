@@ -45,6 +45,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        UpdateService.AddNewData(this);
         SharedPreferences preferences = MainActivity.GetPreferences(this);
         if (!preferences.getString("user-id", "").equals("")
                 && !preferences.getString("password", "").equals("")
@@ -221,7 +222,6 @@ public class LoginActivity extends Activity {
 
             try {
                 // Simulate network access.
-                UpdateService.AddNewData(mContext);
             } catch (Exception e) {
                 Log.e("Error Logging", e.getMessage());
                 return false;

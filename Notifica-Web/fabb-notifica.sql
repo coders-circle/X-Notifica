@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 06, 2015 at 06:37 PM
+-- Generation Time: Mar 13, 2015 at 10:13 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -23,12 +23,48 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `assignments`
+--
+
+CREATE TABLE IF NOT EXISTS `assignments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` int(11) NOT NULL DEFAULT '-1',
+  `groups` varchar(20) NOT NULL DEFAULT '',
+  `summary` text NOT NULL,
+  `details` text NOT NULL,
+  `submission_date` date NOT NULL,
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `central_authorities`
 --
 
 CREATE TABLE IF NOT EXISTS `central_authorities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE IF NOT EXISTS `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` int(11) NOT NULL DEFAULT '-1',
+  `groups` varchar(20) NOT NULL DEFAULT '',
+  `summary` text NOT NULL,
+  `details` text NOT NULL,
+  `event_date` date NOT NULL,
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -54,8 +90,9 @@ CREATE TABLE IF NOT EXISTS `routines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `faculty_id` int(11) NOT NULL,
   `year` int(11) NOT NULL,
-  `group` int(11) NOT NULL DEFAULT '0',
-  `section` int(11) NOT NULL DEFAULT '-1',
+  `group` varchar(10) NOT NULL DEFAULT 'A',
+  `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
+  `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -73,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
   `day` int(11) NOT NULL,
   `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
   `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -88,9 +126,9 @@ CREATE TABLE IF NOT EXISTS `students` (
   `roll` int(11) NOT NULL,
   `faculty_id` int(11) NOT NULL,
   `year` int(11) NOT NULL,
-  `group_number` int(11) NOT NULL DEFAULT '0',
-  `section` int(11) NOT NULL DEFAULT '-1',
-  `is_privileged` tinyint(1) NOT NULL DEFAULT '0',
+  `group` varchar(10) NOT NULL DEFAULT 'A',
+  `pivilege_level` tinyint(1) NOT NULL DEFAULT '0',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -105,6 +143,7 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   `code` varchar(50) NOT NULL,
   `name` varchar(256) NOT NULL,
   `faculty_id` int(11) NOT NULL,
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -118,6 +157,9 @@ CREATE TABLE IF NOT EXISTS `teachers` (
   `id` int(11) NOT NULL,
   `user_id` varchar(256) NOT NULL,
   `name` varchar(256) NOT NULL,
+  `contact_number` varchar(100) NOT NULL,
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
