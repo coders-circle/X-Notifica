@@ -1,7 +1,7 @@
 package com.fabb.notifica;
 
 public class Event {
-    public long time;
+    public long date;
     public String summary;
     public String details;
 

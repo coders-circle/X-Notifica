@@ -59,7 +59,7 @@ public class EventFragment extends Fragment {
         int i = 0;
         for (Event as: ass){
             Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(as.time);
+            cal.setTimeInMillis(as.date);
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
             String title = as.summary

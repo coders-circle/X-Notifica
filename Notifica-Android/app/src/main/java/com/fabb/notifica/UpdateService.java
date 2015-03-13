@@ -14,9 +14,9 @@ public class UpdateService {
         db.DeleteRoutine();
 
         long tids[] = new long[3];
-        tids[0] = db.AddTeacher("bibekdahal20", "Prof. Dr. Er. Bibek Dahal");
-        tids[1] = db.AddTeacher("aditya55", "Aditya Khatri");
-        tids[2] = db.AddTeacher("ankitmehta111", "Dr. Ankit Mehta");
+        tids[0] = db.AddTeacher("bibekdahal20", "Prof. Dr. Er. Bibek Dahal", "+977-9843001100");
+        tids[1] = db.AddTeacher("aditya55", "Aditya Khatri", "+977-90102030");
+        tids[2] = db.AddTeacher("ankitmehta111", "Dr. Ankit Mehta", "+977-00112233");
 
         long f1 = db.AddFaculty("BCT");
         long f2 = db.AddFaculty("BEX");

@@ -5,7 +5,7 @@ public class Assignment {
     public Subject subject;
     public String summary;
     public String details;
-    public long time;
+    public long date;
 
     public String posterId;
 }

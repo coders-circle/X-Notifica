@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -36,7 +36,7 @@ public class Database extends SQLiteOpenHelper{
             + "code TEXT, name TEXT, faculty INTEGER);";
     private static final String TEACHERS_TABLE_CREATE = "CREATE TABLE "
             + TEACHERS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "user_id TEXT, name TEXT);";
+            + "user_id TEXT, name TEXT, contact TEXT);";
     private static final String TS_RELATIONS_TABLE_CREATE = "CREATE TABLE "
             + TS_RELATIONS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "teacher INTEGER, subject INTEGER)";
@@ -47,10 +47,10 @@ public class Database extends SQLiteOpenHelper{
 
     private static final String EVENTS_TABLE_CREATE = "CREATE TABLE "
             + EVENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "time INTEGER, summary TEXT, details TEXT, posterId TEXT);";
+            + "date INTEGER, summary TEXT, details TEXT, posterId TEXT);";
     private static final String ASSIGNMENTS_TABLE_CREATE = "CREATE TABLE "
             + ASSIGNMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "time INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT);";
+            + "date INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT);";
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -119,10 +119,11 @@ public class Database extends SQLiteOpenHelper{
         return db.insert(TS_RELATIONS_TABLE, null, c);
     }
 
-    public long AddTeacher(String userid, String name) {
+    public long AddTeacher(String userid, String name, String contact) {
         ContentValues c = new ContentValues();
         c.put("name", name);
         c.put("user_id", userid);
+        c.put("contact", contact);
         SQLiteDatabase db = getWritableDatabase();
         return db.insert(TEACHERS_TABLE, null, c);
     }
@@ -142,9 +143,9 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ASSIGNMENTS_TABLE, null, null);
     }
-    public long AddAssignment(long time, long subject, String summary, String details, String posterId) {
+    public long AddAssignment(long date, long subject, String summary, String details, String posterId) {
         ContentValues c = new ContentValues();
-        c.put("time", time);
+        c.put("date", date);
         c.put("subject", subject);
         c.put("summary", summary);
         c.put("details", details);
@@ -157,9 +158,9 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(EVENTS_TABLE, null, null);
     }
-    public long AddEvent(long time, String summary, String details, String posterId) {
+    public long AddEvent(long date, String summary, String details, String posterId) {
         ContentValues c = new ContentValues();
-        c.put("time", time);
+        c.put("date", date);
         c.put("summary", summary);
         c.put("details", details);
         c.put("posterId", posterId);
@@ -178,14 +179,14 @@ public class Database extends SQLiteOpenHelper{
     private Comparator<Assignment> acompare = new Comparator<Assignment>() {
         @Override
         public int compare(Assignment lhs, Assignment rhs) {
-            long dt = lhs.time - rhs.time;
+            long dt = lhs.date - rhs.date;
             return (int)dt;
         }
     };
     private Comparator<Event> ecompare = new Comparator<Event>() {
         @Override
         public int compare(Event lhs, Event rhs) {
-            long dt = lhs.time - rhs.time;
+            long dt = lhs.date - rhs.date;
             return (int)dt;
         }
     };
@@ -238,7 +239,7 @@ public class Database extends SQLiteOpenHelper{
         while (!c.isAfterLast()) {
             Assignment r = new Assignment();
             r.subject = GetSubject(c.getLong(c.getColumnIndex("subject")));
-            r.time = c.getLong(c.getColumnIndex("time"));
+            r.date = c.getLong(c.getColumnIndex("date"));
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
@@ -257,7 +258,7 @@ public class Database extends SQLiteOpenHelper{
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Event r = new Event();
-            r.time = c.getLong(c.getColumnIndex("time"));
+            r.date = c.getLong(c.getColumnIndex("date"));
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
