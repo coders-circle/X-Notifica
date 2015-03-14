@@ -97,8 +97,8 @@ body {
 .main > p{
     color:#425060;
 }
-
-.main > .page-header{
+.main > .page-header,
+.main > div > .page-header{
     color:#42ca8b;
 }
 
@@ -133,4 +133,50 @@ body {
 .placeholder img {
   display: inline-block;
   border-radius: 50%;
+}
+
+
+.form-adduser {
+    padding: 19px 19px 19px;
+    margin: 0 auto 20px;
+    background-color: #feffff;
+    border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+               -moz-border-radius: 5px;
+                    border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+               -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+
+.form-adduser .form-adduser-heading,
+.form-adduser .checkbox {
+    margin-bottom: 10px;
+}
+.adduser-icon p,
+.adduser-icon h3{
+    text-align: center;
+}
+
+.form-adduser input[type="button"]{
+    background-color: #99ee9f;
+    border: 1px solid #99ee9f;
+            -webkit-border-radius: 5px;
+               -moz-border-radius: 5px;
+                    border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+               -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+.form-adduser input[type="button"],
+.form-adduser input[type="text"],
+.form-adduser input[type="number"],
+.form-adduser input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 7px 9px;
 }

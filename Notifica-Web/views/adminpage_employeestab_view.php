@@ -1,20 +1,37 @@
-<div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Create a new Employee <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">List Employees</a></li>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 main">
+            <div class="col-md-7">
+                <h1 class="page-header">Employee List</h1>
+                <p> The following table contains employees from the selected faculty. And some other instruction goes here </p>
 
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Attendance Register</a></li>
-          </ul>
-          <ul class="nav nav-sidebar">
-            <li><a href="">Subject Association</a></li>
-            <li><a href="">Manage Category</a></li>
-            <li><a href="">Manage Department</a></li>
-          </ul>
+                <table class="table">
+                    <tr>
+                        <th>S.N.</th>
+                        <th>Name</th>
+                        <th>Roll</th>
+                    </tr>
+                    <?php
+                        $user = $GLOBALS['g_user'];
+                        //$result = $user->GetEmployees();
+                        $count = 1;
+                        //while ($row = $result->fetch_assoc()) {
+                        //    echo '<tr><td>'.$count++.'</td><td>'.$row['name'].'</td><td>'.$row['year'].'-BCT-'.$row['roll'].'</td></tr>';
+                        //}
+                    ?>
+                </table>
+            </div>
+            <div class="col-md-5">
+                <h1 class="page-header">Quick Add</h1>
+                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=employee" method="post" name="registration_form" role="form">
+                    <input type='text' class="form-control" placeholder="Name" name='employeename' id='employeename' required >
+                    <input type='text' class="form-control" placeholder="Faculty" name='faculty' id='faculty' required>
+                    <input type="number" class="form-control" placeholder="Contact No." name="contact" id="contact" required>
 
+                    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Add Employee"/>
+                </form>
+            </div>
         </div>
+
     </div>
 </div>

@@ -24,12 +24,12 @@ class PermissionDeniedException extends Exception{
 }
 
 class User {
-	private $session;
-    private $db;
-	private $userid;
-	private $userType;
-	private $loggedIn;
-	private $username;
+	protected $session;
+    protected $db;
+	protected $userid;
+	protected $userType;
+	protected $loggedIn;
+	protected $username;
 	public function __construct() {
 		$this -> session = new Session;
         $this -> db = new Database(HOST, USER, PASSWORD, DATABASE);
@@ -60,7 +60,6 @@ class User {
 	public function GetUsername(){
 		return $this->username;
 	}
-
 	public function Login($username, $password) {
 		$mysqli = $this -> db;
 		if ($stmt = $mysqli -> prepare("SELECT id, password, salt, usertype FROM users WHERE username = ? LIMIT 1")) {
@@ -153,6 +152,35 @@ class User {
 			return false;
 		}
 	}
+    function AddUserRaw($username, $password, $usertype)
+    {
+        $newpass = hash('sha512', $password);
+        $this->AddUser($username, $newpass, $usertype);
+    }
+    function AddStudent($studentname, $faculty, $roll, $batch){
+        if($this->LoggedIn() == false && $this->GetUserType() != 3){
+            throw new PermissionDeniedException;
+        }
+        $faculty_id = 1001; //computer
+        $group_number = 1;
+        $section = 1;
+
+        $mysqli = $this->db;
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO students (name, roll, faculty_id, year, group_number, section) VALUES (?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('siiiii', $studentname, $roll, $faculty_id, $batch, $group_number, $section);
+            if (! $insert_stmt->execute()) {
+                throw new Exception('Failed to execute the query');
+            }
+        }
+    }
+    function GetStudents(){
+        if ($stmt = $this -> db -> prepare("SELECT * FROM students")) {
+            //$stmt -> bind_param('i', $this->userid);
+            $stmt -> execute();
+            //$stmt -> store_result();
+            return $stmt->get_result();
+        }
+    }
 	function AddUser($username, $password, $usertype)
 	{
         if($this->LoggedIn() == false && $this->GetUserType() != 3)
@@ -160,7 +188,7 @@ class User {
             throw new PermissionDeniedException;
         }
 
-		$mysqli = $this->sqli;
+		$mysqli = $this->db;
 		if (strlen($password) != 128) {
 			 throw new Exception('Invalid password configuration');
 		}

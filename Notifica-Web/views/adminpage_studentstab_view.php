@@ -1,45 +1,38 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li class="active"><a href="#"><strong>Faculties</strong></a></li>
-                <li><a href="#">Computer</a></li>
-                <li><a href="#">Electronics</a></li>
-                <li><a href="#">Electrical</a></li>
-                <li><a href="#">Civil</a></li>
-                <li><a href="#">Mechanical</a></li>
-            </ul>
+        <div class="col-md-12 main">
+            <div class="col-md-7">
+                <h1 class="page-header">Student List</h1>
+                <p> The following table contains students from the selected faculty. And some other instruction goes here </p>
+
+                <table class="table">
+    				<tr>
+    					<th>S.N.</th>
+    					<th>Name</th>
+    					<th>Roll</th>
+    				</tr>
+                    <?php
+                        $user = $GLOBALS['g_user'];
+                        $result = $user->GetStudents();
+                        $count = 1;
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<tr><td>'.$count++.'</td><td>'.$row['name'].'</td><td>'.$row['year'].'-BCT-'.$row['roll'].'</td></tr>';
+                        }
+                    ?>
+                </table>
+            </div>
+            <div class="col-md-5">
+                <h1 class="page-header">Quick Add</h1>
+                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=students" method="post" name="registration_form" role="form">
+    	            <input type='text' class="form-control" placeholder="Name" name='studentname' id='studentname' required >
+                    <input type='text' class="form-control" placeholder="Faculty" name='faculty' id='faculty' required>
+        			<input type="number" class="form-control" placeholder="Year (Batch)" name="batch" id="batch" required>
+                    <input type="number" class="form-control" placeholder="Roll No." name="roll" id="roll" required>
+
+                    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Add Student"/>
+                </form>
+            </div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Student List</h1>
-            <p> The following table contains students from the selected faculty. And some other instruction goes here </p>
-            <table class="table">
-				<tr>
-					<th>S.N.</th>
-					<th>Name</th>
-					<th>Roll</th>
-				</tr>
-                <tr>
-                    <td>1</td>
-                    <td>Ankit Mehta</td>
-                    <td>069-BCT-504</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Aditya khatri</td>
-                    <td>069-BCT-548</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Bibek Dahal</td>
-                    <td>069-BCT-507</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Bishal Sainju</td>
-                    <td>069-BCT-513</td>
-                </tr>
-            </table>
-        </div>
+
     </div>
 </div>
