@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 13, 2015 at 10:13 PM
+-- Generation Time: Mar 15, 2015 at 08:21 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -33,6 +33,8 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `summary` text NOT NULL,
   `details` text NOT NULL,
   `submission_date` date NOT NULL,
+  `poster_id` varchar(256) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -64,6 +66,8 @@ CREATE TABLE IF NOT EXISTS `events` (
   `summary` text NOT NULL,
   `details` text NOT NULL,
   `event_date` date NOT NULL,
+  `poster_id` varchar(256) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -93,6 +97,7 @@ CREATE TABLE IF NOT EXISTS `routines` (
   `group` varchar(10) NOT NULL DEFAULT 'A',
   `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
   `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -110,7 +115,6 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
   `day` int(11) NOT NULL,
   `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
   `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
-  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
