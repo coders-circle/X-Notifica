@@ -42,7 +42,7 @@ class Navbar{
         }
         if(isset($this->user)){
             //$firstname = strstr($this->user->GetUsername(), ' ', true);
-            $firstname = $this->user->GetUsername();
+            $firstname = $this->user->GetName();
             echo '<li class="dropdown">';
             echo '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">';
             echo $firstname.'<span class="caret"></span></a>';
