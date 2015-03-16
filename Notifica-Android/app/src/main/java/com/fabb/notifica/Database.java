@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -42,7 +42,7 @@ public class Database extends SQLiteOpenHelper{
             + "teacher INTEGER, subject INTEGER)";
     private static final String FACULTIES_TABLE_CREATE = "CREATE TABLE "
             + FACULTIES_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "name TEXT);";
+            + "code TEXT, name TEXT);";
 
 
     private static final String EVENTS_TABLE_CREATE = "CREATE TABLE "
@@ -132,8 +132,9 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(FACULTIES_TABLE, null, null);
     }
-    public long AddFaculty(String name) {
+    public long AddFaculty(String name, String code) {
         ContentValues c = new ContentValues();
+        c.put("code", code);
         c.put("name", name);
         SQLiteDatabase db = getWritableDatabase();
         return db.insert(FACULTIES_TABLE, null, c);
@@ -143,8 +144,9 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ASSIGNMENTS_TABLE, null, null);
     }
-    public long AddAssignment(long date, long subject, String summary, String details, String posterId) {
+    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId) {
         ContentValues c = new ContentValues();
+        c.put("id", id);
         c.put("date", date);
         c.put("subject", subject);
         c.put("summary", summary);
@@ -154,12 +156,33 @@ public class Database extends SQLiteOpenHelper{
         return db.insert(ASSIGNMENTS_TABLE, null, c);
     }
 
+    public void RemoveAssignment(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(ASSIGNMENTS_TABLE, "id=?", new String[]{id+""});
+    }
+
+    public void RemoveEvent(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(EVENTS_TABLE, "id=?", new String[]{id+""});
+    }
+
+    public void RemoveTeacher(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TEACHERS_TABLE, "id=?", new String[]{id+""});
+    }
+
+    public void RemoveSubject(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(SUBJECTS_TABLE, "id=?", new String[]{id+""});
+    }
+
     public void DeleteEvents() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(EVENTS_TABLE, null, null);
     }
-    public long AddEvent(long date, String summary, String details, String posterId) {
+    public long AddEvent(long id, long date, String summary, String details, String posterId) {
         ContentValues c = new ContentValues();
+        c.put("id", id);
         c.put("date", date);
         c.put("summary", summary);
         c.put("details", details);
@@ -238,6 +261,7 @@ public class Database extends SQLiteOpenHelper{
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Assignment r = new Assignment();
+            r.id = c.getLong(c.getColumnIndex("id"));
             r.subject = GetSubject(c.getLong(c.getColumnIndex("subject")));
             r.date = c.getLong(c.getColumnIndex("date"));
             r.summary = c.getString(c.getColumnIndex("summary"));
@@ -258,6 +282,7 @@ public class Database extends SQLiteOpenHelper{
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Event r = new Event();
+            r.id = c.getLong(c.getColumnIndex("id"));
             r.date = c.getLong(c.getColumnIndex("date"));
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
@@ -298,17 +323,7 @@ public class Database extends SQLiteOpenHelper{
         c.close();
         return t;
     }
-    public long GetTeacherId(String userId) {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE user_id = ?", new String[]{userId});
-        long tid = -1;
-        c.moveToFirst();
-        if (c.getCount() > 0) {
-            tid = c.getLong(c.getColumnIndex("id"));
-        }
-        c.close();
-        return tid;
-    }
+
     public Subject[] GetSubjectsForTeacher(long teacherId) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TS_RELATIONS_TABLE + " WHERE teacher = ?", new String[]{teacherId+""});
@@ -355,6 +370,7 @@ public class Database extends SQLiteOpenHelper{
             c.moveToFirst();
             if (c.getCount() > 0) {
                 f = new Faculty();
+                f.code = c.getString(c.getColumnIndex("code"));
                 f.name = c.getString(c.getColumnIndex("name"));
                 Cursor c2 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE faculty = ?", new String[]{c.getLong(c.getColumnIndex("id")) + ""});
                 f.subjects = new Subject[c2.getCount()];
@@ -388,9 +404,9 @@ public class Database extends SQLiteOpenHelper{
         return id;
     }
 
-    long GetFacultyId(String name) {
+    long GetFacultyId(String code) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c1 = db.rawQuery("SELECT * FROM " + FACULTIES_TABLE + " WHERE name = ?", new String[]{name});
+        Cursor c1 = db.rawQuery("SELECT * FROM " + FACULTIES_TABLE + " WHERE code = ?", new String[]{code});
         c1.moveToFirst();
         long id = -1;
         if (c1.getCount() > 0) {
@@ -398,6 +414,18 @@ public class Database extends SQLiteOpenHelper{
         }
         c1.close();
         return id;
+    }
+
+    public long GetTeacherId(String userId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE user_id = ?", new String[]{userId});
+        long tid = -1;
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            tid = c.getLong(c.getColumnIndex("id"));
+        }
+        c.close();
+        return tid;
     }
 
 }

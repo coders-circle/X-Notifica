@@ -38,7 +38,7 @@ public class Network {
 
     public String Get(String address) {
         HttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(address);
+        HttpGet request = new HttpGet(URL + address);
         HttpResponse response;
         String result = "";
         try {

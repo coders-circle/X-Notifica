@@ -41,6 +41,8 @@ public class LoginActivity extends Activity {
     private View mProgressView;
     private View mLoginFormView;
 
+    public enum UserType { None, Student, Teacher, CentralAutority }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +84,6 @@ public class LoginActivity extends Activity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-
-    public enum UserType { None, Student, Teacher }
 
     /**
      * Attempts to sign in the account specified by the login form.
@@ -243,6 +243,9 @@ public class LoginActivity extends Activity {
                 editor.putString("user-id", mUserId);
                 editor.putString("password", mPassword);
                 editor.putString("user-type", UserType.Student.name());
+                editor.putLong("updated-at", 0);
+                editor.putInt("routine-start", 0);
+                editor.putInt("routine-end", 0);
                 editor.apply();
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
