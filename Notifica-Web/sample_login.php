@@ -20,7 +20,6 @@ if ($user_id != "bibek") {
 elseif (strtoupper($encrPassword) != strtoupper(hash("sha512", "dahal"))) { // since hashed value is hex string, make sure 0xab == 0xAB
     $output_array["login_result"] = "Failure";
     $output_array["failure_message"] = "Invalid Password";
-    $output_array["password"] = hash("sha512", "dahal");
 }
 else {
     $output_array["login_result"] = "Success";
