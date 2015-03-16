@@ -112,10 +112,11 @@ public class GcmRegister {
             json.put("year", 2069);
             json.put("roll", 507);
             json.put("reg_id", regid);
-        } catch (JSONException e) {
+
+            network.PostJson("register-gcm.php", json);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        network.PostJson("register-gcm.php", json);
     }
 
     String SENDER_ID = "30928798038";

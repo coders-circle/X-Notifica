@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class RoutineFragment extends Fragment {
+public class RoutineFragment extends Fragment implements UpdateListener {
     DaysCollectionPagerAdapter mDaysCollection;
     ViewPager mViewPager;
 
@@ -71,10 +71,19 @@ public class RoutineFragment extends Fragment {
         mViewPager.setCurrentItem(0);
         //Calendar cal = Calendar.getInstance();
         //mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
+
+        UpdateService.AddUpdateListener(this);
     }
 
     public void Refresh() {
         mDaysCollection.notifyDataSetChanged();
+    }
+
+    @Override
+    public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
+        /*
+        TODO: Refresh routine as database is just updated
+        * */
     }
 
     public static class DayFragment extends Fragment {

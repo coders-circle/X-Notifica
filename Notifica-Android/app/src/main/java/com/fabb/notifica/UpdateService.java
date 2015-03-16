@@ -6,9 +6,15 @@ import android.content.SharedPreferences;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class UpdateService {
+
+    private final static ArrayList<UpdateListener> updateListeners = new ArrayList<>();
+    public static void AddUpdateListener(UpdateListener listener) {
+        updateListeners.add(listener);
+    }
 
     public static boolean SendUpdatedInfo(Context ctx) {
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
@@ -55,6 +61,8 @@ public class UpdateService {
         JSONArray subjects = json.optJSONArray("subjects");
         JSONObject routine = json.optJSONObject("routine");
 
+        int ecnt = 0, acnt = 0, rcnt = 0;
+
         if (assignments != null) {
             for (int i=0; i < assignments.length(); ++i) {
                 JSONObject assignment = assignments.optJSONObject(i);
@@ -68,6 +76,7 @@ public class UpdateService {
                     db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
                             assignment.optString("details"), assignment.optString("poster_id"));
                 }
+                acnt++;
             }
         }
 
@@ -83,6 +92,7 @@ public class UpdateService {
                     db.AddEvent(id, event.optLong("date"), event.optString("summary"),
                             event.optString("details"), event.optString("poster_id"));
                 }
+                ecnt++;
             }
         }
 
@@ -128,6 +138,7 @@ public class UpdateService {
                     db.AddRoutineElement(db.GetSubjectId(element.optString("subject_code")), db.GetTeacherId(element.optString("teacher_user_id")),
                             element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"));
                 }
+                rcnt = 1;
             }
         }
 
@@ -136,6 +147,10 @@ public class UpdateService {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong("updated-at", update_time);
         editor.apply();
+
+        for (UpdateListener listener: updateListeners) {
+            listener.OnUpdated(ecnt, acnt, rcnt);
+        }
     }
     // Test Function
     public static void AddNewData(Context ctx) {

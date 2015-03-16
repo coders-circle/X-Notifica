@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class EventFragment extends Fragment {
+public class EventFragment extends Fragment implements UpdateListener {
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
@@ -49,6 +49,8 @@ public class EventFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels;
         expListView.setIndicatorBounds(width - GetPixelFromDips(70), width - GetPixelFromDips(20));
+
+        UpdateService.AddUpdateListener(this);
     }
 
     private void prepareListData() {
@@ -80,5 +82,12 @@ public class EventFragment extends Fragment {
         final float scale = getResources().getDisplayMetrics().density;
         // Convert the dps to pixels, based on density scale
         return (int) (pixels * scale + 0.5f);
+    }
+
+    @Override
+    public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
+        /*
+        TODO: Refresh event list as database is just updated
+        * */
     }
 }

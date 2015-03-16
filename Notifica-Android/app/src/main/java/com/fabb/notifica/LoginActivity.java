@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,13 +36,16 @@ public class LoginActivity extends Activity {
     // Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask mAuthTask = null;
 
+    public final String LoginPage = "sample_login.php";
+
     // UI references.
     private EditText mUserIdView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView mLoginMessageView;
 
-    public enum UserType { None, Student, Teacher, CentralAutority }
+    public enum UserType { None, Student, Teacher }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,8 @@ public class LoginActivity extends Activity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        mLoginMessageView = (TextView)findViewById(R.id.login_message);
     }
 
     /**
@@ -172,15 +178,15 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private String GetLoginJson(String userId, String password) {
+    private JSONObject GetLoginJson(String userId, String password) {
         JSONObject json = new JSONObject();
         try {
-            json.put("user-id", userId);
+            json.put("user_id", userId);
             json.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return json.toString();
+        return json;
     }
 
     public static String Encrypt512(String password) {
@@ -209,27 +215,36 @@ public class LoginActivity extends Activity {
         private final String mUserId;
         private final String mPassword;
         private final Context mContext;
+        private String failureMessage;
+        private JSONObject response;
 
         UserLoginTask(Context context, String userId, String password) {
             mUserId = userId;
             mPassword = password;
             mContext = context;
+            failureMessage = "";
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
-                // Simulate network access.
+                Network network = new Network(LoginActivity.this);
+                String result = network.PostJson(LoginPage, GetLoginJson(mUserId, mPassword));
+                response = new JSONObject(result);
+                if (!response.has("message_type") || !response.optString("message_type").equals("Login Result") || !response.has("login_result")) {
+                    failureMessage = "Couldn't login. Please verify you are connected to internet and try again";
+                    return false;
+                }
+                if (!response.optString("login_result").equals("Success")) {
+                    failureMessage = response.optString("failure_message");
+                    return false;
+                }
             } catch (Exception e) {
                 Log.e("Error Logging", e.getMessage());
+                failureMessage = "Couldn't login. Please verify you are connected to internet and try again";
                 return false;
             }
-
-            // TODO: register the new account here.
             return true;
-            //return false;
         }
 
         @Override
@@ -242,16 +257,29 @@ public class LoginActivity extends Activity {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("user-id", mUserId);
                 editor.putString("password", mPassword);
-                editor.putString("user-type", UserType.Student.name());
+                editor.putString("user-type", response.optString("user_type"));
+                editor.putString("user-name", response.optString("name"));
                 editor.putLong("updated-at", 0);
                 editor.putInt("routine-start", 0);
                 editor.putInt("routine-end", 0);
                 editor.apply();
+                UpdateService.Update(LoginActivity.this);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                switch (failureMessage) {
+                    case "Invalid Password":
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                        break;
+                    case "Invalid User":
+                        mUserIdView.setError(getString(R.string.error_invalid_user_id));
+                        mUserIdView.requestFocus();
+                        break;
+                    default:
+                        mLoginMessageView.setText(failureMessage);
+                        break;
+                }
             }
         }
 
@@ -262,6 +290,7 @@ public class LoginActivity extends Activity {
         }
     }
 }
+
 
 
 

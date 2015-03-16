@@ -22,8 +22,8 @@ import java.io.InputStreamReader;
 public class Network {
     private final Context mContext;
 
-    public final String URL = "127.0.0.1/Notifica-Web/";
-    public final String ERR_CONNECTION = "ERROR_CONNECTING";
+    public final String URL = "http://192.168.0.59/Notifica-Web/";
+    public final String ERR_CONNECTION = "{ \"message_type\": \"ERROR CONNECTION\" }";
 
     Network(Context context) {
         mContext = context;
@@ -74,7 +74,6 @@ public class Network {
             }
         } catch(Exception e) {
             e.printStackTrace();
-            Toast.makeText(mContext, "Error: Cannot Establish Connection", Toast.LENGTH_LONG).show();
             result = ERR_CONNECTION;
         }
         return result;
