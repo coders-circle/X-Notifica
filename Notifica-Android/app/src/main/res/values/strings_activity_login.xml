@@ -7,6 +7,6 @@
 
     <string name="error_invalid_user_id">This user id is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password does not match with the user-id</string>
+    <string name="error_incorrect_password">This password does not match with the user id</string>
     <string name="error_field_required">This field is required</string>
 </resources>
