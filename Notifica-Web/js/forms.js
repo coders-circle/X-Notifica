@@ -9,7 +9,7 @@ function formhash(form, password) {
 	password.value = "";
 	for(var i = 0; i < len; i++) {password.value += "-";}
 }
- 
+
 function regformhash(form, typ, uid, password, conf) {
 	if(typ.selectedIndex == 0){
 		alert('Please select a user type first');
@@ -22,11 +22,11 @@ function regformhash(form, typ, uid, password, conf) {
 			form.un.focus();
 			return false;
 		}
-		re = /^\w+$/; 
-		if(!re.test(form.un.value)) { 
-			alert("Username must contain only letters, numbers and underscores. Please try again"); 
+		re = /^\w+$/;
+		if(!re.test(form.un.value)) {
+			alert("Username must contain only letters, numbers and underscores. Please try again");
 			form.un.focus();
-			return false; 
+			return false;
 		}
 		form.submit();
 		return true;
@@ -35,18 +35,18 @@ function regformhash(form, typ, uid, password, conf) {
         alert('You must provide all the requested details. Please try again');
         return false;
     }
-    re = /^\w+$/; 
-    if(!re.test(form.un.value)) { 
-        alert("Username must contain only letters, numbers and underscores. Please try again"); 
+    re = /^\w+$/;
+    if(!re.test(form.un.value)) {
+        alert("Username must contain only letters, numbers and underscores. Please try again");
         form.un.focus();
-        return false; 
+        return false;
     }
     if (pwd.value.length < 6) {
         alert('Passwords must be at least 6 characters long.  Please try again');
         form.pwd.focus();
         return false;
     }
-    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/; 
+    var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!re.test(password.value)) {
         alert('Passwords must contain at least one number, one lowercase and one uppercase letter.  Please try again');
         return false;

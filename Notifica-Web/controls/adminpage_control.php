@@ -15,11 +15,10 @@ else if($tabID == 'students') {
     $adminPage->SetActiveTab(1);
     if(isset($_POST['studentname'])){
         $studentname = $_POST['studentname'];
-        $faculty = $_POST['faculty'];
         $batch = $_POST['batch'];
         $roll = $_POST['roll'];
         $user = $GLOBALS['g_user'];
-        $user->AddStudent($studentname, $faculty, $roll, $batch);
+        $user->AddStudent($studentname, $roll, $batch);
     }
 }
 
