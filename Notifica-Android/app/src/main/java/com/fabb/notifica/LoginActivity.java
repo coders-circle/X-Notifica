@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
     // Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask mAuthTask = null;
 
-    public final String LoginPage = "sample_login.php";
+    public final String LoginPage = "device_login.php";
 
     // UI references.
     private EditText mUserIdView;
@@ -53,7 +53,8 @@ public class LoginActivity extends Activity {
 
         UpdateService.AddNewData(this);
         SharedPreferences preferences = MainActivity.GetPreferences(this);
-        if (!preferences.getString("user-id", "").equals("")
+        if (preferences.getBoolean("logged-in", false)
+                && !preferences.getString("user-id", "").equals("")
                 && !preferences.getString("password", "").equals("")
                 && !preferences.getString("user-type", "").equals("")) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -89,6 +90,8 @@ public class LoginActivity extends Activity {
         mProgressView = findViewById(R.id.login_progress);
 
         mLoginMessageView = (TextView)findViewById(R.id.login_message);
+
+        mUserIdView.setText(preferences.getString("user-id", ""));
     }
 
     /**
@@ -262,6 +265,7 @@ public class LoginActivity extends Activity {
                 editor.putLong("updated-at", 0);
                 editor.putInt("routine-start", 0);
                 editor.putInt("routine-end", 0);
+                editor.putBoolean("logged-in", true);
                 editor.apply();
                 UpdateService.Update(LoginActivity.this);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));

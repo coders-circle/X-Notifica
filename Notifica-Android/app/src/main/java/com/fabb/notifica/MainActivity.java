@@ -157,7 +157,7 @@ public class MainActivity extends ActionBarActivity {
     public void LogOut() {
         SharedPreferences preferences = GetPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.remove("user-name");
+        editor.putBoolean("logged-in", false);
         editor.remove("password");
         editor.remove("user-type");
         editor.apply();

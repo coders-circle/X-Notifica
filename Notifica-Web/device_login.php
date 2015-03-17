@@ -9,6 +9,7 @@ $input_array = json_decode($input_data, true);
 
 $user_id = $input_array["user_id"];
 $encrPassword = $input_array["password"];
+$encrPassword = strtolower($encrPassword);
 
 
 $output_array = array();
