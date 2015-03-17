@@ -34,7 +34,7 @@ class User {
     protected $name;
 
 	public function __construct() {
-		$this -> session = new Session;
+		//$this -> session = new Session;
         $this -> db = new Database(HOST, USER, PASSWORD, DATABASE);
 		$this -> userType = 0;
 		$this -> loggedIn = false;
@@ -80,12 +80,12 @@ class User {
 					throw new AccountLockedException;
 				} else {
 					if ($db_password == $password) {
-						$user_browser = $_SERVER['HTTP_USER_AGENT'];
+					//	$user_browser = $_SERVER['HTTP_USER_AGENT'];
 						$this->userid = preg_replace("/[^0-9]+/", "", $this->userid);
-						$_SESSION['user_id'] = $this->userid;
+					//	$_SESSION['user_id'] = $this->userid;
 						$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
-						$_SESSION['username'] = $username;
-						$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
+					//	$_SESSION['username'] = $username;
+					//	$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
 						$this->loggedIn = true;
 						$this->username = $username;
                         $stmt->free_result();
@@ -118,11 +118,12 @@ class User {
 					} else {
 						//$now = time();
 						//$mysqli -> query("INSERT INTO login_attempts(user_id, time) VALUES ('$this->userid', '$now')");
+                        throw new Exception("Invalid Password")
 						return false;
 					}
 				}
 			} else {
-
+                throw new Exception("Invalid User")
 				return false;
 			}
 		}
@@ -282,6 +283,9 @@ class User {
         */
         $piece = explode(" ", $this->name);
         return $piece[0];
+    }
+    GetFullName(){
+        return $this->name;
     }
     function GetStudents(){
         if ($stmt = $this -> db -> prepare("SELECT * FROM students WHERE roll > 0")) {

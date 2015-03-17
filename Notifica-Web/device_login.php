@@ -1,6 +1,6 @@
 <?php
 
-require_once 'classes/User.php'
+require_once 'classes/User.php';
 
 header('Content-type: application/json');
 
@@ -16,9 +16,10 @@ $output_array = array();
 $output_array["message_type"] = "Login Result";
 
 $user = new User;
-
-if($user->Login($user_id, $encrPassword)){
+try{
+//if($user->Login($user_id, $encrPassword)){
     // Login Successful
+    $user->Login($user_id, $encrPassword);
     $output_array["login_result"] = "Success";
     $userType = $user->GetUserType();
     if($userType == 2){
@@ -27,11 +28,13 @@ if($user->Login($user_id, $encrPassword)){
         $output_array["user_type"] = "Student";  // Or Teacher
     }
     $output_array["name"] = $user->GetFullName();
-    $user->Logout();
-    setcookie("bs", "", time()-3600);
-}else{
+    //$user->Logout();
+    //setcookie("bs", "", time()-3600);
+}
+//else{
+catch(Exception $e){
     $output_array["login_result"] = "Failure";
-    $output_array["failure_message"] = "Invalid User or Password";
+    $output_array["failure_message"] = $e->getMessage();
 }
 
 echo json_encode($output_array)
