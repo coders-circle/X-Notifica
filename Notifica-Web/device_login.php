@@ -19,7 +19,7 @@ $user = new User;
 try{
 //if($user->Login($user_id, $encrPassword)){
     // Login Successful
-    $user->Login($user_id, $encrPassword);
+    $user->LoginTest($user_id, $encrPassword);
     $output_array["login_result"] = "Success";
     $userType = $user->GetUserType();
     if($userType == 2){

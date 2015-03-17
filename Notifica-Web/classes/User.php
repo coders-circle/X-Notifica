@@ -34,7 +34,7 @@ class User {
     protected $name;
 
 	public function __construct() {
-		//$this -> session = new Session;
+		$this -> session = new Session;
         $this -> db = new Database(HOST, USER, PASSWORD, DATABASE);
 		$this -> userType = 0;
 		$this -> loggedIn = false;
@@ -65,6 +65,55 @@ class User {
 	public function GetUsername(){
 		return $this->username;
 	}
+
+    public function LoginTest($username, $password){
+        $mysqli = $this -> db;
+        if ($stmt = $mysqli -> prepare("SELECT id, password, salt, usertype FROM users WHERE username = ? LIMIT 1")) {
+            $stmt -> bind_param('s', $username);
+            $stmt -> execute();
+            $stmt -> store_result();
+            $stmt -> bind_result($this->userid, $db_password, $salt, $this->userType);
+            $stmt -> fetch();
+            $password = hash('sha512', $password . $salt);
+
+            if ($stmt->num_rows == 1 ) {
+                if ($db_password == $password) {
+                    $this->userid = preg_replace("/[^0-9]+/", "", $this->userid);
+                    $username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
+                    $this->loggedIn = true;
+                    $this->username = $username;
+                    $stmt->free_result();
+                    $stmt->close();
+                    $stmt = null;
+
+                    if($this->userType == 3){
+                        $stmt = $this->db->prepare("SELECT name, faculty_id FROM central_authorities WHERE id = ? LIMIT 1");
+                    }else if($this->userType == 2){
+                        $stmt = $this->db->prepare("SELECT name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
+                    }else{
+                        $stmt = $this->db->prepare("SELECT name, faculty_id FROM students WHERE id = ? LIMIT 1");
+                    }
+
+                    if($stmt != null){
+                        $stmt->bind_param('i', $this->userid);
+                        $stmt->execute();
+                        $stmt->store_result();
+                        $stmt->bind_result($this->name, $this->facultyid);
+
+                        $stmt->fetch();
+                        $stmt->free_result();
+                        $stmt->close();
+                    }
+                } else {
+                throw new Exception("Invalid Password");
+                }
+            } else {
+                throw new Exception("Invalid User");
+                //return false;
+            }
+        }
+    }
+
 	public function Login($username, $password) {
 		$mysqli = $this -> db;
 		if ($stmt = $mysqli -> prepare("SELECT id, password, salt, usertype FROM users WHERE username = ? LIMIT 1")) {
@@ -80,12 +129,12 @@ class User {
 					throw new AccountLockedException;
 				} else {
 					if ($db_password == $password) {
-					//	$user_browser = $_SERVER['HTTP_USER_AGENT'];
+						$user_browser = $_SERVER['HTTP_USER_AGENT'];
 						$this->userid = preg_replace("/[^0-9]+/", "", $this->userid);
-					//	$_SESSION['user_id'] = $this->userid;
+						$_SESSION['user_id'] = $this->userid;
 						$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
-					//	$_SESSION['username'] = $username;
-					//	$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
+						$_SESSION['username'] = $username;
+						$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
 						$this->loggedIn = true;
 						$this->username = $username;
                         $stmt->free_result();
@@ -118,12 +167,12 @@ class User {
 					} else {
 						//$now = time();
 						//$mysqli -> query("INSERT INTO login_attempts(user_id, time) VALUES ('$this->userid', '$now')");
-                        throw new Exception("Invalid Password")
+                        //throw new Exception("Invalid Password")
 						return false;
 					}
 				}
 			} else {
-                throw new Exception("Invalid User")
+                //throw new Exception("Invalid User")
 				return false;
 			}
 		}
@@ -284,7 +333,7 @@ class User {
         $piece = explode(" ", $this->name);
         return $piece[0];
     }
-    GetFullName(){
+    function GetFullName(){
         return $this->name;
     }
     function GetStudents(){
