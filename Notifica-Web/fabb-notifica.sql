@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 16, 2015 at 12:33 PM
--- Server version: 5.5.32
--- PHP Version: 5.4.16
+-- Host: localhost
+-- Generation Time: Mar 19, 2015 at 07:09 PM
+-- Server version: 5.5.40-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `fabb-notifica`
 --
-CREATE DATABASE IF NOT EXISTS `fabb-notifica` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `fabb-notifica`;
 
 -- --------------------------------------------------------
 
@@ -35,6 +33,8 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `summary` text NOT NULL,
   `details` text NOT NULL,
   `submission_date` date NOT NULL,
+  `poster_id` varchar(256) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -73,6 +73,8 @@ CREATE TABLE IF NOT EXISTS `events` (
   `summary` text NOT NULL,
   `details` text NOT NULL,
   `event_date` date NOT NULL,
+  `poster_id` varchar(256) NOT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
@@ -85,8 +87,9 @@ CREATE TABLE IF NOT EXISTS `events` (
 
 CREATE TABLE IF NOT EXISTS `faculties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL,
   `name` varchar(256) NOT NULL,
-  `code` varchar(16) NOT NULL,
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=501 ;
 
@@ -94,9 +97,9 @@ CREATE TABLE IF NOT EXISTS `faculties` (
 -- Dumping data for table `faculties`
 --
 
-INSERT INTO `faculties` (`id`, `name`, `code`) VALUES
-(400, 'Electronics', 'BEX'),
-(500, 'Computer', 'BCT');
+INSERT INTO `faculties` (`id`, `code`, `name`, `changed_at`) VALUES
+(400, 'BEX', 'Electronics', '0000-00-00 00:00:00'),
+(500, 'BCT', 'Computer', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -111,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `routines` (
   `group` varchar(10) NOT NULL DEFAULT 'A',
   `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
   `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
+  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -128,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
   `day` int(11) NOT NULL,
   `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
   `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
-  `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -212,14 +215,14 @@ CREATE TABLE IF NOT EXISTS `teachers_subjects` (
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` tinytext NOT NULL,
   `password` char(128) NOT NULL,
   `salt` char(128) NOT NULL,
   `usertype` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1013 ;
 
 --
 -- Dumping data for table `users`
