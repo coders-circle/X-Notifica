@@ -171,6 +171,11 @@ public class Database extends SQLiteOpenHelper{
         db.delete(TEACHERS_TABLE, "id=?", new String[]{id+""});
     }
 
+    public void RemoveFaculty(long id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(FACULTIES_TABLE, "id=?", new String[]{id+""});
+    }
+
     public void RemoveSubject(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(SUBJECTS_TABLE, "id=?", new String[]{id+""});

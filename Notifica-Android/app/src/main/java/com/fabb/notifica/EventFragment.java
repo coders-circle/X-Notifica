@@ -61,7 +61,7 @@ public class EventFragment extends Fragment implements UpdateListener {
         int i = 0;
         for (Event as: ass){
             Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(as.date);
+            cal.setTimeInMillis(as.date*1000);
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
             String title = as.summary

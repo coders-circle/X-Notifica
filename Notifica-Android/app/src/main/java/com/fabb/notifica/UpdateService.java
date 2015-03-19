@@ -54,6 +54,8 @@ public class UpdateService {
     }
 
     public static void UpdateData(Context ctx, JSONObject json) {
+        if (!json.optString("message_type").equals("Database Update"))
+            return;
         Database db = new Database(ctx);
         JSONArray assignments = json.optJSONArray("assignments");
         JSONArray events = json.optJSONArray("events");
@@ -61,38 +63,20 @@ public class UpdateService {
         JSONArray subjects = json.optJSONArray("subjects");
         JSONObject routine = json.optJSONObject("routine");
 
-        int ecnt = 0, acnt = 0, rcnt = 0;
+        //JSONObject st_relations = json.optJSONArray("subject-teacher-relations");
+        JSONArray faculties = json.optJSONArray("faculty");
 
-        if (assignments != null) {
-            for (int i=0; i < assignments.length(); ++i) {
-                JSONObject assignment = assignments.optJSONObject(i);
-                if (assignment == null || !assignment.has("id"))
+        int ecnt = 0, acnt = 0, rcnt = 0, fcnt = 0;
+
+        if (faculties != null) {
+            for (int i=0; i < faculties.length(); ++i) {
+                JSONObject faculty = faculties.optJSONObject(i);
+                if (faculty == null || !faculty.has("code"))
                     continue;
-                long id = assignment.optLong("id");
-                boolean deleted = assignment.optBoolean("deleted");
+                long id = db.GetFacultyId(faculty.optString("code"));
                 db.RemoveAssignment(id);
-                if (!deleted) {
-                    long sub_id = db.GetSubjectId(assignment.optString("subject_code"));
-                    db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
-                            assignment.optString("details"), assignment.optString("poster_id"));
-                }
-                acnt++;
-            }
-        }
-
-        if (events != null) {
-            for (int i=0; i < events.length(); ++i) {
-                JSONObject event = events.optJSONObject(i);
-                if (event == null || !event.has("id"))
-                    continue;
-                long id = event.optLong("id");
-                boolean deleted = event.optBoolean("deleted");
-                db.RemoveEvent(id);
-                if (!deleted) {
-                    db.AddEvent(id, event.optLong("date"), event.optString("summary"),
-                            event.optString("details"), event.optString("poster_id"));
-                }
-                ecnt++;
+                db.AddFaculty(faculty.optString("code"), faculty.optString("name"));
+                fcnt++;
             }
         }
 
@@ -141,6 +125,40 @@ public class UpdateService {
                 rcnt = 1;
             }
         }
+
+        if (assignments != null) {
+            for (int i=0; i < assignments.length(); ++i) {
+                JSONObject assignment = assignments.optJSONObject(i);
+                if (assignment == null || !assignment.has("id"))
+                    continue;
+                long id = assignment.optLong("id");
+                boolean deleted = assignment.optBoolean("deleted");
+                db.RemoveAssignment(id);
+                if (!deleted) {
+                    long sub_id = db.GetSubjectId(assignment.optString("subject_code"));
+                    db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
+                            assignment.optString("details"), assignment.optString("poster_id"));
+                }
+                acnt++;
+            }
+        }
+
+        if (events != null) {
+            for (int i=0; i < events.length(); ++i) {
+                JSONObject event = events.optJSONObject(i);
+                if (event == null || !event.has("id"))
+                    continue;
+                long id = event.optLong("id");
+                boolean deleted = event.optBoolean("deleted");
+                db.RemoveEvent(id);
+                if (!deleted) {
+                    db.AddEvent(id, event.optLong("date"), event.optString("summary"),
+                            event.optString("details"), event.optString("poster_id"));
+                }
+                ecnt++;
+            }
+        }
+
 
         long update_time = json.optLong("time");
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
@@ -215,21 +233,21 @@ public class UpdateService {
         Calendar cal = Calendar.getInstance();
         String summary = "Complete the classwork";
         String details = "Interface 8085 with 8255ppi to any ADC. Use your own declarations.";
-        db.AddAssignment(0, cal.getTimeInMillis(), sids[0], summary, details, "069bct509");
+        db.AddAssignment(0, cal.getTimeInMillis()/1000, sids[0], summary, details, "069bct509");
         summary = "Lab 3 details";
         details = "Interface 8085 using booth algorithm.";
-        db.AddAssignment(1, cal.getTimeInMillis(), sids[0], summary, details, "aditya55");
+        db.AddAssignment(1, cal.getTimeInMillis()/1000, sids[0], summary, details, "aditya55");
 
 
         summary = "Computer Graphics Assessment";
         details = "We are having computer graphics assessment from chapter 3";
         cal.set(2015, 1, 20);
-        db.AddEvent(0, cal.getTimeInMillis(), summary, details, "bibekdahal20");
+        db.AddEvent(0, cal.getTimeInMillis()/1000, summary, details, "bibekdahal20");
 
         summary = "COA Assessment";
         details = "We are having COA assessment from chapter 12";
         cal.set(2015, 2, 10);
-        db.AddEvent(1, cal.getTimeInMillis(), summary, details, "069bct509");
+        db.AddEvent(1, cal.getTimeInMillis()/1000, summary, details, "069bct509");
 
     }
 }

@@ -63,7 +63,7 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
         int i = 0;
         for (Assignment as: ass){
             Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(as.date);
+            cal.setTimeInMillis(as.date*1000);
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
             String title = as.summary + "\nSubject: " + as.subject.name
