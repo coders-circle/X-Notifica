@@ -42,6 +42,11 @@ class User {
         $this->name = "";
 	}
 
+    public function GetDB(){
+
+        return $this->db;
+    }
+
 	public function StartSession() {
 		$this -> session -> Start();
 	}
