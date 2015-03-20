@@ -89,5 +89,5 @@ public class EventFragment extends Fragment implements UpdateListener {
         /*
         TODO: Refresh event list as database is just updated
         * */
-    }
+     }
 }

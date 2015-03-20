@@ -1,7 +1,5 @@
 <?php
 
-require_once 'classes/User.php';
-
 header('Content-type: application/json');
 
 $input_data = file_get_contents("php://input");
@@ -20,13 +18,9 @@ $output_array = array();
 if ($input_array["message_type"] == "Update Request") {
 
     $user_id = $input_array["user_id"];
-    $password = $input_arrya["password"]
-    $password = strtolower($password);
-    $client_updated_at = $input_array["updated_at"];
+    $updated_at = $input_array["updated_at"];
 
     $output_array["message_type"] = "Database Update";
-
-    $user = new User;
 
     // Get a list of changed data since $updated_at time from the database
     // Note that $updated_at is integer in seconds
@@ -39,27 +33,10 @@ if ($input_array["message_type"] == "Update Request") {
     //  - assignments
     //  - events
 
-
-    try{
-        $user->LoginTest($user_id, $encrPassword);
-        $db = $user->GetDB();
-        $userType = $user->GetUserType();
-        if($userType == 2){
-        }else if($userType == 1){
-            if($stmt = $db->prepare("SELECT * from faculties WHERE changed_at < ?")){
-                $stmt->bind_param('i', $client_updated_at);
-                $stmt -> execute();
-                $result = $stmt->get_result();
-                $currentIndex = 0;
-                $faculties = array();
-                while ($row = $result->fetch_assoc()){
-                    $faculties[$currentIndex++] = $row;
-                }
-            }
-        }
-    }
-    catch(Exception $e){
-    }
+    $faculties = array();
+    $faculties[0] = array();
+    $faculties[0]["code"] = "BCT";
+    $faculties[0]["name"] = "Bachelor of Computer Engineering";
 
     $teachers = array();
     $teachers[0] = array();
@@ -135,3 +112,4 @@ else {
 
 echo json_encode($output_array);
 ?>
+

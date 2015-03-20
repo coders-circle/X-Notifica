@@ -51,7 +51,6 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UpdateService.AddNewData(this);
         SharedPreferences preferences = MainActivity.GetPreferences(this);
         if (preferences.getBoolean("logged-in", false)
                 && !preferences.getString("user-id", "").equals("")
@@ -59,7 +58,10 @@ public class LoginActivity extends Activity {
                 && !preferences.getString("user-type", "").equals("")) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
+            return;
         }
+
+        // UpdateService.AddNewData(this);
 
         setContentView(R.layout.activity_login);
 
@@ -221,6 +223,8 @@ public class LoginActivity extends Activity {
         private String failureMessage;
         private JSONObject response;
 
+        private UpdateService.UpdateResult updateResult;
+
         UserLoginTask(Context context, String userId, String password) {
             mUserId = userId;
             mPassword = password;
@@ -247,6 +251,21 @@ public class LoginActivity extends Activity {
                 failureMessage = "Couldn't login. Please verify you are connected to internet and try again";
                 return false;
             }
+
+
+            SharedPreferences preferences = MainActivity.GetPreferences(mContext);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("user-id", mUserId);
+            editor.putString("password", mPassword);
+            editor.putString("user-type", response.optString("user_type"));
+            editor.putString("user-name", response.optString("name"));
+            editor.putLong("updated-at", 0);
+            editor.putInt("routine-start", 0);
+            editor.putInt("routine-end", 0);
+            editor.putBoolean("logged-in", true);
+            editor.apply();
+            UpdateService.Update(LoginActivity.this, updateResult);
+
             return true;
         }
 
@@ -256,18 +275,7 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
-                SharedPreferences preferences = MainActivity.GetPreferences(mContext);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("user-id", mUserId);
-                editor.putString("password", mPassword);
-                editor.putString("user-type", response.optString("user_type"));
-                editor.putString("user-name", response.optString("name"));
-                editor.putLong("updated-at", 0);
-                editor.putInt("routine-start", 0);
-                editor.putInt("routine-end", 0);
-                editor.putBoolean("logged-in", true);
-                editor.apply();
-                UpdateService.Update(LoginActivity.this);
+                UpdateService.FinishUpdate(updateResult);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             } else {

@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -36,7 +36,7 @@ public class Database extends SQLiteOpenHelper{
             + "code TEXT, name TEXT, faculty INTEGER);";
     private static final String TEACHERS_TABLE_CREATE = "CREATE TABLE "
             + TEACHERS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "user_id TEXT, name TEXT, contact TEXT);";
+            + "user_id TEXT, name TEXT, contact TEXT, faculty INTEGER);";
     private static final String TS_RELATIONS_TABLE_CREATE = "CREATE TABLE "
             + TS_RELATIONS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "teacher INTEGER, subject INTEGER)";
@@ -81,6 +81,17 @@ public class Database extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    public void DeleteAll() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(ROUTINE_ELEMENTS_TABLE, null, null);
+        db.delete(SUBJECTS_TABLE, null, null);
+        db.delete(TEACHERS_TABLE, null, null);
+        db.delete(TS_RELATIONS_TABLE, null, null);
+        db.delete(EVENTS_TABLE, null, null);
+        db.delete(ASSIGNMENTS_TABLE, null, null);
+        db.delete(FACULTIES_TABLE, null, null);
+    }
+
     public void DeleteRoutine() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ROUTINE_ELEMENTS_TABLE, null, null);
@@ -119,11 +130,12 @@ public class Database extends SQLiteOpenHelper{
         return db.insert(TS_RELATIONS_TABLE, null, c);
     }
 
-    public long AddTeacher(String userid, String name, String contact) {
+    public long AddTeacher(String userid, String name, String contact, long faculty) {
         ContentValues c = new ContentValues();
         c.put("name", name);
         c.put("user_id", userid);
         c.put("contact", contact);
+        c.put("faculty", faculty);
         SQLiteDatabase db = getWritableDatabase();
         return db.insert(TEACHERS_TABLE, null, c);
     }
@@ -323,14 +335,14 @@ public class Database extends SQLiteOpenHelper{
             t = new Teacher();
             t.name = c.getString(c.getColumnIndex("name"));
             t.userId = c.getString(c.getColumnIndex("user_id"));
-            t.subjects = GetSubjectsForTeacher(id);
         }
         c.close();
         return t;
     }
 
-    public Subject[] GetSubjectsForTeacher(long teacherId) {
+    public Subject[] GetSubjectsForTeacher(Teacher teacher) {
         SQLiteDatabase db = getReadableDatabase();
+        long teacherId = GetTeacherId(teacher.userId);
         Cursor c = db.rawQuery("SELECT * FROM " + TS_RELATIONS_TABLE + " WHERE teacher = ?", new String[]{teacherId+""});
         Subject[] sbs = new Subject[c.getCount()];
         c.moveToFirst();
@@ -365,33 +377,50 @@ public class Database extends SQLiteOpenHelper{
         return sbs;
     }
 
+    public Faculty GetFaculty(long facultyId) {
+        SQLiteDatabase db = getReadableDatabase();
+        Faculty f = null;
+        Cursor c = db.rawQuery("SELECT * FROM " + FACULTIES_TABLE + " WHERE id = ?", new String[]{facultyId+""});
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            f = new Faculty();
+            f.code = c.getString(c.getColumnIndex("code"));
+            f.name = c.getString(c.getColumnIndex("name"));
+            Cursor c2 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE faculty = ?", new String[]{c.getLong(c.getColumnIndex("id")) + ""});
+            f.subjects = new Subject[c2.getCount()];
+            c2.moveToFirst();
+            int i = 0;
+            while (!c2.isAfterLast()) {
+                f.subjects[i] = new Subject();
+                f.subjects[i].name = c2.getString(c2.getColumnIndex("name"));
+                f.subjects[i].code = c2.getString(c2.getColumnIndex("code"));
+                i++;
+                c2.moveToNext();
+            }
+            c2.close();
+        }
+        c.close();
+        return f;
+    }
+
     public Faculty GetFaculty(Subject subject) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c1 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE code = ?", new String[]{subject.code});
         c1.moveToFirst();
         Faculty f = null;
-        if (c1.getCount() > 0) {
-            Cursor c = db.rawQuery("SELECT * FROM " + FACULTIES_TABLE + " WHERE id = ?", new String[]{c1.getLong(c1.getColumnIndex("faculty")) + ""});
-            c.moveToFirst();
-            if (c.getCount() > 0) {
-                f = new Faculty();
-                f.code = c.getString(c.getColumnIndex("code"));
-                f.name = c.getString(c.getColumnIndex("name"));
-                Cursor c2 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE faculty = ?", new String[]{c.getLong(c.getColumnIndex("id")) + ""});
-                f.subjects = new Subject[c2.getCount()];
-                c2.moveToFirst();
-                int i = 0;
-                while (!c2.isAfterLast()) {
-                    f.subjects[i] = new Subject();
-                    f.subjects[i].name = c2.getString(c2.getColumnIndex("name"));
-                    f.subjects[i].code = c2.getString(c2.getColumnIndex("code"));
-                    i++;
-                    c2.moveToNext();
-                }
-                c2.close();
-            }
-            c.close();
-        }
+        if (c1.getCount() > 0)
+            f = GetFaculty(c1.getLong(c1.getColumnIndex("faculty")));
+        c1.close();
+        return f;
+    }
+
+    public Faculty GetFaculty(Teacher teacher) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c1 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE user_id = ?", new String[]{teacher.userId});
+        c1.moveToFirst();
+        Faculty f = null;
+        if (c1.getCount() > 0)
+            f = GetFaculty(c1.getLong(c1.getColumnIndex("faculty")));
         c1.close();
         return f;
     }

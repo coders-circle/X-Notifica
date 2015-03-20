@@ -1,5 +1,6 @@
 package com.fabb.notifica;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.client.RedirectException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.List;
 public class RoutineFragment extends Fragment implements UpdateListener {
     DaysCollectionPagerAdapter mDaysCollection;
     ViewPager mViewPager;
+
+    private Activity mActivity;
 
     private static boolean mLoaded = false;
     private static List<List<RoutineElement>> routine = new ArrayList<>();
@@ -60,6 +65,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         strip.setDrawFullUnderline(true);
 
 
+        mActivity = getActivity();
         if (!mLoaded) {
             Database db = new Database(getActivity());
             for (int d = 0; d < 7; ++d) {
@@ -77,6 +83,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
     public void Refresh() {
         mDaysCollection.notifyDataSetChanged();
+        Toast.makeText(mActivity, "Routine Changed", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -84,6 +91,14 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         /*
         TODO: Refresh routine as database is just updated
         * */
+        if (routineCnt > 0) {
+            routine.clear();
+            Database db = new Database(mActivity);
+            for (int d = 0; d < 7; ++d) {
+                routine.add(db.GetRoutine(RoutineElement.Day.values()[d]));
+            }
+        }
+        Refresh();
     }
 
     public static class DayFragment extends Fragment {
@@ -101,8 +116,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
             //c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            String sTime = startTime / 60 + ":" + startTime % 60;
-            String eTime = endTime / 60 + ":" + endTime % 60;
+            String sTime = String.format("%02d", startTime / 60) + ":" + String.format("%02d", startTime % 60);
+            String eTime = String.format("%02d", endTime / 60) + ":" + String.format("%02d", endTime % 60);
 
             //c1.setGravity(Gravity.CENTER);
             c2.setGravity(Gravity.CENTER);
@@ -150,7 +165,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                     public void onClick(View v) {
                         Database db = new Database(getActivity());
                         Toast.makeText(getActivity(),
-                                r.subject.name + "\nTeacher: " + r.teacher.name+"\nFaculty: "+db.GetFaculty(r.subject).name,
+                                r.subject.name + "\nTeacher: " + r.teacher.name,//+"\nFaculty: "+db.GetFaculty(r.subject).name,
                                 Toast.LENGTH_LONG).show();
                     }
                 });
@@ -158,8 +173,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 c2.setTypeface(null, Typeface.BOLD);
-                String sTime = r.startTime / 60 + ":" + r.startTime % 60;
-                String eTime = r.endTime / 60 + ":" + r.endTime % 60;
+                String sTime = String.format("%02d", startTime / 60) + ":" + String.format("%02d", startTime % 60);
+                String eTime = String.format("%02d", endTime / 60) + ":" + String.format("%02d", endTime % 60);
 
                 if (lastTime < r.startTime)
                     AddBreak(table, lastTime, r.startTime);

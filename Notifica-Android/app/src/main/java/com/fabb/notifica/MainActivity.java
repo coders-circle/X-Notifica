@@ -3,6 +3,7 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
@@ -150,11 +151,19 @@ public class MainActivity extends ActionBarActivity {
             LogOut();
             return true;
         }
+        else if (id == R.id.action_update) {
+            new UpdateService.UpdateTask(this).execute();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
+
     public void LogOut() {
+        Database db = new Database(this);
+        db.DeleteAll();
+
         SharedPreferences preferences = GetPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("logged-in", false);

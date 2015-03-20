@@ -2,6 +2,7 @@ package com.fabb.notifica;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,6 +16,7 @@ public class UpdateService {
     public static void AddUpdateListener(UpdateListener listener) {
         updateListeners.add(listener);
     }
+    private final static String updatePhp = "sample_update.php";
 
     public static boolean SendUpdatedInfo(Context ctx) {
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
@@ -25,7 +27,7 @@ public class UpdateService {
             json.put("user_id", preferences.getString("user-id",""));
             json.put("updated_at", preferences.getLong("updated-at", 0));
 
-            network.PostJson("update.php", json);
+            network.PostJson(updatePhp, json);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -33,7 +35,7 @@ public class UpdateService {
         return true;
     }
 
-    public static boolean Update(Context ctx) {
+    public static boolean Update(Context ctx, UpdateResult updateResult) {
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
         JSONObject json = new JSONObject();
         Network network = new Network(ctx);
@@ -42,9 +44,9 @@ public class UpdateService {
             json.put("user_id", preferences.getString("user-id",""));
             json.put("updated_at", preferences.getLong("updated-at", 0));
 
-            String result = network.PostJson("update.php", json);
+            String result = network.PostJson(updatePhp, json);
             JSONObject resJson = new JSONObject(result);
-            UpdateData(ctx, resJson);
+            UpdateData(ctx, resJson, updateResult);
             SendUpdatedInfo(ctx);
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +55,13 @@ public class UpdateService {
         return true;
     }
 
-    public static void UpdateData(Context ctx, JSONObject json) {
+    public static class UpdateResult {
+        int event_count;
+        int assignment_count;
+        int routine_count;
+    }
+
+    public static void UpdateData(Context ctx, JSONObject json, UpdateResult updateResult) {
         if (!json.optString("message_type").equals("Database Update"))
             return;
         Database db = new Database(ctx);
@@ -88,7 +96,7 @@ public class UpdateService {
                 long id = db.GetTeacherId(teacher.optString("user_id"));
                 if (id != -1)
                     db.RemoveTeacher(id);
-                db.AddTeacher(teacher.optString("user_id"), teacher.optString("name"), teacher.optString("contact"));
+                db.AddTeacher(teacher.optString("user_id"), teacher.optString("name"), teacher.optString("contact"), db.GetFacultyId(teacher.optString("faculty_code")));
             }
         }
 
@@ -166,10 +174,35 @@ public class UpdateService {
         editor.putLong("updated-at", update_time);
         editor.apply();
 
+        updateResult.event_count = ecnt;
+        updateResult.assignment_count = acnt;
+        updateResult.routine_count = rcnt;
+    }
+    public static void FinishUpdate(UpdateResult updateResult) {
         for (UpdateListener listener: updateListeners) {
-            listener.OnUpdated(ecnt, acnt, rcnt);
+            listener.OnUpdated(updateResult.event_count, updateResult.assignment_count, updateResult.routine_count);
         }
     }
+
+    public static class UpdateTask extends AsyncTask<Void, Void, Void> {
+        private final Context mContext;
+        private UpdateResult result = new UpdateResult();
+
+        UpdateTask(Context context) {
+            mContext = context;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            Update(mContext, result);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void v) {
+            FinishUpdate(result);
+        }
+    }
+
     // Test Function
     public static void AddNewData(Context ctx) {
         Database db = new Database(ctx);
@@ -178,14 +211,14 @@ public class UpdateService {
         db.DeleteFaculties();
         db.DeleteRoutine();
 
-        long tids[] = new long[3];
-        tids[0] = db.AddTeacher("bibekdahal20", "Prof. Dr. Er. Bibek Dahal", "+977-9843001100");
-        tids[1] = db.AddTeacher("aditya55", "Aditya Khatri", "+977-90102030");
-        tids[2] = db.AddTeacher("ankitmehta111", "Dr. Ankit Mehta", "+977-00112233");
-
         long f1 = db.AddFaculty("Bachelor in Computer Engineering", "BCT");
         long f2 = db.AddFaculty("Bachelor in Electronics and Communication Engineering", "BEX");
         long f3 = db.AddFaculty("Bachelor in Electrical Engineering", "BEL");
+
+        long tids[] = new long[3];
+        tids[0] = db.AddTeacher("bibekdahal20", "Prof. Dr. Er. Bibek Dahal", "+977-9843001100", f1);
+        tids[1] = db.AddTeacher("aditya55", "Aditya Khatri", "+977-90102030", f2);
+        tids[2] = db.AddTeacher("ankitmehta111", "Dr. Ankit Mehta", "+977-00112233", f3);
 
         String s[] = new String[7];
         s[0] = "Computer Organization & Architecture";
