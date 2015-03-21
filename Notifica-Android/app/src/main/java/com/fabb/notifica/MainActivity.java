@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 if (getSupportActionBar() != null)
-                    getSupportActionBar().setTitle("Hello");
+                    getSupportActionBar().setTitle("Notifica");
             }
         };
 
