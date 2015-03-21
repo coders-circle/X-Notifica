@@ -55,15 +55,15 @@ public class MainActivity extends ActionBarActivity {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                if (getSupportActionBar() != null)
-                    getSupportActionBar().setTitle("Notifica");
+                //if (getSupportActionBar() != null)
+                    //getSupportActionBar().setTitle("Notifica");
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if (getSupportActionBar() != null)
-                    getSupportActionBar().setTitle("Notifica");
+                //if (getSupportActionBar() != null)
+                    //getSupportActionBar().setTitle("Notifica");
             }
         };
 
