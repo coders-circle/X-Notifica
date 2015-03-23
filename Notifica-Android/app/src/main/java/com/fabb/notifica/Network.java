@@ -73,6 +73,7 @@ public class Network {
                 result = convertStreamToString(in);
             }
         } catch(Exception e) {
+
             e.printStackTrace();
             result = ERR_CONNECTION;
         }

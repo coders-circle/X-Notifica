@@ -223,7 +223,7 @@ public class LoginActivity extends Activity {
         private String failureMessage;
         private JSONObject response;
 
-        private UpdateService.UpdateResult updateResult;
+        private UpdateService.UpdateResult updateResult = new UpdateService.UpdateResult();
 
         UserLoginTask(Context context, String userId, String password) {
             mUserId = userId;

@@ -3,6 +3,8 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +18,7 @@ public class UpdateService {
     public static void AddUpdateListener(UpdateListener listener) {
         updateListeners.add(listener);
     }
-    private final static String updatePhp = "sample_update.php";
+    private final static String updatePhp = "device_update.php";
 
     public static boolean SendUpdatedInfo(Context ctx) {
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
@@ -25,6 +27,7 @@ public class UpdateService {
         try {
             json.put("message_type", "Updated Info");
             json.put("user_id", preferences.getString("user-id",""));
+            json.put("password", preferences.getString("password", ""));
             json.put("updated_at", preferences.getLong("updated-at", 0));
 
             network.PostJson(updatePhp, json);
@@ -34,21 +37,25 @@ public class UpdateService {
         }
         return true;
     }
-
+    static String result = "";
     public static boolean Update(Context ctx, UpdateResult updateResult) {
+        updateResult.updated = false;
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
         JSONObject json = new JSONObject();
         Network network = new Network(ctx);
+
         try {
             json.put("message_type", "Update Request");
             json.put("user_id", preferences.getString("user-id",""));
+            json.put("password", preferences.getString("password", ""));
             json.put("updated_at", preferences.getLong("updated-at", 0));
 
-            String result = network.PostJson(updatePhp, json);
+            result = network.PostJson(updatePhp, json);
             JSONObject resJson = new JSONObject(result);
             UpdateData(ctx, resJson, updateResult);
             SendUpdatedInfo(ctx);
         } catch (Exception e) {
+            Log.d("Network Result", result);
             e.printStackTrace();
             return false;
         }
@@ -59,6 +66,7 @@ public class UpdateService {
         int event_count;
         int assignment_count;
         int routine_count;
+        boolean updated;
     }
 
     public static void UpdateData(Context ctx, JSONObject json, UpdateResult updateResult) {
@@ -177,8 +185,11 @@ public class UpdateService {
         updateResult.event_count = ecnt;
         updateResult.assignment_count = acnt;
         updateResult.routine_count = rcnt;
+        updateResult.updated = true;
     }
     public static void FinishUpdate(UpdateResult updateResult) {
+        if (!updateResult.updated)
+            return;
         for (UpdateListener listener: updateListeners) {
             listener.OnUpdated(updateResult.event_count, updateResult.assignment_count, updateResult.routine_count);
         }
@@ -200,6 +211,7 @@ public class UpdateService {
         @Override
         protected void onPostExecute(final Void v) {
             FinishUpdate(result);
+            Toast.makeText(mContext, UpdateService.result, Toast.LENGTH_LONG).show();
         }
     }
 

@@ -7,6 +7,75 @@ header('Content-type: application/json');
 $input_data = file_get_contents("php://input");
 $input_array = json_decode($input_data, true);
 
+function GetUserId($db, $id) {
+    $username = "";
+    if($stmt = $db->prepare("SELECT username from users WHERE id = ?")){
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($username);
+        
+        $stmt->fetch();
+        $stmt->free_result();
+        $stmt->close();
+    }
+    return $username;
+}
+
+function GetTeacherUserId($db, $id) {
+    // Since currently same id is stored in users and teachers table:
+    return GetUserId($db, $id);
+}
+
+function GetSubjectCode($db, $id) {
+    $code = "";
+    if($stmt = $db->prepare("SELECT code from subjects WHERE id = ?")){
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($code);
+        
+        $stmt->fetch();
+        $stmt->free_result();
+        $stmt->close();
+    }
+    return $code;
+}
+
+function GetFacultyCode($db, $id) {
+    $code = "";
+    if($stmt = $db->prepare("SELECT code from faculties WHERE id = ?")){
+        $stmt->bind_param('i', $id);;
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($code);
+        
+        $stmt->fetch();
+        $stmt->free_result();
+        $stmt->close();
+    }
+    return $code;
+}
+function GetRoutineElements($db, $id) {
+    $elements = array();
+    if($stmt = $db->prepare("SELECT * from routine_elements WHERE id = ?")){
+        $stmt->bind_param('i', $id);
+        $stmt -> execute();
+        $result = $stmt->get_result();
+        $currentIndex = 0;
+        while ($row = $result->fetch_assoc()){
+            $element = array();
+            $element["start_time"] = $row["start_time"];
+            $element["end_time"] = $row["end_time"];
+            $element["day"] = $row["day"];
+            $element["teacher_user_id"] = GetTeacherUserId($db, $row["teacher_id"]);
+            $element["subject_code"] = GetSubjectCode($db, $row["subject_id"]);
+            $elements[$currentIndex++] = $element;
+        }
+        $stmt->close();
+    }
+    return $elements;
+}
 /*
 We get two types of messages:
 1. Update Request
@@ -41,152 +110,133 @@ if ($input_array["message_type"] == "Update Request") {
 
 
     try{
-        $user->LoginTest($user_id, $encrPassword);
+        $user->LoginTest($user_id, $password);
         $db = $user->GetDB();
         $userType = $user->GetUserType();
         if($userType == 2){
         }else if($userType == 1){
-            if($stmt = $db->prepare("SELECT * from faculties WHERE changed_at > ?")){
+            
+            if($stmt = $db->prepare("SELECT * from faculties WHERE UNIX_TIMESTAMP(changed_at) > ?")){
                 $stmt->bind_param('i', $client_updated_at);
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
                 $faculties = array();
                 while ($row = $result->fetch_assoc()){
-                    $faculties[$currentIndex++] = $row;
+                    $faculty = array();
+                    $faculty["code"] = $row["code"];
+                    $faculty["name"] = $row["name"];
+                    $faculties[$currentIndex++] = $faculty;
                 }
+                if ($currentIndex > 0)
+                    $output_array["faculties"] = $faculties;
                 $stmt->close();
             }
-            if($stmt = $db->prepare("SELECT * from subjects WHERE changed_at > ?")){
+            if($stmt = $db->prepare("SELECT * from subjects WHERE UNIX_TIMESTAMP(changed_at) > ?")){
                 $stmt->bind_param('i', $client_updated_at);
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
-                $faculties = array();
+                $subjects = array();
                 while ($row = $result->fetch_assoc()){
-                    $subjects[$currentIndex] = new array();
-                    $subjects[$currentIndex]["code"] = $row["code"];
-                    $subjects[$currentIndex]["name"] = $row["name"];
-                    ++currentIndex;
+                    $subject = array();
+                    $subject["code"] = $row["code"];
+                    $subject["name"] = $row["name"];
+                    $subject["faculty_code"] = GetFacultyCode($db, $row["faculty_id"]);
+                    $subjects[$currentIndex++] = $subject;
                 }
+                if ($currentIndex > 0)
+                    $output_array["subjects"] = $subjects;
                 $stmt->close();
             }
-            if($stmt = $db->prepare("SELECT * from teachers WHERE changed_at > ?")){
+            if($stmt = $db->prepare("SELECT * from teachers WHERE UNIX_TIMESTAMP(changed_at) > ?")){
                 $stmt->bind_param('i', $client_updated_at);
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
-                $faculties = array();
+                $teachers = array();
                 while ($row = $result->fetch_assoc()){
-                    $teachers[$currentIndex] = new array();
-                    $teachers[$currentIndex]["user_id"] = $row["user_id"]
-                    $teachers[$currentIndex]["name"] = $row["name"];
-                    $teachers[$currentIndex]["contact"] = $row["contact"];
-                    ++$currentIndex;
+                    $teacher = array();
+                    $teacher["name"] = $row["name"];
+                    $teacher["user_id"] = $row["user_id"];
+                    $teacher["contact"] = $row["contact_number"];
+                    $teacher["faculty_code"] = GetFacultyCode($db, $row["faculty_id"]);
+                    $teachers[$currentIndex++] = $teacher;
                 }
+                if ($currentIndex > 0)
+                    $output_array["teachers"] = $subjects;
                 $stmt->close();
             }
-            if($stmt = $db->prepare("SELECT * from routine WHERE changed_at > ?")){
-                $stmt->bind_param('i', $client_updated_at);
+            if($stmt = $db->prepare("SELECT * from routines WHERE UNIX_TIMESTAMP(changed_at) > ? AND faculty_id = ? AND year = ?")){
+                $stmt->bind_param('iii', $client_updated_at, $user->GetFacultyID(), $user->GetStudentBatch());
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
-                $faculties = array();
-                while ($row = $result->fetch_assoc()){
-                    $routine[$currentIndex++] = $row;
+                if ($row = $result->fetch_assoc()){
+                    $routine = array();
+                    $routine["start_time"] = $row["start_time"];
+                    $routine["end_time"] = $row["end_time"];
+                    $routine["elements"] = GetRoutineElements($db, $row["id"]);
+                    $output_array["routine"] = $routine;
                 }
                 $stmt->close();
             }
-            if($stmt = $db->prepare("SELECT * from assignments WHERE faculty_id = ? AND year = ? AND changed_at > ?")){
-                $stmt->bind_param('iii', $year, $facultyid, $client_updated_at);
+            if($stmt = $db->prepare("SELECT * from assignments WHERE UNIX_TIMESTAMP(changed_at) > ? AND (faculty_id = -1 OR faculty_id = ?) AND (year = -1 OR year = ?)")){
+                $stmt->bind_param('iii', $client_updated_at, $user->GetFacultyID(), $user->GetStudentBatch());
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
-                $faculties = array();
+                $assignments = array();
                 while ($row = $result->fetch_assoc()){
-                    $assignments[$currentIndex++] = $row;
+                    if ($row["groups"] != "") {
+                        if (strpos($row["groups"], $user->GetSubjectGroup()) == false)
+                            continue;
+                    }
+                    $assignment = array();
+                    $assignment["id"] = $row["id"];
+                    $assignment["subject_code"] = GetSubjectCode($db, $row["subject_id"]);
+                    $assignment["poster_id"] = GetUserId($row["poster_id"]);
+                    $assignment["date"] = $row["submission_date"];
+                    $assignment["summary"] = $row["summary"];
+                    $assignment["details"] = $row["details"];
+                    $assignments[$currentIndex++] = $assignment;
                 }
+                if ($currentIndex > 0)
+                    $output_array["assignments"] = $assignments;
                 $stmt->close();
             }
-            if($stmt = $db->prepare("SELECT * from events WHERE changed_at > ?")){
-                $stmt->bind_param('i', $client_updated_at);
+            if($stmt = $db->prepare("SELECT * from events WHERE UNIX_TIMESTAMP(changed_at) > ? AND (faculty_id = -1 OR faculty_id = ?) AND (year = -1 OR year = ?)")){
+                $stmt->bind_param('iii', $client_updated_at, $user->GetFacultyID(), $user->GetStudentBatch());
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
-                $faculties = array();
+                $events = array();
                 while ($row = $result->fetch_assoc()){
-                    $events[$currentIndex++] = $row;
+                    if ($row["groups"] != "") {
+                        if (strpos($row["groups"], $user->GetSubjectGroup()) == false)
+                            continue;
+                    }
+                    $event = array();
+                    $event["id"] = $row["id"];
+                    $event["poster_id"] = GetUserId($db, $row["poster_id"]);
+                    $event["date"] = strtotime($row["event_date"]);
+                    $event["summary"] = $row["summary"];
+                    $event["details"] = $row["details"];
+                    $events[$currentIndex++] = $event;
                 }
+                if ($currentIndex > 0)
+                    $output_array["events"] = $events;
                 $stmt->close();
             }
-
-
-
         }
+        // Finally the latest time of update that the client will record; this time is later returned in "Updated Info" message
+        $tm = time();
+        $output_array["time"] = $tm;
+
     }
     catch(Exception $e){
+        $output_array["error"] = $e->__toString();
     }
-
-    $teachers = array();
-    $teachers[0] = array();
-    $teachers[0]["user_id"] = "bibek_khtramanxe";
-    $teachers[0]["name"] = "Bibek Dahal";
-    $teachers[0]["contact"] = "+977-98666333";
-
-    $subjects = array();
-    $subjects[0] = array();
-    $subjects[0]["code"] = "CT234";
-    $subjects[0]["name"] = "Software Engineering";
-    $subjects[1] = array();
-    $subjects[1]["code"] = "EX456";
-    $subjects[1]["name"] = "Computer Graphics";
-
-    if (true /*replace this condition by testing if routine of user_id has changed */){
-        $routine = array();
-        $routine["start_time"] = 10*60+15; // 10:15
-        $routine["end_time"] = 17*60+0;    // 17:00
-
-        // Get each routine element and store in $elements
-        $elements = array();
-        $elements[0] = array();
-        $elements[0]["subject_code"] = "CT234";
-        $elements[0]["teacher_user_id"] = "bibek_khtramanxe";
-        $elements[0]["day"] = 1;              // Monday
-        $elements[0]["start_time"] = 11*60+5; // 11:05
-        $elements[0]["end_time"] = 11*60+55;  // 11:55
-        //...
-
-        $routine["elements"] = $elements;
-    }
-
-    $assignments = array();
-    $assignments[0] = array();
-    $assignments[0]["id"] = 2; // NOTE: This id is directly fetched from the SQL database and is synchronized with SQL database in client
-    $assignments[0]["date"] = 1233456;  // Time in "SECONDS";
-    $assignments[0]["subject_code"] = "EX456";
-    $assignments[0]["summary"] = "Summary";
-    $assignments[0]["details"] = "Details";
-
-    $events = array();
-    $events[0] = array();
-    $events[0]["id"] = 5; // NOTE: This id is directly fetched from the SQL database and is synchronized with SQL database in client
-    $events[0]["date"] = 1233456;  // Time in "SECONDS";
-    $events[0]["summary"] = "Summary";
-    $events[0]["details"] = "Details";
-
-
-    // Finally the latest time of update that the client will record; this time is later returned in "Updated Info" message
-    $tm = time();
-
-    // Now form the json
-    $output_array["faculties"] = $faculties;
-    $output_array["teachers"] = $teachers;
-    $output_array["subjects"] = $subjects;
-    $output_array["routine"] = $routine;
-    $output_array["assignments"] = $assignments;
-    $output_array["events"] = $events;
-//    $output_array["routine"] = $routine;
-    $output_array["time"] = $tm;
 }
 elseif ($input_array["message_type"] == "Updated Info") {
     $user_id = $input_array["user_id"];

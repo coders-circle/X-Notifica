@@ -114,6 +114,8 @@ public class Database extends SQLiteOpenHelper{
         db.delete(TS_RELATIONS_TABLE, null, null);
     }
     public long AddSubject(String code, String name, long faculty) {
+        if (GetSubjectId(code) != -1)
+            return -1;
         ContentValues c = new ContentValues();
         c.put("code", code);
         c.put("name", name);
@@ -131,6 +133,8 @@ public class Database extends SQLiteOpenHelper{
     }
 
     public long AddTeacher(String userid, String name, String contact, long faculty) {
+        if (GetTeacherId(userid) != -1)
+            return -1;
         ContentValues c = new ContentValues();
         c.put("name", name);
         c.put("user_id", userid);
@@ -145,6 +149,8 @@ public class Database extends SQLiteOpenHelper{
         db.delete(FACULTIES_TABLE, null, null);
     }
     public long AddFaculty(String name, String code) {
+        if (GetFacultyId(code) != -1)
+            return -1;
         ContentValues c = new ContentValues();
         c.put("code", code);
         c.put("name", name);

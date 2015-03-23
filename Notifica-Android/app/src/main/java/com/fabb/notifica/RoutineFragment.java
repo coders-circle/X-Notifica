@@ -83,7 +83,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
     public void Refresh() {
         mDaysCollection.notifyDataSetChanged();
-        Toast.makeText(mActivity, "Routine Changed", Toast.LENGTH_LONG).show();
+        Toast.makeText(mActivity, "Routine Changed", Toast.LENGTH_SHORT).show();
     }
 
     @Override
