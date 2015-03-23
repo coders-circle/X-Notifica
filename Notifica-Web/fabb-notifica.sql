@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 23, 2015 at 07:12 PM
+-- Generation Time: Mar 23, 2015 at 11:19 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.7
 
@@ -30,6 +30,7 @@ DROP TABLE IF EXISTS `assignments`;
 CREATE TABLE IF NOT EXISTS `assignments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `faculty_id` int(11) NOT NULL,
+  `subject_id` int(11) NOT NULL,
   `year` int(11) NOT NULL DEFAULT '-1',
   `groups` varchar(20) NOT NULL DEFAULT '',
   `summary` text NOT NULL,
@@ -39,7 +40,15 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `assignments`
+--
+
+INSERT INTO `assignments` (`id`, `faculty_id`, `subject_id`, `year`, `groups`, `summary`, `details`, `submission_date`, `poster_id`, `deleted`, `changed_at`) VALUES
+(1, 500, 1, 2069, '', 'test123', 'test345', '2015-03-24', 1010, 0, '2015-03-25 17:17:26'),
+(2, 400, 1, -1, '', 'test2', 'test2', '2015-03-23', 1010, 0, '2015-03-23 17:06:41');
 
 -- --------------------------------------------------------
 
@@ -83,14 +92,16 @@ CREATE TABLE IF NOT EXISTS `events` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `events`
 --
 
 INSERT INTO `events` (`id`, `faculty_id`, `year`, `groups`, `summary`, `details`, `event_date`, `poster_id`, `deleted`, `changed_at`) VALUES
-(1, 500, -1, '', 'HELLO', 'WORLD', '2015-03-24', 1, 0, '2015-03-24 13:18:29');
+(1, 500, -1, '', 'HELLO', 'WORLD', '2015-03-24', 1, 0, '2015-03-24 13:18:29'),
+(2, -1, -1, 'AB', 'abcd', 'wert', '2016-04-24', 1010, 0, '2015-03-23 16:34:37'),
+(3, 500, 2069, '', 'zxcvcx', 'test', '2015-03-23', 1010, 0, '2015-03-26 16:37:35');
 
 -- --------------------------------------------------------
 
@@ -196,7 +207,14 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   `faculty_id` int(11) NOT NULL,
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `subjects`
+--
+
+INSERT INTO `subjects` (`id`, `code`, `name`, `faculty_id`, `changed_at`) VALUES
+(1, 'CT111', 'TEST SUBJECT', 500, '2015-03-23 16:54:52');
 
 -- --------------------------------------------------------
 

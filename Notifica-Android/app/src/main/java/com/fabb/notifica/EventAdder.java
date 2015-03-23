@@ -1,5 +1,8 @@
 package com.fabb.notifica;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +24,7 @@ import java.util.Date;
 
 
 public class EventAdder extends ActionBarActivity {
+    private static final String postPhp = "sample_post.php";
     Spinner mFacultyList;
     Spinner mSubjectList;
     EditText mSummaryEdit;
@@ -53,6 +59,7 @@ public class EventAdder extends ActionBarActivity {
         Database db = new Database(this);
         faculties = db.GetFaculties();
         ArrayList<String> faculty_names = new ArrayList<>();
+        faculty_names.add("None");
         for (Faculty f: faculties) {
             faculty_names.add(f.name);
         }
@@ -82,8 +89,12 @@ public class EventAdder extends ActionBarActivity {
     public void onPostClicked(View view) {
         String summary = mSummaryEdit.getText().toString();
         String details = mDetailsEdit.getText().toString();
-        String faculty_code = faculties.get((int)mFacultyList.getSelectedItemId()).code;
-        int year = Integer.parseInt(mYearEdit.getText().toString());
+        String faculty_code = "";
+        if (mFacultyList.getSelectedItemId() > 0)
+            faculty_code = faculties.get((int)mFacultyList.getSelectedItemId()-1).code;
+        int year = 0;
+        if (!mYearEdit.getText().toString().equals(""))
+            year = Integer.parseInt(mYearEdit.getText().toString());
         String groups = mGroupsEdit.getText().toString();
         long date = 0;
 
@@ -91,10 +102,58 @@ public class EventAdder extends ActionBarActivity {
         cal.set(mDateEdit.getYear(), mDateEdit.getMonth(), mDateEdit.getDayOfMonth());
         date = cal.getTimeInMillis()/1000;
 
-        if (parentActivity.equals("Assignments")) {
-            String subject_code = subjects.get((int)mSubjectList.getSelectedItemId()).code;
+
+        SharedPreferences preferences = MainActivity.GetPreferences(this);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("message_type", "Post Event");
+            json.put("user_id", preferences.getString("user-id",""));
+            json.put("password", preferences.getString("password", ""));
+            json.put("summary", summary);
+            json.put("details", details);
+            json.put("date", date);
+            json.put("year", year);
+            json.put("groups", groups);
+            json.put("faculty_code", faculty_code);
+
+            if (parentActivity.equals("Assignments")) {
+                if (mSubjectList.getSelectedItemId() >= 0) {
+                    String subject_code = subjects.get((int) mSubjectList.getSelectedItemId()).code;
+                    json.put("subject_code", subject_code);
+                }
+                else
+                    return;
+
+                json.put("message_type", "Post Assignment");
+            }
+
+            new PostTask(this, json).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Toast.makeText(this, "Posting data: \n" + summary + "\n" + details + "\n"
-                +faculty_code + "\n" + date + "\n" + year + "\n" + groups, Toast.LENGTH_SHORT).show();
+
+    }
+
+    public static class PostTask extends AsyncTask<Void, Void, Void> {
+        private final EventAdder mActivity;
+        JSONObject mJson;
+        String result="";
+
+        PostTask(EventAdder activity, JSONObject json) {
+            mActivity = activity;
+            mJson=json;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            Network network = new Network(mActivity);
+            result = network.PostJson(postPhp, mJson);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void v) {
+            Toast.makeText(mActivity, "Posted Successfully\n"+result, Toast.LENGTH_SHORT).show();
+            mActivity.finish();
+        }
     }
 }

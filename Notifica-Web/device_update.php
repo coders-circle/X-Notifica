@@ -1,81 +1,14 @@
 <?php
 
 require_once 'classes/User.php';
+require_once 'Helpers.php';
 
 header('Content-type: application/json');
 
 $input_data = file_get_contents("php://input");
 $input_array = json_decode($input_data, true);
 
-function GetUserId($db, $id) {
-    $username = "";
-    if($stmt = $db->prepare("SELECT username from users WHERE id = ?")){
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($username);
-        
-        $stmt->fetch();
-        $stmt->free_result();
-        $stmt->close();
-    }
-    return $username;
-}
 
-function GetTeacherUserId($db, $id) {
-    // Since currently same id is stored in users and teachers table:
-    return GetUserId($db, $id);
-}
-
-function GetSubjectCode($db, $id) {
-    $code = "";
-    if($stmt = $db->prepare("SELECT code from subjects WHERE id = ?")){
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($code);
-        
-        $stmt->fetch();
-        $stmt->free_result();
-        $stmt->close();
-    }
-    return $code;
-}
-
-function GetFacultyCode($db, $id) {
-    $code = "";
-    if($stmt = $db->prepare("SELECT code from faculties WHERE id = ?")){
-        $stmt->bind_param('i', $id);;
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($code);
-        
-        $stmt->fetch();
-        $stmt->free_result();
-        $stmt->close();
-    }
-    return $code;
-}
-function GetRoutineElements($db, $id) {
-    $elements = array();
-    if($stmt = $db->prepare("SELECT * from routine_elements WHERE id = ?")){
-        $stmt->bind_param('i', $id);
-        $stmt -> execute();
-        $result = $stmt->get_result();
-        $currentIndex = 0;
-        while ($row = $result->fetch_assoc()){
-            $element = array();
-            $element["start_time"] = $row["start_time"];
-            $element["end_time"] = $row["end_time"];
-            $element["day"] = $row["day"];
-            $element["teacher_user_id"] = GetTeacherUserId($db, $row["teacher_id"]);
-            $element["subject_code"] = GetSubjectCode($db, $row["subject_id"]);
-            $elements[$currentIndex++] = $element;
-        }
-        $stmt->close();
-    }
-    return $elements;
-}
 /*
 We get two types of messages:
 1. Update Request
@@ -189,14 +122,14 @@ if ($input_array["message_type"] == "Update Request") {
                 $assignments = array();
                 while ($row = $result->fetch_assoc()){
                     if ($row["groups"] != "") {
-                        if (strpos($row["groups"], $user->GetSubjectGroup()) == false)
+                        if (strpos($row["groups"], $user->GetStudentGroup()) == false)
                             continue;
                     }
                     $assignment = array();
                     $assignment["id"] = $row["id"];
                     $assignment["subject_code"] = GetSubjectCode($db, $row["subject_id"]);
-                    $assignment["poster_id"] = GetUserId($row["poster_id"]);
-                    $assignment["date"] = $row["submission_date"];
+                    $assignment["poster_id"] = GetUserId($db, $row["poster_id"]);
+                    $assignment["date"] = strtotime($row["submission_date"]);
                     $assignment["summary"] = $row["summary"];
                     $assignment["details"] = $row["details"];
                     $assignments[$currentIndex++] = $assignment;
@@ -213,7 +146,7 @@ if ($input_array["message_type"] == "Update Request") {
                 $events = array();
                 while ($row = $result->fetch_assoc()){
                     if ($row["groups"] != "") {
-                        if (strpos($row["groups"], $user->GetSubjectGroup()) == false)
+                        if (strpos($row["groups"], $user->GetStudentGroup()) == false)
                             continue;
                     }
                     $event = array();
@@ -235,7 +168,8 @@ if ($input_array["message_type"] == "Update Request") {
 
     }
     catch(Exception $e){
-        $output_array["error"] = $e->__toString();
+        $output_array["update_result"] = "Failure";
+        $output_array["failure_message"] = $e->getMessage();
     }
 }
 elseif ($input_array["message_type"] == "Updated Info") {
