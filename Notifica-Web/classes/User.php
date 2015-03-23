@@ -32,6 +32,8 @@ class User {
 	protected $username;
     protected $facultyid;
     protected $name;
+    protected $year;
+    protected $roll;
 
 	public function __construct() {
 		$this -> session = new Session;
@@ -43,7 +45,6 @@ class User {
 	}
 
     public function GetDB(){
-
         return $this->db;
     }
 
@@ -52,9 +53,10 @@ class User {
 	}
 
 	public function DeleteUser($userid){
-        if($this -> db -> query("DELETE FROM users WHERE id = '$userid'") == FALSE){
+
+        //if($this -> db -> query("DELETE FROM users WHERE id = '$userid'") == FALSE){
             // failed to delete :/
-        }
+        //}
 	}
 
 	public function Logout(){
@@ -96,14 +98,14 @@ class User {
                     }else if($this->userType == 2){
                         $stmt = $this->db->prepare("SELECT name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
                     }else{
-                        $stmt = $this->db->prepare("SELECT name, faculty_id FROM students WHERE id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT name, faculty_id, roll, year FROM students WHERE id = ? LIMIT 1");
                     }
 
                     if($stmt != null){
                         $stmt->bind_param('i', $this->userid);
                         $stmt->execute();
                         $stmt->store_result();
-                        $stmt->bind_result($this->name, $this->facultyid);
+                        $stmt->bind_result($this->name, $this->facultyid, $this->roll, $this->year);
 
                         $stmt->fetch();
                         $stmt->free_result();
@@ -269,7 +271,13 @@ class User {
         $this->AddUser($id, $username, $newpass, $usertype);
     }
     function GetFacultyID(){
-
+        return $this->facultyid;
+    }
+    function GetStudentRoll(){
+        return $this->roll;
+    }
+    function GetStudentBatch(){
+        return $this->year;
     }
     function AddStudent($studentname, $roll, $batch){
         if($this->LoggedIn() == false && $this->GetUserType() != 3){

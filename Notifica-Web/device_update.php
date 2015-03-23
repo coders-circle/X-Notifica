@@ -64,7 +64,10 @@ if ($input_array["message_type"] == "Update Request") {
                 $currentIndex = 0;
                 $faculties = array();
                 while ($row = $result->fetch_assoc()){
-                    $subjects[$currentIndex++] = $row;
+                    $subjects[$currentIndex] = new array();
+                    $subjects[$currentIndex]["code"] = $row["code"];
+                    $subjects[$currentIndex]["name"] = $row["name"];
+                    ++currentIndex;
                 }
                 $stmt->close();
             }
@@ -75,7 +78,11 @@ if ($input_array["message_type"] == "Update Request") {
                 $currentIndex = 0;
                 $faculties = array();
                 while ($row = $result->fetch_assoc()){
-                    $teachers[$currentIndex++] = $row;
+                    $teachers[$currentIndex] = new array();
+                    $teachers[$currentIndex]["user_id"] = $row["user_id"]
+                    $teachers[$currentIndex]["name"] = $row["name"];
+                    $teachers[$currentIndex]["contact"] = $row["contact"];
+                    ++$currentIndex;
                 }
                 $stmt->close();
             }
@@ -90,8 +97,8 @@ if ($input_array["message_type"] == "Update Request") {
                 }
                 $stmt->close();
             }
-            if($stmt = $db->prepare("SELECT * from assignments WHERE changed_at > ?")){
-                $stmt->bind_param('i', $client_updated_at);
+            if($stmt = $db->prepare("SELECT * from assignments WHERE faculty_id = ? AND year = ? AND changed_at > ?")){
+                $stmt->bind_param('iii', $year, $facultyid, $client_updated_at);
                 $stmt -> execute();
                 $result = $stmt->get_result();
                 $currentIndex = 0;
