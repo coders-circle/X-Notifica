@@ -32,8 +32,11 @@ class User {
 	protected $username;
     protected $facultyid;
     protected $name;
+
     protected $year;
     protected $roll;
+    protected $group;
+    protected $privilaged;
 
 	public function __construct() {
 		$this -> session = new Session;
@@ -98,14 +101,14 @@ class User {
                     }else if($this->userType == 2){
                         $stmt = $this->db->prepare("SELECT name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
                     }else{
-                        $stmt = $this->db->prepare("SELECT name, faculty_id, roll, year FROM students WHERE id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT name, faculty_id, roll, year, group, privilage_level FROM students WHERE id = ? LIMIT 1");
                     }
 
                     if($stmt != null){
                         $stmt->bind_param('i', $this->userid);
                         $stmt->execute();
                         $stmt->store_result();
-                        $stmt->bind_result($this->name, $this->facultyid, $this->roll, $this->year);
+                        $stmt->bind_result($this->name, $this->facultyid, $this->roll, $this->year, $this->group, $this->privilaged);
 
                         $stmt->fetch();
                         $stmt->free_result();
@@ -265,10 +268,10 @@ class User {
 			return false;
 		}
 	}
-    function AddUserRaw($id, $username, $password, $usertype)
+    function AddUserRaw($username, $password, $usertype)
     {
         $newpass = hash('sha512', $password);
-        $this->AddUser($id, $username, $newpass, $usertype);
+        $this->AddUser($username, $newpass, $usertype);
     }
     function GetFacultyID(){
         return $this->facultyid;
@@ -279,6 +282,12 @@ class User {
     function GetStudentBatch(){
         return $this->year;
     }
+    function GetStudentGroup(){
+        return $this->group;
+    }
+    function GetStudentPrivilage(){
+        return $this->privilaged;
+    }
     function AddStudent($studentname, $roll, $batch){
         if($this->LoggedIn() == false && $this->GetUserType() != 3){
             throw new PermissionDeniedException;
@@ -288,61 +297,44 @@ class User {
         $group = "A";
 
         $mysqli = $this->db;
-        if ($insert_stmt = $mysqli->prepare("INSERT INTO students (name, roll, faculty_id, year, group_id) VALUES (?, ?, ?, ?, ?)")) {
-            $insert_stmt->bind_param('siiis', $studentname, $roll, $faculty_id, $batch, $group);
+
+        $yearstr = strval($batch);
+        $yearstr = substr($yearstr, -3);
+        $stmt = $this->db->prepare("SELECT code FROM faculties WHERE id = ? LIMIT 1");
+        if($stmt == null){throw new Exception($this->db->error);}
+        $stmt->bind_param('i', $faculty_id);
+        $stmt->execute();
+        $stmt->store_result();
+        $dep_code = null;
+        if ($stmt->num_rows == 1) {
+            $stmt -> bind_result($dep_code);
+            $stmt -> fetch();
+        }else {throw new Exception("Unable to fetch Department Code");}
+
+        $username = $yearstr.$dep_code.strval($roll);
+        $this->AddUserRaw($username, $username, 1);    // 1 = student
+        $user_id = $this->db->insert_id;
+
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO students (user_id, name, roll, faculty_id, year, group_id) VALUES (?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('isiiis', $user_id, $studentname, $roll, $faculty_id, $batch, $group);
             if (! $insert_stmt->execute()) {
                 throw new Exception('Failed to execute the query');
             }
-            $userid = $this->db->insert_id;
-            $insert_stmt->close();
-
-            $yearstr = strval($batch);
-            $yearstr = substr($yearstr, -3);
-
-            $stmt = $this->db->prepare("SELECT code FROM faculties WHERE id = ? LIMIT 1");
-            if($stmt == null){throw new Exception($this->db->error);}
-
-            $stmt->bind_param('i', $faculty_id);
-            $stmt->execute();
-            $stmt->store_result();
-            $dep_code = null;
-            if ($stmt->num_rows == 1) {
-                $stmt -> bind_result($dep_code);
-                $stmt -> fetch();
-            }else {throw new Exception("zZz");}
-
-            $username = $yearstr.$dep_code.strval($roll);
-            $this->AddUserRaw($userid, $username, $username, 1);
-            //$this->AddUserRaw()
+        }
+    }
+    function AddTeacher($teachername, $teacherun, $contact){
+        $this->AddUserRaw($teacherun, $teacherun, 2);    // 2 = teacher
+        $user_id = $this->db->insert_id;
+        $mysqli = $this->db;
+        $faculty_id = $this->facultyid;
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO teachers (user_id, name, faculty_id, contact_number) VALUES (?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('isis', $user_id, $teachername, $faculty_id, $contact);
+            if (! $insert_stmt->execute()) {
+                throw new Exception('Failed to execute the query');
+            }
         }
     }
     function GetName(){
-        /*
-        $stmt = null;
-        if($this->userType == 3){    // Central Authority
-            $stmt = $this->db->prepare("SELECT name FROM central_authorities WHERE id = ? LIMIT 1");
-        }else if($this->userType == 2){
-            $stmt = $this->db->prepare("SELECT name FROM teachers WHERE id = ? LIMIT 1");
-        }else if($this->userType == 1){
-            $stmt = $this->db->prepare("SELECT name FROM students WHERE id = ? LIMIT 1");
-        }else{
-            //throw Exception("zZz");
-        }
-        if($stmt == null){throw new Exception("zZz");}
-        $stmt->bind_param('i', $this->userid);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows == 1) {
-            $name = null;
-            $stmt -> bind_result($name);
-            $stmt -> fetch();
-            $piece = explode(" ", $name);
-            return $piece[0];
-        }else{
-            //throw Exception("zZz");
-        }
-        return null;
-        */
         $piece = explode(" ", $this->name);
         return $piece[0];
     }
@@ -355,7 +347,7 @@ class User {
             return $stmt->get_result();
         }
     }
-	function AddUser($id, $username, $password, $usertype)
+	function AddUser($username, $password, $usertype)
 	{
         if($this->LoggedIn() == false && $this->GetUserType() != 3)
         {
@@ -366,14 +358,14 @@ class User {
 		if (strlen($password) != 128) {
 			 throw new Exception('Invalid password configuration');
 		}
-		$stmt = $mysqli->prepare("SELECT * FROM users WHERE username = ? OR id = ? LIMIT 1");
+		$stmt = $mysqli->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
 		if ($stmt) {
-			$stmt->bind_param('si', $username, $id);
+			$stmt->bind_param('s', $username);
 			$stmt->execute();
 			$stmt->store_result();
 			if ($stmt->num_rows == 1) {
 				$stmt->close();
-				throw new Exception('A user with this Username or ID already exists.');
+				throw new Exception('A user with this Username already exists.');
 			}
 			$stmt->close();
 		} else {
@@ -382,12 +374,12 @@ class User {
 		}
 		$random_salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
 		$password = hash('sha512', $password . $random_salt);
-		if ($insert_stmt = $mysqli->prepare("INSERT INTO users (id, username, password, salt, usertype) VALUES (?, ?, ?, ?, ?)")) {
-			$insert_stmt->bind_param('isssi', $id, $username, $password, $random_salt, $usertype);
+		if ($insert_stmt = $mysqli->prepare("INSERT INTO users (username, password, salt, usertype) VALUES (?, ?, ?, ?)")) {
+			$insert_stmt->bind_param('sssi', $username, $password, $random_salt, $usertype);
 			if (! $insert_stmt->execute()) {
 				throw new Exception('Failed to execute the query');
 			}
-		}
+		}else{throw new Exception("Failed to prepare user insert statement");}
 	}
 }
 ?>

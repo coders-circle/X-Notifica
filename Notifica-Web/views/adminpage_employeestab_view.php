@@ -23,11 +23,10 @@
             </div>
             <div class="col-md-5">
                 <h1 class="page-header">Quick Add</h1>
-                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=employee" method="post" name="registration_form" role="form">
+                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=employees" method="post" name="registration_form" role="form">
                     <input type='text' class="form-control" placeholder="Name" name='employeename' id='employeename' required >
-                    <input type='text' class="form-control" placeholder="Faculty" name='faculty' id='faculty' required>
-                    <input type="number" class="form-control" placeholder="Contact No." name="contact" id="contact" required>
-
+                    <input type='text' class="form-control" placeholder="Username" name='employeeun' id='employeeun' required >
+                    <input type="text" class="form-control" placeholder="Contact No." name="contact" id="contact" required>
                     <input type="submit" class="btn btn-lg btn-primary btn-block" value="Add Employee"/>
                 </form>
             </div>
