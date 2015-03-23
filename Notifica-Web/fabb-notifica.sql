@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 23, 2015 at 04:57 PM
+-- Generation Time: Mar 23, 2015 at 05:27 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.7
 
@@ -29,12 +29,13 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `assignments`;
 CREATE TABLE IF NOT EXISTS `assignments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` int(11) NOT NULL,
   `year` int(11) NOT NULL DEFAULT '-1',
   `groups` varchar(20) NOT NULL DEFAULT '',
   `summary` text NOT NULL,
   `details` text NOT NULL,
   `submission_date` date NOT NULL,
-  `poster_id` varchar(256) NOT NULL,
+  `poster_id` int(11) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -72,6 +73,7 @@ INSERT INTO `central_authorities` (`id`, `name`, `faculty_id`, `updated_at`, `us
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `faculty_id` int(11) NOT NULL,
   `year` int(11) NOT NULL DEFAULT '-1',
   `groups` varchar(20) NOT NULL DEFAULT '',
   `summary` text NOT NULL,
