@@ -1,10 +1,14 @@
 package com.fabb.notifica;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -28,7 +32,30 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
     public void onCreate(Bundle save)
     {
         super.onCreate(save);
+        setHasOptionsMenu(true);
         setRetainInstance(true);
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_event, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.add_item) {
+            AddItem();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void AddItem() {
+        Intent i = new Intent(getActivity(), EventAdder.class);
+        i.putExtra("parentActivity", "Assignments");
+        startActivity(i);
     }
 
     @Override

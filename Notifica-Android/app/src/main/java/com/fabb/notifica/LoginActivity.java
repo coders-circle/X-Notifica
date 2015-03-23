@@ -259,6 +259,7 @@ public class LoginActivity extends Activity {
             editor.putString("password", mPassword);
             editor.putString("user-type", response.optString("user_type"));
             editor.putString("user-name", response.optString("name"));
+            editor.putInt("privilege", response.optInt("privilege"));
             editor.putLong("updated-at", 0);
             editor.putInt("routine-start", 0);
             editor.putInt("routine-end", 0);

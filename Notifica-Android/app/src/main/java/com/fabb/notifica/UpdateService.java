@@ -80,7 +80,7 @@ public class UpdateService {
         JSONObject routine = json.optJSONObject("routine");
 
         //JSONObject st_relations = json.optJSONArray("subject-teacher-relations");
-        JSONArray faculties = json.optJSONArray("faculty");
+        JSONArray faculties = json.optJSONArray("faculties");
 
         int ecnt = 0, acnt = 0, rcnt = 0, fcnt = 0;
 
@@ -90,8 +90,8 @@ public class UpdateService {
                 if (faculty == null || !faculty.has("code"))
                     continue;
                 long id = db.GetFacultyId(faculty.optString("code"));
-                db.RemoveAssignment(id);
-                db.AddFaculty(faculty.optString("code"), faculty.optString("name"));
+                db.RemoveFaculty(id);
+                db.AddFaculty(faculty.optString("name"), faculty.optString("code"));
                 fcnt++;
             }
         }

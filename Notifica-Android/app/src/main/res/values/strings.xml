@@ -23,5 +23,8 @@
         <item>Study Info</item>
         <item>Settings</item>
     </string-array>
+    <string name="title_activity_event_adder">EventAdder</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

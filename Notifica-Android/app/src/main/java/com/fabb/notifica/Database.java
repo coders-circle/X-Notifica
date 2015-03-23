@@ -237,10 +237,10 @@ public class Database extends SQLiteOpenHelper{
         }
     };
 
-    public List<RoutineElement> GetRoutine() {
+    public ArrayList<RoutineElement> GetRoutine() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ROUTINE_ELEMENTS_TABLE, null);
-        List<RoutineElement> rs = new ArrayList<>();
+        ArrayList<RoutineElement> rs = new ArrayList<>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             RoutineElement r = new RoutineElement();
@@ -257,10 +257,10 @@ public class Database extends SQLiteOpenHelper{
         return rs;
     }
 
-    public List<RoutineElement> GetRoutine(RoutineElement.Day day){
+    public ArrayList<RoutineElement> GetRoutine(RoutineElement.Day day){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ROUTINE_ELEMENTS_TABLE + " WHERE day = ?", new String[]{day.ordinal()+""});
-        List<RoutineElement> rs = new ArrayList<>();
+        ArrayList<RoutineElement> rs = new ArrayList<>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             RoutineElement r = new RoutineElement();
@@ -277,10 +277,10 @@ public class Database extends SQLiteOpenHelper{
         return rs;
     }
 
-    public List<Assignment> GetAssignments() {
+    public ArrayList<Assignment> GetAssignments() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE, null);
-        List<Assignment> rs = new ArrayList<>();
+        ArrayList<Assignment> rs = new ArrayList<>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Assignment r = new Assignment();
@@ -298,10 +298,10 @@ public class Database extends SQLiteOpenHelper{
         return rs;
     }
 
-    public List<Event> GetEvents() {
+    public ArrayList<Event> GetEvents() {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + EVENTS_TABLE, null);
-        List<Event> rs = new ArrayList<>();
+        ArrayList<Event> rs = new ArrayList<>();
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Event r = new Event();
@@ -314,6 +314,22 @@ public class Database extends SQLiteOpenHelper{
             c.moveToNext();
         }
         Collections.sort(rs, ecompare);
+        c.close();
+        return rs;
+    }
+
+    public ArrayList<Subject> GetSubjects() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE, null);
+        ArrayList<Subject> rs = new ArrayList<>();
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Subject r = new Subject();
+            r.code = c.getString(c.getColumnIndex("code"));
+            r.name = c.getString(c.getColumnIndex("name"));
+            c.moveToNext();
+            rs.add(r);
+        }
         c.close();
         return rs;
     }
@@ -381,6 +397,34 @@ public class Database extends SQLiteOpenHelper{
         }
         c1.close();
         return sbs;
+    }
+
+    public ArrayList<Faculty> GetFaculties() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + FACULTIES_TABLE, null);
+        ArrayList<Faculty> rs = new ArrayList<>();
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Faculty r = new Faculty();
+            r.code = c.getString(c.getColumnIndex("code"));
+            r.name = c.getString(c.getColumnIndex("name"));
+            Cursor c2 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE faculty = ?", new String[]{c.getLong(c.getColumnIndex("id")) + ""});
+            r.subjects = new Subject[c2.getCount()];
+            c2.moveToFirst();
+            int i = 0;
+            while (!c2.isAfterLast()) {
+                r.subjects[i] = new Subject();
+                r.subjects[i].name = c2.getString(c2.getColumnIndex("name"));
+                r.subjects[i].code = c2.getString(c2.getColumnIndex("code"));
+                i++;
+                c2.moveToNext();
+            }
+            c2.close();
+            c.moveToNext();
+            rs.add(r);
+        }
+        c.close();
+        return rs;
     }
 
     public Faculty GetFaculty(long facultyId) {

@@ -1,11 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="com.fabb.notifica.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
         android:orderInCategory="110" app:showAsAction="never" />
 
     <item android:id="@+id/action_update" android:title="Update"
-        android:orderInCategory="105" />
+        android:orderInCategory="105"  app:showAsAction="never" />
+
+
 </menu>
