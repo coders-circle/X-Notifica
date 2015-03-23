@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 19, 2015 at 07:09 PM
+-- Generation Time: Mar 23, 2015 at 04:57 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.5
+-- PHP Version: 5.5.9-1ubuntu4.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `assignments`
 --
 
+DROP TABLE IF EXISTS `assignments`;
 CREATE TABLE IF NOT EXISTS `assignments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `year` int(11) NOT NULL DEFAULT '-1',
@@ -45,11 +46,13 @@ CREATE TABLE IF NOT EXISTS `assignments` (
 -- Table structure for table `central_authorities`
 --
 
+DROP TABLE IF EXISTS `central_authorities`;
 CREATE TABLE IF NOT EXISTS `central_authorities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
   `faculty_id` int(11) NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
@@ -57,8 +60,8 @@ CREATE TABLE IF NOT EXISTS `central_authorities` (
 -- Dumping data for table `central_authorities`
 --
 
-INSERT INTO `central_authorities` (`id`, `name`, `faculty_id`, `updated_at`) VALUES
-(1, 'Ankit Mehta', 500, '2015-03-14 18:15:00');
+INSERT INTO `central_authorities` (`id`, `name`, `faculty_id`, `updated_at`, `user_id`) VALUES
+(1, 'Ankit Mehta', 500, '2015-03-14 18:15:00', 1);
 
 -- --------------------------------------------------------
 
@@ -66,6 +69,7 @@ INSERT INTO `central_authorities` (`id`, `name`, `faculty_id`, `updated_at`) VAL
 -- Table structure for table `events`
 --
 
+DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `year` int(11) NOT NULL DEFAULT '-1',
@@ -85,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `events` (
 -- Table structure for table `faculties`
 --
 
+DROP TABLE IF EXISTS `faculties`;
 CREATE TABLE IF NOT EXISTS `faculties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
@@ -98,8 +103,8 @@ CREATE TABLE IF NOT EXISTS `faculties` (
 --
 
 INSERT INTO `faculties` (`id`, `code`, `name`, `changed_at`) VALUES
-(400, 'BEX', 'Electronics', '0000-00-00 00:00:00'),
-(500, 'BCT', 'Computer', '0000-00-00 00:00:00');
+(400, 'BEX', 'Electronics', '2015-03-18 18:15:00'),
+(500, 'BCT', 'Computer', '2015-03-18 18:15:00');
 
 -- --------------------------------------------------------
 
@@ -107,6 +112,7 @@ INSERT INTO `faculties` (`id`, `code`, `name`, `changed_at`) VALUES
 -- Table structure for table `routines`
 --
 
+DROP TABLE IF EXISTS `routines`;
 CREATE TABLE IF NOT EXISTS `routines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `faculty_id` int(11) NOT NULL,
@@ -124,6 +130,7 @@ CREATE TABLE IF NOT EXISTS `routines` (
 -- Table structure for table `routine_elements`
 --
 
+DROP TABLE IF EXISTS `routine_elements`;
 CREATE TABLE IF NOT EXISTS `routine_elements` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `routine_id` int(11) NOT NULL,
@@ -141,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
 -- Table structure for table `students`
 --
 
+DROP TABLE IF EXISTS `students`;
 CREATE TABLE IF NOT EXISTS `students` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
@@ -150,6 +158,7 @@ CREATE TABLE IF NOT EXISTS `students` (
   `group_id` varchar(10) NOT NULL DEFAULT 'A',
   `pivilege_level` tinyint(1) NOT NULL DEFAULT '0',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1013 ;
 
@@ -157,12 +166,12 @@ CREATE TABLE IF NOT EXISTS `students` (
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `roll`, `faculty_id`, `year`, `group_id`, `pivilege_level`, `updated_at`) VALUES
-(1000, '__dummy', -1, -1, -1, 'X', 0, '0000-00-00 00:00:00'),
-(1009, 'Abinash Manandhar', 501, 500, 2069, 'A', 0, '0000-00-00 00:00:00'),
-(1010, 'Anish Shrestha', 502, 500, 2069, 'A', 0, '0000-00-00 00:00:00'),
-(1011, 'Anjesh Kafle', 503, 500, 2069, 'A', 0, '0000-00-00 00:00:00'),
-(1012, 'Ankit Mehata', 504, 500, 2069, 'A', 0, '0000-00-00 00:00:00');
+INSERT INTO `students` (`id`, `name`, `roll`, `faculty_id`, `year`, `group_id`, `pivilege_level`, `updated_at`, `user_id`) VALUES
+(1000, '__dummy', -1, -1, -1, 'X', 0, '0000-00-00 00:00:00', -1),
+(1009, 'Abinash Manandhar', 501, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1009),
+(1010, 'Anish Shrestha', 502, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1010),
+(1011, 'Anjesh Kafle', 503, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1011),
+(1012, 'Ankit Mehata', 504, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1012);
 
 -- --------------------------------------------------------
 
@@ -170,6 +179,7 @@ INSERT INTO `students` (`id`, `name`, `roll`, `faculty_id`, `year`, `group_id`, 
 -- Table structure for table `subjects`
 --
 
+DROP TABLE IF EXISTS `subjects`;
 CREATE TABLE IF NOT EXISTS `subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
@@ -185,11 +195,13 @@ CREATE TABLE IF NOT EXISTS `subjects` (
 -- Table structure for table `teachers`
 --
 
+DROP TABLE IF EXISTS `teachers`;
 CREATE TABLE IF NOT EXISTS `teachers` (
   `id` int(11) NOT NULL,
-  `user_id` varchar(256) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `contact_number` varchar(100) NOT NULL,
+  `faculty_id` int(11) NOT NULL,
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
@@ -201,6 +213,7 @@ CREATE TABLE IF NOT EXISTS `teachers` (
 -- Table structure for table `teachers_subjects`
 --
 
+DROP TABLE IF EXISTS `teachers_subjects`;
 CREATE TABLE IF NOT EXISTS `teachers_subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `teacher_id` int(11) NOT NULL,
@@ -214,6 +227,7 @@ CREATE TABLE IF NOT EXISTS `teachers_subjects` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` tinytext NOT NULL,
