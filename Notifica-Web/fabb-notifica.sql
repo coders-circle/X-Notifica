@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 23, 2015 at 05:27 PM
+-- Generation Time: Mar 23, 2015 at 07:12 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.7
 
@@ -79,11 +79,18 @@ CREATE TABLE IF NOT EXISTS `events` (
   `summary` text NOT NULL,
   `details` text NOT NULL,
   `event_date` date NOT NULL,
-  `poster_id` varchar(256) NOT NULL,
+  `poster_id` int(11) NOT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `events`
+--
+
+INSERT INTO `events` (`id`, `faculty_id`, `year`, `groups`, `summary`, `details`, `event_date`, `poster_id`, `deleted`, `changed_at`) VALUES
+(1, 500, -1, '', 'HELLO', 'WORLD', '2015-03-24', 1, 0, '2015-03-24 13:18:29');
 
 -- --------------------------------------------------------
 
@@ -105,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `faculties` (
 --
 
 INSERT INTO `faculties` (`id`, `code`, `name`, `changed_at`) VALUES
-(400, 'BEX', 'Electronics', '2015-03-18 18:15:00'),
+(400, 'BEX', 'Electronics', '2015-03-23 18:15:00'),
 (500, 'BCT', 'Computer', '2015-03-18 18:15:00');
 
 -- --------------------------------------------------------
