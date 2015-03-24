@@ -314,7 +314,7 @@ class User {
                 throw new Exception("Failed to add routine :/");
             }
             foreach($routine_elements as $re){
-                $this->AddRoutineElement($re["routine_id"], $re["subject_id"], $re["teacher_id"], $re["day"], $re["starttime"], $re["endtime"]);
+                $this->AddRoutineElement(1, $re["subject_id"], $re["teacher_id"], $re["day"], $re["starttime"], $re["endtime"]);
             }
         }
     }

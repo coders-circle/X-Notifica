@@ -41,6 +41,7 @@
                         }
                     ?>
                 </div>
+                <input type="submit" class="btn btn-lg btn-primary btn-block" value="Add Routine"/>
             </form>
         </div>
     </div>
@@ -48,30 +49,30 @@
         <div class="row">
             <div class="col-md-4">
                 <h4> Time </h4>
-                <input type="time" name="start"/>
+                <input type="time" name="start[]"/>
                 to
-                <input type="time" name="end"/>
+                <input type="time" name="end[]"/>
             </div>
             <div class="col-md-4">
                 <h4> Subject </h4>
-                <select>
+                <select name="subject[]">
                     <?php
                     $user = $GLOBALS['g_user'];
                     $result = $user->GetCourses();
                     while($row = $result->fetch_assoc()){
-                        echo '<option value = '.$row["id"].'">'.$row["name"].'</option>';
+                        echo '<option value = '.$row["id"].'>'.$row["name"].'</option>';
                     }
                     ?>
                 </select>
             </div>
             <div class="col-md-4">
                 <h4> Teacher </h4>
-                <select>
+                <select name="teacher[]">
                     <?php
                     $user = $GLOBALS['g_user'];
                     $result = $user->GetTeachers();
                     while($row = $result->fetch_assoc()){
-                        echo '<option value = '.$row["id"].'">'.$row["name"].'</option>';
+                        echo '<option value = '.$row["id"].'>'.$row["name"].'</option>';
                     }
                     ?>
                 </select>

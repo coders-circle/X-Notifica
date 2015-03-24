@@ -30,5 +30,11 @@ function AddRow(id) {
     var $parent = $(id);
     var $row = $("#period").clone().appendTo($parent).attr("id", "row"+$rowsnum);
     $row.css("visibility", "visible");
+    $row.find("input").each(function(){
+        $(this).attr("name", id.concat($(this).attr("name")));
+    });
+    $row.find("select").each(function(){
+        $(this).attr("name", id.concat($(this).attr("name")));
+    });
     $rowsnum++;
 }
