@@ -154,8 +154,8 @@ if ($input_array["message_type"] == "Update Request") {
                 $currentIndex = 0;
                 $assignments = array();
                 while ($row = $result->fetch_assoc()){
-                    if ($row["groups"] != "") {
-                        if (strpos($row["groups"], $user->GetStudentGroup()) == false)
+                    if ($row["groups"] != "" and $userType == 1) {
+                        if (!(strpos($row["groups"], $user->GetStudentGroup()) !== false))
                             continue;
                     }
                     $assignment = array();
@@ -191,8 +191,8 @@ if ($input_array["message_type"] == "Update Request") {
                 $currentIndex = 0;
                 $events = array();
                 while ($row = $result->fetch_assoc()){
-                    if ($row["groups"] != "") {
-                        if (strpos($row["groups"], $user->GetStudentGroup()) == false)
+                    if ($row["groups"] != "" and $userType == 1) {
+                        if (!(strpos($row["groups"], $user->GetStudentGroup()) !== false))
                             continue;
                     }
                     $event = array();
