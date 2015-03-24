@@ -141,6 +141,7 @@ public class EventAdder extends ActionBarActivity {
         String result="";
         boolean success=false;
         String failureMessage = "";
+        UpdateService.UpdateResult mUpdateResult = new UpdateService.UpdateResult();
 
         PostTask(EventAdder activity, JSONObject json) {
             mActivity = activity;
@@ -154,8 +155,7 @@ public class EventAdder extends ActionBarActivity {
                 result = network.PostJson(postPhp, mJson);
                 JSONObject json = new JSONObject(result);
                 if (json.optString("post_result").equals("Success")) {
-                    UpdateService.UpdateResult uresult = new UpdateService.UpdateResult();
-                    UpdateService.Update(mActivity, uresult, true);
+                    UpdateService.Update(mActivity, mUpdateResult, true);
                     success = true;
                 }
                 failureMessage =json.optString("failure_message");
@@ -168,6 +168,7 @@ public class EventAdder extends ActionBarActivity {
         @Override
         protected void onPostExecute(final Void v) {
             if (success) {
+                UpdateService.FinishUpdate(mUpdateResult);
                 Toast.makeText(mActivity, "Posted Successfully", Toast.LENGTH_SHORT).show();
                 mActivity.finish();
                 return;

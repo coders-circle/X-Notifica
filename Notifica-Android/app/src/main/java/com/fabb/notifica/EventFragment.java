@@ -122,5 +122,13 @@ public class EventFragment extends Fragment implements UpdateListener {
         /*
         TODO: Refresh event list as database is just updated
         * */
+        try {
+            prepareListData();
+            listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
+            expListView.invalidate();
+        }
+        catch (Exception ignore)
+        {}
      }
 }

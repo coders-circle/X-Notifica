@@ -68,7 +68,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Year: "/>
+            android:text="Batch: "/>
 
         <EditText
             android:id="@+id/event_edit_year"

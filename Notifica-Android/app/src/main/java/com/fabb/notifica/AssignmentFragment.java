@@ -124,5 +124,13 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
         /*
         TODO: Refresh assignment list as database is just updated
         * */
+        try {
+            prepareListData();
+            listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+            expListView.setAdapter(listAdapter);
+            expListView.invalidate();
+        }
+        catch (Exception ignore)
+        {}
     }
 }
