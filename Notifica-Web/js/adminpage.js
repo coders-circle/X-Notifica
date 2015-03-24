@@ -26,8 +26,8 @@ var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
 
 
 $rowsnum = 0;
-function AddRow() {
-    var $parent = $("#day_routine");
+function AddRow(id) {
+    var $parent = $(id);
     var $row = $("#period").clone().appendTo($parent).attr("id", "row"+$rowsnum);
     $row.css("visibility", "visible");
     $rowsnum++;
