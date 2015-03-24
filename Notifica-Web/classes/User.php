@@ -297,6 +297,31 @@ class User {
     function GetStudentPrivilage(){
         return $this->privilaged;
     }
+
+    function AddRoutineElement($routineid, $subjectid, $teacherid, $day, $starttime, $endtime){
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO routine_elements (routine_id, subject_id, teacher_id, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('iiiiii', $routineid, $subjectid, $teacherid, $day, $starttime, $endtime);
+            if (! $insert_stmt->execute()) {
+                throw new Exception("Failed to add routine element :/");
+            }
+        }
+    }
+    
+    function AddRoutine($facultyid, $year, $group, $starttime, $endtime, $routine_elements){
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO routines (faculty_id, year, start_time, end_time) VALUES (?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('iiii', $facultyid, $year, $group, $starttime, $endtime);
+            if (! $insert_stmt->execute()) {
+                throw new Exception("Failed to add routine :/");
+            }
+            foreach($routine_elements as $re){
+                $this->AddRoutineElement($re["routine_id"], $re["subject_id"], $re["teacher_id"], $re["day"], $re["starttime"], $re["endtime"]);
+            }
+        }
+    }
+
+
+
+
     function AddStudent($studentname, $roll, $batch){
         if($this->LoggedIn() == false && $this->GetUserType() != 3){
             throw new PermissionDeniedException;
@@ -384,6 +409,7 @@ class User {
             return $stmt->get_result();
         }
     }
+
 	function AddUser($username, $password, $usertype)
 	{
         if($this->LoggedIn() == false && $this->GetUserType() != 3)
