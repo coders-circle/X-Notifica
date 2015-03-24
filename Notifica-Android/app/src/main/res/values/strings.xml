@@ -20,7 +20,6 @@
         <item>Routine</item>
         <item>Assignments</item>
         <item>Events</item>
-        <item>Study Info</item>
         <item>Settings</item>
     </string-array>
     <string name="title_activity_event_adder">EventAdder</string>

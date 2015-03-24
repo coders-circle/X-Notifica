@@ -49,10 +49,7 @@ function GetTeacherUserId($db, $id) {
 }
 
 function GetTeacherUserName($db, $id) {
-    $userId = GetTeacherUserId($db, $id);
-    if ($userid < 0)
-        return "";
-    return GetUserName($db, $userid);
+    return GetUserName($db, GetTeacherUserId($db, $id));
 }
 
 function GetSubjectId($db, $code) {

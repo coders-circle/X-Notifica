@@ -88,9 +88,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
     @Override
     public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
-        /*
-        TODO: Refresh routine as database is just updated
-        * */
         if (routineCnt > 0) {
             routine.clear();
             Database db = new Database(mActivity);
@@ -163,9 +160,13 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 c2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Database db = new Database(getActivity());
+                        String text = "";
+                        if (r.subject != null)
+                            text += r.subject.name + "\n";
+                        if (r.teacher != null)
+                            text += "Teacher: " + r.teacher.name;
                         Toast.makeText(getActivity(),
-                                r.subject.name + "\nTeacher: " + r.teacher.name,//+"\nFaculty: "+db.GetFaculty(r.subject).name,
+                                text,
                                 Toast.LENGTH_LONG).show();
                     }
                 });

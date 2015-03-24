@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
@@ -138,6 +139,8 @@ public class EventAdder extends ActionBarActivity {
         private final EventAdder mActivity;
         JSONObject mJson;
         String result="";
+        boolean success=false;
+        String failureMessage = "";
 
         PostTask(EventAdder activity, JSONObject json) {
             mActivity = activity;
@@ -145,15 +148,31 @@ public class EventAdder extends ActionBarActivity {
         }
         @Override
         protected Void doInBackground(Void... params) {
-            Network network = new Network(mActivity);
-            result = network.PostJson(postPhp, mJson);
+            try {
+                success = false;
+                Network network = new Network(mActivity);
+                result = network.PostJson(postPhp, mJson);
+                JSONObject json = new JSONObject(result);
+                if (json.optString("post_result").equals("Success")) {
+                    UpdateService.UpdateResult uresult = new UpdateService.UpdateResult();
+                    UpdateService.Update(mActivity, uresult, true);
+                    success = true;
+                }
+                failureMessage =json.optString("failure_message");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(final Void v) {
-            Toast.makeText(mActivity, "Posted Successfully\n"+result, Toast.LENGTH_SHORT).show();
-            mActivity.finish();
+            if (success) {
+                Toast.makeText(mActivity, "Posted Successfully", Toast.LENGTH_SHORT).show();
+                mActivity.finish();
+                return;
+            }
+            Toast.makeText(mActivity, "Posting failed\n"+ failureMessage, Toast.LENGTH_SHORT).show();
         }
     }
 }

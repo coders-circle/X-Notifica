@@ -20,7 +20,7 @@ try{
     // Login Successful
     $user->LoginTest($user_id, $encrPassword);
     $db = $user->GetDB();
-    if ($input_array["message_type"] = "Post Event" || $input_array["message_type"] == "Post Assignment") {
+    if ($input_array["message_type"] == "Post Event" || $input_array["message_type"] == "Post Assignment") {
         $userType = $user->GetUserType();
 
         $canPost = false;

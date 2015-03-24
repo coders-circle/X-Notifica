@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences preferences = GetPreferences(this);
-        String toast = "Name: " + preferences.getString("user-name", "") + "\n" + "Type: " + preferences.getString("user-type", "");
+        String toast = "Name: " + preferences.getString("user-name", "") + "\n" + preferences.getString("user-type", "");
         Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
 
         //GcmRegister.Register(this);
