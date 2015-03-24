@@ -1,4 +1,38 @@
 <div class="container">
+    <div id = "period" style = "visibility:hidden; ">
+        <div class="row">
+            <div class="col-md-4">
+                <h4> Time </h4>
+                <input type="time" name="start"/>
+                to
+                <input type="time" name="end"/>
+            </div>
+            <div class="col-md-4">
+                <h4> Subject </h4>
+                <select>
+                    <?php
+                    $user = $GLOBALS['g_user'];
+                    $result = $user->GetCourses();
+                    while($row = $result->fetch_assoc()){
+                        echo '<option value = '.$row["id"].'">'.$row["name"].'</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <h4> Teacher </h4>
+                <select>
+                    <?php
+                    $user = $GLOBALS['g_user'];
+                    $result = $user->GetTeachers();
+                    while($row = $result->fetch_assoc()){
+                        echo '<option value = '.$row["id"].'">'.$row["name"].'</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12 main">
             <h1 class="page-header">Add New Routine</h1>
@@ -12,48 +46,25 @@
                     <li role="presentation"><a href="#fri" role="tab" id="friday-tab" data-toggle="tab" aria-controls="friday">Friday</a></li>
                     <li role="presentation"><a href="#sat" role="tab" id="saturday-tab" data-toggle="tab" aria-controls="saturday">Saturday</a></li>
                 </ul>
-                <div id="days-tab-contents" class="tab-content">
-                    <div role="tabpanel" class="tab-pane fade in active" id="sun" aria-labelledBy="sunday-tab">
-                        <div id = "day_routine">
-                            <div id = "period" style = "visibility:hidden; ">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <input type="time" name="start"/>
-                                        to
-                                        <input type="time" name="end"/>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text"/>
-                                        <input type="text"/>
-                                    </div>
-                                </div>
-                            </div>
 
-                        </div>
-                        <br/>
-                        <br/>
-                        <button type="button" class="btn btn-default btn-lg" onClick="AddRow();">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a period
-                        </button>
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="mon" aria-labelledBy="monday-tab">
-                        Monday
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="tue" aria-labelledBy="tuesday-tab">
-                        Tuesday
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="wed" aria-labelledBy="wednesday-tab">
-                        Wednesday
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="thu" aria-labelledBy="thursday-tab">
-                        Thursday
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="fri" aria-labelledBy="friday-tab">
-                        Friday
-                    </div>
-                    <div role="tabpanel" class="tab-pane fade in" id="sat" aria-labelledBy="saturday-tab">
-                        Saturday
-                    </div>
+                <div id="days-tab-contents" class="tab-content">
+                    <?php
+                        $divlabels = array("sunday-tab", "monday-tab", "tuesday-tab", "wednesday-tab", "thursday-tab", "friday-tab", "saturday-tab");
+                        $divids = array("sun", "mon", "tue", "wed", "thu", "fri", "sat");
+                        $innerdivids = array("sun_routine", "mon_routine", "tue_routine", "wed_routine", "thu_routine", "fri_routine", "sat_routine");
+                        $count = 0;
+                        while($count < 7){
+                            if($count == 0) echo '<div role="tabpanel" class="tab-pane fade in active" id="'.$divids[$count].'" aria-labelledBy="'.$divlabels[$count].'">';
+                            else echo '<div role="tabpanel" class="tab-pane fade in" id="'.$divids[$count].'" aria-labelledBy="'.$divlabels[$count].'">';
+                            echo '<div id = "'.$innerdivids[$count].'">';
+                            echo '</div>';
+                            echo '<button type="button" class="btn btn-default btn-lg" onClick=\'AddRow("#'.$innerdivids[$count].'");\'>
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a period
+                            </button></div>';
+                            ++$count;
+                        }
+                    ?>
+
                 </div>
             </form>
         </div>
