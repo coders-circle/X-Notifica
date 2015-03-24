@@ -299,6 +299,7 @@ class User {
     }
 
     function AddRoutineElement($routineid, $subjectid, $teacherid, $day, $starttime, $endtime){
+        $mysqli = $this->db;
         if ($insert_stmt = $mysqli->prepare("INSERT INTO routine_elements (routine_id, subject_id, teacher_id, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)")) {
             $insert_stmt->bind_param('iiiiii', $routineid, $subjectid, $teacherid, $day, $starttime, $endtime);
             if (! $insert_stmt->execute()) {
@@ -308,13 +309,15 @@ class User {
     }
     
     function AddRoutine($facultyid, $year, $group, $starttime, $endtime, $routine_elements){
-        if ($insert_stmt = $mysqli->prepare("INSERT INTO routines (faculty_id, year, start_time, end_time) VALUES (?, ?, ?, ?)")) {
-            $insert_stmt->bind_param('iiii', $facultyid, $year, $group, $starttime, $endtime);
-            if (! $insert_stmt->execute()) {
+        $mysqli = $this->db;
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO routines (faculty_id, year, `group`, start_time, end_time) VALUES (?, ?, ?, ?, ?)")) {
+            $insert_stmt->bind_param('iisii', $facultyid, $year, $group, $starttime, $endtime);
+            if (!$insert_stmt->execute()) {
                 throw new Exception("Failed to add routine :/");
             }
+            $id = $mysqli->insert_id;
             foreach($routine_elements as $re){
-                $this->AddRoutineElement(1, $re["subject_id"], $re["teacher_id"], $re["day"], $re["starttime"], $re["endtime"]);
+                $this->AddRoutineElement($id, $re["subject_id"], $re["teacher_id"], $re["day"], $re["starttime"], $re["endtime"]);
             }
         }
     }

@@ -152,11 +152,11 @@ else if($tabID == 'routine'){
             $elements[$count++] = $element;
         }
    
-        for ($i=0; $i<$count; $i++) {
-            $arr = $elements[$i];
-            foreach($arr as $key => $value)
-                echo $key . " = ". $value . "<br/>";
-        }      
+ //       for ($i=0; $i<$count; $i++) {
+ //           $arr = $elements[$i];
+ //           foreach($arr as $key => $value)
+ //               echo $key . " = ". $value . "<br/>";
+ //       }      
         $user->AddRoutine($faculty_id, $batch, $group, 0, 24*60, $elements);
     }
     $adminPage->SetActiveTab(4);
