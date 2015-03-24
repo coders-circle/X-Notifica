@@ -15,12 +15,11 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
     private static final String TEACHERS_TABLE = "teachers";
-    private static final String TS_RELATIONS_TABLE = "teachers_subjects";
     private static final String FACULTIES_TABLE = "faculties";
 
     private static final String EVENTS_TABLE = "events";
@@ -30,16 +29,14 @@ public class Database extends SQLiteOpenHelper{
     // Database creation sql statements
     private static final String ROUTINE_ELEMENTS_TABLE_CREATE = "CREATE TABLE "
             + ROUTINE_ELEMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "subject INTEGER, teacher INTEGER, day INTEGER, startTime INTEGER, endTime INTEGER);"; // times are stored as minutes
+            + "subject INTEGER, teacher INTEGER, day INTEGER, startTime INTEGER, endTime INTEGER, " // times are stored as minutes
+            + "faculty INTEGER, year INTEGER, group_id TEXT);";  // For teachers, needed extra data
     private static final String SUBJECTS_TABLE_CREATE = "CREATE TABLE "
             + SUBJECTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "code TEXT, name TEXT, faculty INTEGER);";
     private static final String TEACHERS_TABLE_CREATE = "CREATE TABLE "
             + TEACHERS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "user_id TEXT, name TEXT, contact TEXT, faculty INTEGER);";
-    private static final String TS_RELATIONS_TABLE_CREATE = "CREATE TABLE "
-            + TS_RELATIONS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "teacher INTEGER, subject INTEGER)";
     private static final String FACULTIES_TABLE_CREATE = "CREATE TABLE "
             + FACULTIES_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "code TEXT, name TEXT);";
@@ -47,10 +44,12 @@ public class Database extends SQLiteOpenHelper{
 
     private static final String EVENTS_TABLE_CREATE = "CREATE TABLE "
             + EVENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "date INTEGER, summary TEXT, details TEXT, posterId TEXT);";
+            + "date INTEGER, summary TEXT, details TEXT, posterId TEXT, "
+            + "faculty INTEGER, year INTEGER, groups TEXT);"; // Extra for teachers
     private static final String ASSIGNMENTS_TABLE_CREATE = "CREATE TABLE "
             + ASSIGNMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "date INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT);";
+            + "date INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT, "
+            + "faculty INTEGER, year INTEGER, groups TEXT);"; // Extra for teachers
 
     public Database(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -62,7 +61,6 @@ public class Database extends SQLiteOpenHelper{
         db.execSQL(SUBJECTS_TABLE_CREATE);
         db.execSQL(TEACHERS_TABLE_CREATE);
         db.execSQL(FACULTIES_TABLE_CREATE);
-        db.execSQL(TS_RELATIONS_TABLE_CREATE);
 
         db.execSQL(EVENTS_TABLE_CREATE);
         db.execSQL(ASSIGNMENTS_TABLE_CREATE);
@@ -74,7 +72,6 @@ public class Database extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + SUBJECTS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TEACHERS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + FACULTIES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + TS_RELATIONS_TABLE);
 
         db.execSQL("DROP TABLE IF EXISTS " + EVENTS_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + ASSIGNMENTS_TABLE);
@@ -86,7 +83,6 @@ public class Database extends SQLiteOpenHelper{
         db.delete(ROUTINE_ELEMENTS_TABLE, null, null);
         db.delete(SUBJECTS_TABLE, null, null);
         db.delete(TEACHERS_TABLE, null, null);
-        db.delete(TS_RELATIONS_TABLE, null, null);
         db.delete(EVENTS_TABLE, null, null);
         db.delete(ASSIGNMENTS_TABLE, null, null);
         db.delete(FACULTIES_TABLE, null, null);
@@ -107,11 +103,25 @@ public class Database extends SQLiteOpenHelper{
         db.insert(ROUTINE_ELEMENTS_TABLE, null, c);
     }
 
+    public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime, long faculty, int year, String group) {
+        ContentValues c = new ContentValues();
+        c.put("subject", subject);
+        c.put("teacher", teacher);
+        c.put("day", day);
+        c.put("startTime", startTime);
+        c.put("endTime", endTime);
+        c.put("faculty", faculty);
+        c.put("year", year);
+        c.put("group_id", group);
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(ROUTINE_ELEMENTS_TABLE, null, c);
+    }
+
+
     public void DeleteSubjectsTeachers() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(SUBJECTS_TABLE, null, null);
         db.delete(TEACHERS_TABLE, null, null);
-        db.delete(TS_RELATIONS_TABLE, null, null);
     }
     public long AddSubject(String code, String name, long faculty) {
         if (GetSubjectId(code) != -1)
@@ -122,14 +132,6 @@ public class Database extends SQLiteOpenHelper{
         c.put("faculty", faculty);
         SQLiteDatabase db = getWritableDatabase();
         return db.insert(SUBJECTS_TABLE, null, c);
-    }
-
-    public long AddSubjectTeacherRelation(long subject, long teacher) {
-        ContentValues c = new ContentValues();
-        c.put("subject", subject);
-        c.put("teacher", teacher);
-        SQLiteDatabase db = getWritableDatabase();
-        return db.insert(TS_RELATIONS_TABLE, null, c);
     }
 
     public long AddTeacher(String userid, String name, String contact, long faculty) {
@@ -174,6 +176,21 @@ public class Database extends SQLiteOpenHelper{
         return db.insert(ASSIGNMENTS_TABLE, null, c);
     }
 
+    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId, long faculty, int year, String groups) {
+        ContentValues c = new ContentValues();
+        c.put("id", id);
+        c.put("date", date);
+        c.put("subject", subject);
+        c.put("summary", summary);
+        c.put("details", details);
+        c.put("posterId", posterId);
+        c.put("faculty", faculty);
+        c.put("year", year);
+        c.put("groups", groups);
+        SQLiteDatabase db = getWritableDatabase();
+        return db.insert(ASSIGNMENTS_TABLE, null, c);
+    }
+
     public void RemoveAssignment(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ASSIGNMENTS_TABLE, "id=?", new String[]{id+""});
@@ -214,6 +231,19 @@ public class Database extends SQLiteOpenHelper{
         return db.insert(EVENTS_TABLE, null, c);
     }
 
+    public long AddEvent(long id, long date, String summary, String details, String posterId, long faculty, int year, String groups) {
+        ContentValues c = new ContentValues();
+        c.put("id", id);
+        c.put("date", date);
+        c.put("summary", summary);
+        c.put("details", details);
+        c.put("posterId", posterId);
+        c.put("faculty", faculty);
+        c.put("year", year);
+        c.put("groups", groups);
+        SQLiteDatabase db = getWritableDatabase();
+        return db.insert(EVENTS_TABLE, null, c);
+    }
 
     private Comparator<RoutineElement> rcompare = new Comparator<RoutineElement>() {
         @Override
@@ -249,6 +279,12 @@ public class Database extends SQLiteOpenHelper{
             r.endTime = c.getInt(c.getColumnIndex("endTime"));
             r.subject = GetSubject(c.getLong(c.getColumnIndex("subject")));
             r.teacher = GetTeacher(c.getLong(c.getColumnIndex("teacher")));
+            if (!c.isNull(c.getColumnIndex("faculty")))
+                r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
+            if (!c.isNull(c.getColumnIndex("year")))
+                r.year = c.getInt(c.getColumnIndex("year"));
+            if (!c.isNull(c.getColumnIndex("group")))
+                r.group = c.getString(c.getColumnIndex("group_id"));
             rs.add(r);
             c.moveToNext();
         }
@@ -269,6 +305,12 @@ public class Database extends SQLiteOpenHelper{
             r.endTime = c.getInt(c.getColumnIndex("endTime"));
             r.subject = GetSubject(c.getLong(c.getColumnIndex("subject")));
             r.teacher = GetTeacher(c.getLong(c.getColumnIndex("teacher")));
+            if (!c.isNull(c.getColumnIndex("faculty")))
+                r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
+            if (!c.isNull(c.getColumnIndex("year")))
+                r.year = c.getInt(c.getColumnIndex("year"));
+            if (!c.isNull(c.getColumnIndex("group")))
+                r.group = c.getString(c.getColumnIndex("group_id"));
             rs.add(r);
             c.moveToNext();
         }
@@ -290,6 +332,12 @@ public class Database extends SQLiteOpenHelper{
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
+            if (!c.isNull(c.getColumnIndex("faculty")))
+                r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
+            if (!c.isNull(c.getColumnIndex("year")))
+                r.year = c.getInt(c.getColumnIndex("year"));
+            if (!c.isNull(c.getColumnIndex("groups")))
+                r.groups = c.getString(c.getColumnIndex("groups"));
             rs.add(r);
             c.moveToNext();
         }
@@ -310,6 +358,12 @@ public class Database extends SQLiteOpenHelper{
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
+            if (!c.isNull(c.getColumnIndex("faculty")))
+                r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
+            if (!c.isNull(c.getColumnIndex("year")))
+                r.year = c.getInt(c.getColumnIndex("year"));
+            if (!c.isNull(c.getColumnIndex("groups")))
+                r.groups = c.getString(c.getColumnIndex("groups"));
             rs.add(r);
             c.moveToNext();
         }
@@ -360,43 +414,6 @@ public class Database extends SQLiteOpenHelper{
         }
         c.close();
         return t;
-    }
-
-    public Subject[] GetSubjectsForTeacher(Teacher teacher) {
-        SQLiteDatabase db = getReadableDatabase();
-        long teacherId = GetTeacherId(teacher.userId);
-        Cursor c = db.rawQuery("SELECT * FROM " + TS_RELATIONS_TABLE + " WHERE teacher = ?", new String[]{teacherId+""});
-        Subject[] sbs = new Subject[c.getCount()];
-        c.moveToFirst();
-        int i = 0;
-        while (!c.isAfterLast()) {
-            sbs[i] = GetSubject(c.getLong(c.getColumnIndex("subject")));
-            i++;
-            c.moveToNext();
-        }
-        c.close();
-        return sbs;
-    }
-
-    public Teacher[] GetTeachersForSubject(Subject subject) {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor c1 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE code = ?", new String[]{subject.code});
-        c1.moveToFirst();
-        Teacher[] sbs = null;
-        if (c1.getCount() > 0) {
-            Cursor c = db.rawQuery("SELECT * FROM " + TS_RELATIONS_TABLE + " WHERE subject = ?", new String[]{c1.getLong(c1.getColumnIndex("id")) + ""});
-            sbs = new Teacher[c.getCount()];
-            c.moveToFirst();
-            int i = 0;
-            while (!c.isAfterLast()) {
-                sbs[i] = GetTeacher(c.getLong(c.getColumnIndex("teacher")));
-                i++;
-                c.moveToNext();
-            }
-            c.close();
-        }
-        c1.close();
-        return sbs;
     }
 
     public ArrayList<Faculty> GetFaculties() {

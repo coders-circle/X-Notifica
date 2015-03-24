@@ -99,9 +99,9 @@ class User {
                     $stmt = null;
 
                     if($this->userType == 3){
-                        $stmt = $this->db->prepare("SELECT id, name, faculty_id FROM central_authorities WHERE id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT id, name, faculty_id FROM central_authorities WHERE user_id = ? LIMIT 1");
                     }else if($this->userType == 2){
-                        $stmt = $this->db->prepare("SELECT id, name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT id, name, faculty_id FROM teachers WHERE user_id = ? LIMIT 1");
                     }else if($this->userType == 1){
                         $stmt = $this->db->prepare("SELECT id, name, faculty_id, roll, year, group_id, privilege_level FROM students WHERE user_id = ? LIMIT 1");
                     }

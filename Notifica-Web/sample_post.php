@@ -30,8 +30,8 @@ try{
             if ($user->GetStudentPrivilage() == 1)
                 $canPost = true;
         }
-        //if (!$canPost)
-        //    throw new Exception("Failed to Post");
+        if (!$canPost)
+            throw new Exception("Failed to Post");
 
         $summary = $input_array["summary"];
         $details = $input_array["details"];

@@ -38,7 +38,7 @@ public class UpdateService {
         return true;
     }
     static String result = "";
-    public static boolean Update(Context ctx, UpdateResult updateResult) {
+    public static boolean Update(Context ctx, UpdateResult updateResult, boolean cleanUpdate) {
         updateResult.updated = false;
         SharedPreferences preferences = MainActivity.GetPreferences(ctx);
         JSONObject json = new JSONObject();
@@ -48,11 +48,14 @@ public class UpdateService {
             json.put("message_type", "Update Request");
             json.put("user_id", preferences.getString("user-id",""));
             json.put("password", preferences.getString("password", ""));
-            json.put("updated_at", preferences.getLong("updated-at", 0));
+            if (cleanUpdate)
+                json.put("updated_at", 0);
+            else
+                json.put("updated_at", preferences.getLong("updated-at", 0));
 
             result = network.PostJson(updatePhp, json);
             JSONObject resJson = new JSONObject(result);
-            UpdateData(ctx, resJson, updateResult);
+            UpdateData(ctx, resJson, updateResult, cleanUpdate);
             SendUpdatedInfo(ctx);
         } catch (Exception e) {
             Log.d("Network Result", result);
@@ -69,20 +72,25 @@ public class UpdateService {
         boolean updated;
     }
 
-    public static void UpdateData(Context ctx, JSONObject json, UpdateResult updateResult) {
-        if (!json.optString("message_type").equals("Database Update"))
+    public static void UpdateData(Context ctx, JSONObject json, UpdateResult updateResult, boolean cleanUpdate) {
+        if (!json.optString("message_type").equals("Database Update")
+                || !json.optString("update_result").equals("Success"))
             return;
         Database db = new Database(ctx);
         JSONArray assignments = json.optJSONArray("assignments");
         JSONArray events = json.optJSONArray("events");
         JSONArray teachers = json.optJSONArray("teachers");
         JSONArray subjects = json.optJSONArray("subjects");
-        JSONObject routine = json.optJSONObject("routine");
 
         //JSONObject st_relations = json.optJSONArray("subject-teacher-relations");
         JSONArray faculties = json.optJSONArray("faculties");
 
+        boolean isTeacher = MainActivity.GetPreferences(ctx).getString("user-type","").equals("Teacher");
         int ecnt = 0, acnt = 0, rcnt = 0, fcnt = 0;
+
+        if (cleanUpdate) {
+            db.DeleteAll();
+        }
 
         if (faculties != null) {
             for (int i=0; i < faculties.length(); ++i) {
@@ -96,6 +104,7 @@ public class UpdateService {
             }
         }
 
+        if (!isTeacher)
         if (teachers != null) {
             for (int i=0; i < teachers.length(); ++i) {
                 JSONObject teacher = teachers.optJSONObject(i);
@@ -119,29 +128,51 @@ public class UpdateService {
                 db.AddSubject(subject.optString("code"), subject.optString("name"), db.GetFacultyId(subject.optString("faculty_code")));
             }
         }
-
-        if (routine != null) {
-            JSONArray elements = routine.optJSONArray("elements");
-            if (elements != null) {
-                db.DeleteRoutine();
-                SharedPreferences preferences = MainActivity.GetPreferences(ctx);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("routine-start", routine.optInt("start_time"));
-                editor.putInt("routine-end", routine.optInt("end_time"));
-                editor.apply();
-
-                for (int i=0; i<elements.length(); ++i) {
-                    JSONObject element = elements.optJSONObject(i);
-                    if (element == null)
+        if (isTeacher) {
+            JSONArray routines = json.optJSONArray("routines");
+            if (routines != null) {
+                for (int i=0; i < routines.length(); ++i) {
+                    JSONObject routine = routines.optJSONObject(i);
+                    if (routine == null)
                         continue;
-
-                    db.AddRoutineElement(db.GetSubjectId(element.optString("subject_code")), db.GetTeacherId(element.optString("teacher_user_id")),
-                            element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"));
+                    JSONArray elements = routine.optJSONArray("elements");
+                    if (elements == null)
+                        continue;
+                    for (int j = 0; j < elements.length(); ++j) {
+                        JSONObject element = elements.optJSONObject(j);
+                        if (element == null)
+                            continue;
+                        db.AddRoutineElement(db.GetSubjectId(element.optString("subject_code")), db.GetTeacherId(element.optString("teacher_user_id")),
+                                element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"),
+                                db.GetFacultyId(routine.optString("faculty_code")), routine.optInt("year"), routine.optString("group"));
+                    }
+                    rcnt += 1;
                 }
-                rcnt = 1;
             }
         }
+        else {
+            JSONObject routine = json.optJSONObject("routine");
+            if (routine != null) {
+                JSONArray elements = routine.optJSONArray("elements");
+                if (elements != null) {
+                    db.DeleteRoutine();
+                    SharedPreferences preferences = MainActivity.GetPreferences(ctx);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putInt("routine-start", routine.optInt("start_time"));
+                    editor.putInt("routine-end", routine.optInt("end_time"));
+                    editor.apply();
 
+                    for (int i = 0; i < elements.length(); ++i) {
+                        JSONObject element = elements.optJSONObject(i);
+                        if (element == null)
+                            continue;
+                        db.AddRoutineElement(db.GetSubjectId(element.optString("subject_code")), db.GetTeacherId(element.optString("teacher_user_id")),
+                                element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"));
+                    }
+                    rcnt = 1;
+                }
+            }
+        }
         if (assignments != null) {
             for (int i=0; i < assignments.length(); ++i) {
                 JSONObject assignment = assignments.optJSONObject(i);
@@ -152,8 +183,13 @@ public class UpdateService {
                 db.RemoveAssignment(id);
                 if (!deleted) {
                     long sub_id = db.GetSubjectId(assignment.optString("subject_code"));
-                    db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
-                            assignment.optString("details"), assignment.optString("poster_id"));
+                    if (isTeacher)
+                        db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
+                                assignment.optString("details"), assignment.optString("poster_id"),
+                                db.GetFacultyId(assignment.optString("faculty_code")), assignment.optInt("year"), assignment.optString("groups"));
+                    else
+                        db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
+                                assignment.optString("details"), assignment.optString("poster_id"));
                 }
                 acnt++;
             }
@@ -168,8 +204,13 @@ public class UpdateService {
                 boolean deleted = event.optBoolean("deleted");
                 db.RemoveEvent(id);
                 if (!deleted) {
-                    db.AddEvent(id, event.optLong("date"), event.optString("summary"),
-                            event.optString("details"), event.optString("poster_id"));
+                    if (isTeacher)
+                        db.AddEvent(id, event.optLong("date"), event.optString("summary"),
+                            event.optString("details"), event.optString("poster_id"),
+                                db.GetFacultyId(event.optString("faculty_code")), event.optInt("year"), event.optString("groups"));
+                    else
+                        db.AddEvent(id, event.optLong("date"), event.optString("summary"),
+                                event.optString("details"), event.optString("poster_id"));
                 }
                 ecnt++;
             }
@@ -197,14 +238,20 @@ public class UpdateService {
 
     public static class UpdateTask extends AsyncTask<Void, Void, Void> {
         private final Context mContext;
+        private final boolean mCleanUpdate;
         private UpdateResult result = new UpdateResult();
 
         UpdateTask(Context context) {
             mContext = context;
+            mCleanUpdate = true;
+        }
+        UpdateTask(Context context, boolean cleanUpdate) {
+            mContext = context;
+            mCleanUpdate = cleanUpdate;
         }
         @Override
         protected Void doInBackground(Void... params) {
-            Update(mContext, result);
+            Update(mContext, result, mCleanUpdate);
             return null;
         }
 
@@ -244,15 +291,12 @@ public class UpdateService {
         for (int i=0; i<7; ++i) {
             if (i % 3 == 0) {
                 sids[i] = db.AddSubject("BCT"+i, s[i], f1);
-                db.AddSubjectTeacherRelation(sids[i], tids[0]);
             }
             else if (i % 3 == 1) {
                 sids[i] = db.AddSubject("BCT"+i, s[i], f2);
-                db.AddSubjectTeacherRelation(sids[i], tids[1]);
             }
             else {
                 sids[i] = db.AddSubject("BCT"+i, s[i], f3);
-                db.AddSubjectTeacherRelation(sids[i], tids[2]);
             }
         }
 
@@ -265,7 +309,7 @@ public class UpdateService {
                 if (j>=3)
                     startTime += 20;
                 db.AddRoutineElement(subject,
-                        db.GetTeacherId(db.GetTeachersForSubject(db.GetSubject(subject))[0].userId),
+                        0,
                         i,
                         startTime,
                         startTime + 60);

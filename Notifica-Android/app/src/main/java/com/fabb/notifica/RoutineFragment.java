@@ -173,8 +173,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 c2.setTypeface(null, Typeface.BOLD);
-                String sTime = String.format("%02d", startTime / 60) + ":" + String.format("%02d", startTime % 60);
-                String eTime = String.format("%02d", endTime / 60) + ":" + String.format("%02d", endTime % 60);
+                String sTime = String.format("%02d", r.startTime / 60) + ":" + String.format("%02d", r.startTime % 60);
+                String eTime = String.format("%02d", r.endTime / 60) + ":" + String.format("%02d", r.endTime % 60);
 
                 if (lastTime < r.startTime)
                     AddBreak(table, lastTime, r.startTime);

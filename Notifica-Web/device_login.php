@@ -18,21 +18,17 @@ $output_array["message_type"] = "Login Result";
 
 $user = new User;
 try{
-//if($user->Login($user_id, $encrPassword)){
-    // Login Successful
     $user->LoginTest($user_id, $encrPassword);
-    $output_array["login_result"] = "Success";
     $userType = $user->GetUserType();
     if($userType == 2){
-
+        $output_array["user_type"] = "Teacher";
     }else if($userType == 1){
-        $output_array["user_type"] = "Student";  // Or Teacher
+        $output_array["user_type"] = "Student";
+        $output_array["privilege"] = $user->GetStudentPrivilage();
     }
     $output_array["name"] = $user->GetFullName();
-    //$user->Logout();
-    //setcookie("bs", "", time()-3600);
+    $output_array["login_result"] = "Success";
 }
-//else{
 catch(Exception $e){
     $output_array["login_result"] = "Failure";
     $output_array["failure_message"] = $e->getMessage();

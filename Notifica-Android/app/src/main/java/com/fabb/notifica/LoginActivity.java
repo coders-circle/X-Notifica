@@ -265,7 +265,7 @@ public class LoginActivity extends Activity {
             editor.putInt("routine-end", 0);
             editor.putBoolean("logged-in", true);
             editor.apply();
-            UpdateService.Update(LoginActivity.this, updateResult);
+            UpdateService.Update(LoginActivity.this, updateResult, true);
 
             return true;
         }

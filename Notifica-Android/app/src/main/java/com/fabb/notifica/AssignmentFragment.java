@@ -1,6 +1,7 @@
 package com.fabb.notifica;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -32,7 +33,10 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
     public void onCreate(Bundle save)
     {
         super.onCreate(save);
-        setHasOptionsMenu(true);
+        SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
+        if (preferences.getString("user-type", "").equals("Teacher")
+                || preferences.getInt("privilege", 0) == 1)
+            setHasOptionsMenu(true);
         setRetainInstance(true);
     }
     @Override
@@ -93,8 +97,10 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
             cal.setTimeInMillis(as.date*1000);
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
-            String title = as.summary + "\nSubject: " + as.subject.name
-                    + "\nDate of Submission:\n    " + format1.format(cal.getTime());
+            String title = as.summary;
+            if (as.subject != null)
+                title += "\nSubject: " + as.subject.name;
+            title += "\nDate of Submission:\n    " + format1.format(cal.getTime());
 
             List<String> children = new ArrayList<>();
             String contents = as.details;

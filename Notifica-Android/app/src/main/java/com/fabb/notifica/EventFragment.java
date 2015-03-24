@@ -1,6 +1,7 @@
 package com.fabb.notifica;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -31,7 +32,10 @@ public class EventFragment extends Fragment implements UpdateListener {
     public void onCreate(Bundle save)
     {
         super.onCreate(save);
-        setHasOptionsMenu(true);
+        SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
+        if (preferences.getString("user-type", "").equals("Teacher")
+                || preferences.getInt("privilege", 0) == 1)
+            setHasOptionsMenu(true);
         setRetainInstance(true);
     }
 
