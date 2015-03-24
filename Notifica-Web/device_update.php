@@ -130,13 +130,13 @@ if ($input_array["message_type"] == "Update Request") {
                 while ($row = $result->fetch_assoc()){
                     $teacher = array();
                     $teacher["name"] = $row["name"];
-                    $teacher["user_id"] = $row["user_id"];
+                    $teacher["user_id"] = GetUserName($db, $row["user_id"]);
                     $teacher["contact"] = $row["contact_number"];
                     $teacher["faculty_code"] = GetFacultyCode($db, $row["faculty_id"]);
                     $teachers[$currentIndex++] = $teacher;
                 }
                 if ($currentIndex > 0)
-                    $output_array["teachers"] = $subjects;
+                    $output_array["teachers"] = $teachers;
                 $stmt->close();
             }
             $stmt = null;

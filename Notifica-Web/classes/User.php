@@ -369,7 +369,7 @@ class User {
         if ($insert_stmt = $mysqli->prepare("INSERT INTO teachers (user_id, name, faculty_id, contact_number) VALUES (?, ?, ?, ?)")) {
             $insert_stmt->bind_param('isis', $user_id, $teachername, $faculty_id, $contact);
             if (! $insert_stmt->execute()) {
-                throw new Exception('Failed to add the teacher');
+                //throw new Exception('Failed to add the teacher');
             }
         }
     }

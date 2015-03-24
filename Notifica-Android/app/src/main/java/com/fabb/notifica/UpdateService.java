@@ -258,7 +258,7 @@ public class UpdateService {
         @Override
         protected void onPostExecute(final Void v) {
             FinishUpdate(result);
-            Toast.makeText(mContext, UpdateService.result, Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, UpdateService.result, Toast.LENGTH_LONG).show();
         }
     }
 
