@@ -23,11 +23,18 @@
             </div>
             <div class="col-md-5">
                 <h1 class="page-header">Quick Add</h1>
-                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=employee" method="post" name="registration_form" role="form">
-                    <input type='text' class="form-control" placeholder="Name" name='employeename' id='employeename' required >
-                    <input type='text' class="form-control" placeholder="Faculty" name='faculty' id='faculty' required>
-                    <input type="number" class="form-control" placeholder="Semester" name="semester" id="semester" required>
-
+                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=courses" method="post" name="registration_form" role="form">
+                    <input type='text' class="form-control" placeholder="Subject Name" name="subjectname" id="subjectname" required>
+                    <input type='text' class='form-control' placeholder="Subject Code" name="subjectcode" id="subjectcode" required>
+                    <select class="form-control" placeholder="Select a faculty" name="faculty" id ="faculty" required>
+                        <?php
+                            $user = $GLOBALS['g_user'];
+                            $result = $user->GetFaculties();
+                            while($row = $result->fetch_assoc()){
+                                echo '<option value = '.$row["id"].'">'.$row["name"].'</option>';
+                            }
+                        ?>
+                    </select>
                     <input type="submit" class="btn btn-lg btn-primary btn-block" value="Add Course"/>
                 </form>
             </div>

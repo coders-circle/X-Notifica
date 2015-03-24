@@ -327,7 +327,9 @@ class User {
         if ($insert_stmt = $mysqli->prepare("INSERT INTO students (user_id, name, roll, faculty_id, year, group_id) VALUES (?, ?, ?, ?, ?, ?)")) {
             $insert_stmt->bind_param('isiiis', $user_id, $studentname, $roll, $faculty_id, $batch, $group);
             if (! $insert_stmt->execute()) {
-                throw new Exception('Failed to execute the query');
+                // TODO: may be also delete created user  @@ So so lazy -_-
+                throw new Exception('Failed to add the Student');
+
             }
         }
     }
@@ -339,7 +341,15 @@ class User {
         if ($insert_stmt = $mysqli->prepare("INSERT INTO teachers (user_id, name, faculty_id, contact_number) VALUES (?, ?, ?, ?)")) {
             $insert_stmt->bind_param('isis', $user_id, $teachername, $faculty_id, $contact);
             if (! $insert_stmt->execute()) {
-                throw new Exception('Failed to execute the query');
+                throw new Exception('Failed to add the teacher');
+            }
+        }
+    }
+    function AddCourse($subjectname, $subjectcode, $facultyid){
+        if($insert_stmt = $this->db->prepare("INSERT INTO subjects (code, name, faculty_id) VALUES (?, ?, ?)")){
+            $insert_stmt->bind_param('ssi', $subjectcode, $subjectname, $facultyid);
+            if(!$insert_stmt->execute()){
+                throw new Exception('Failed to add the course');
             }
         }
     }
@@ -352,6 +362,12 @@ class User {
     }
     function GetStudents(){
         if ($stmt = $this -> db -> prepare("SELECT * FROM students WHERE roll > 0")) {
+            $stmt -> execute();
+            return $stmt->get_result();
+        }
+    }
+    function GetFaculties(){
+        if ($stmt = $this -> db -> prepare("SELECT * FROM faculties")) {
             $stmt -> execute();
             return $stmt->get_result();
         }

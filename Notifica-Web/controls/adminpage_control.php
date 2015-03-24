@@ -35,6 +35,13 @@ else if($tabID == 'employees') {
 
 else if($tabID == 'courses'){
     $adminPage->SetActiveTab(3);
+    if(isset($_POST['subjectname']) && isset($_POST['subjectcode']) && isset($_POST['faculty'])){
+        $subjectname = $_POST['subjectname'];
+        $subjectcode = $_POST['subjectcode'];
+        $facultyid = $_POST['faculty'];
+        $user = $GLOBALS['g_user'];
+        $user->AddCourse($subjectname, $subjectcode, $facultyid);
+    }
 }
 
 else if($tabID == 'examination'){
