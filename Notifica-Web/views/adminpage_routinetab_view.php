@@ -13,6 +13,7 @@
                         }
                     ?>
                 </select>
+                <input type='text' placeholder="Group" name="group" id="group" required>
                 <ul class="nav nav-tabs " id="days-tab"  role="tablist">
                     <li role="presentation" class="active"><a href="#sun" id="sunday-tab" role="tab" data-toggle="tab" aria-controls="sunday" aria-expanded="true">Sunday</a></li>
                     <li role="presentation"><a href="#mon" role="tab" id="monday-tab" data-toggle="tab" aria-controls="monday">Monday</a></li>

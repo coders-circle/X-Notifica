@@ -83,7 +83,7 @@ else if($tabID == 'routine'){
 
         $faculty_id = intval($POST['faculty']);
         $batch = intval($POST['batch']);
-        $group = 'A';
+        $group = $POST['group'];
         $user = $GLOBALS['g_user'];
 
         $elements = array();
