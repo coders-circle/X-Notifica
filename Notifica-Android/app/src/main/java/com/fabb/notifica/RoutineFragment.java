@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -105,41 +106,13 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         public static final String ARG_DAY = "day";
         public static final String[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-        int startTime = 10*60+30;
-        int endTime = 16*60+50;
-
-        private void AddBreak(TableLayout table, int startTime, int endTime){
-            //TableRow tr =  new TableRow(getActivity());
-            //TextView c1 = new TextView(getActivity());
-            TableRow tr1 =  new TableRow(getActivity());
-            TextView c2 = new TextView(getActivity());
-
-            //c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            String sTime = String.format("%02d", startTime / 60) + ":" + String.format("%02d", startTime % 60);
-            String eTime = String.format("%02d", endTime / 60) + ":" + String.format("%02d", endTime % 60);
-
-            //c1.setGravity(Gravity.CENTER);
-            c2.setGravity(Gravity.CENTER);
-
-            //c1.setText(sTime + " - " + eTime);
-            //c1.setPadding(6, 2, 2, 2);
-            c2.setText("---- BREAK ----");
-            c2.setPadding(6, 2, 2, 10);
-            //tr.addView(c1);
-            tr1.addView(c2);
-
-            //table.addView(tr);
-            table.addView(tr1);
-
-        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
 
+            ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
             Bundle args = getArguments();
-            TableLayout table = (TableLayout)rootView;
 
             Calendar c = Calendar.getInstance();
             long now = c.getTimeInMillis();
@@ -150,60 +123,32 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             long passed = (now - c.getTimeInMillis())/1000/60;
 
             int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
-
             List<RoutineElement> rtn = routine.get(day);
-            int lastTime = startTime;
+            ArrayList<CustomListAdapter.CustomListItem> infos = new ArrayList<>();
             for (final RoutineElement r : rtn) {
-
-                TableRow tr =  new TableRow(getActivity());
-                TextView c1 = new TextView(getActivity());
-                TableRow tr1 =  new TableRow(getActivity());
-                TextView c2 = new TextView(getActivity());
-
-                c2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Database db = new Database(getActivity());
-                        Toast.makeText(getActivity(),
-                                r.subject.name + "\nTeacher: " + r.teacher.name,//+"\nFaculty: "+db.GetFaculty(r.subject).name,
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-
-                c1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                c2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                c2.setTypeface(null, Typeface.BOLD);
-                String sTime = String.format("%02d", r.startTime / 60) + ":" + String.format("%02d", r.startTime % 60);
-                String eTime = String.format("%02d", r.endTime / 60) + ":" + String.format("%02d", r.endTime % 60);
-
-                if (lastTime < r.startTime)
-                    AddBreak(table, lastTime, r.startTime);
-                lastTime = r.endTime;
-                // Highlight current period
-                if (r.startTime <= passed && r.endTime >= passed && day == c.get(Calendar.DAY_OF_WEEK)-1) {
-                    tr.setBackgroundColor(Color.rgb(210, 210, 210));
-                    tr1.setBackgroundColor(Color.rgb(210, 210, 210));
-                    /*c1.setTextColor(Color.WHITE);
-                    c2.setTextColor(Color.WHITE);*/
+                String subject = "";
+                String teacher = "";
+                String time = "";
+                if (r.subject != null) {
+                    subject = r.subject.name;
                 }
-                //else {
-                    c1.setTextColor(Color.DKGRAY);
-                    c2.setTextColor(Color.DKGRAY);
-                //}
+                if (r.teacher != null) {
+                    teacher = r.teacher.name;
+                }
+                String sTime = String.format("%02d", r.startTime/60) + ":" + String.format("%02d", r.startTime%60);
+                String eTime = String.format("%02d", r.endTime/60) + ":" + String.format("%02d", r.endTime%60);
+                time = sTime + " - " + eTime;
 
-                c1.setText(sTime + " - " + eTime);
-                c1.setPadding(6, 2, 2, 2);
-                c2.setText(r.subject.name);
-                c2.setPadding(6, 2, 2, 10);
-                tr.addView(c1);
-                tr1.addView(c2);
-                table.addView(tr);
-                table.addView(tr1);
+                CustomListAdapter.CustomListItem info = new CustomListAdapter.CustomListItem();
+                info.subjects = subject;
+                info.teachers = teacher;
+                info.times = time;
+                infos.add(info);
+
             }
 
-            if (lastTime < endTime)
-                AddBreak(table, lastTime, endTime);
-
+            CustomListAdapter adapter = new CustomListAdapter(getActivity(), infos);
+            lv.setAdapter(adapter);
             return rootView;
         }
 
