@@ -372,6 +372,18 @@ class User {
             return $stmt->get_result();
         }
     }
+    function GetTeachers(){
+        if ($stmt = $this -> db -> prepare("SELECT * FROM teachers")) {
+            $stmt -> execute();
+            return $stmt->get_result();
+        }
+    }
+    function GetCourses(){
+        if ($stmt = $this -> db -> prepare("SELECT * FROM subjects")) {
+            $stmt -> execute();
+            return $stmt->get_result();
+        }
+    }
 	function AddUser($username, $password, $usertype)
 	{
         if($this->LoggedIn() == false && $this->GetUserType() != 3)

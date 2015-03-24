@@ -18,8 +18,17 @@ var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
 		}
 
 	window.onload = function(){
-		var ctx = document.getElementById("overview").getContext("2d");
-		window.myLine = new Chart(ctx).Line(lineChartData, {
-			responsive: true
-		});
+//		var ctx = document.getElementById("overview").getContext("2d");
+//		window.myLine = new Chart(ctx).Line(lineChartData, {
+//			responsive: true
+//		});
 	}
+
+
+$rowsnum = 0;
+function AddRow() {
+    var $parent = $("#day_routine");
+    var $row = $("#period").clone().appendTo($parent).attr("id", "row"+$rowsnum);
+    $row.css("visibility", "visible");
+    $rowsnum++;
+}

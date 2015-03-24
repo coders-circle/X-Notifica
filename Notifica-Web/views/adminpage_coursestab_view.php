@@ -8,16 +8,16 @@
                 <table class="table">
                     <tr>
                         <th>S.N.</th>
-                        <th>Name</th>
-                        <th>Roll</th>
+                        <th>Subject Name</th>
+                        <th>Subject Code</th>
                     </tr>
                     <?php
                         $user = $GLOBALS['g_user'];
-                        //$result = $user->GetEmployees();
+                        $result = $user->GetCourses();
                         $count = 1;
-                        //while ($row = $result->fetch_assoc()) {
-                        //    echo '<tr><td>'.$count++.'</td><td>'.$row['name'].'</td><td>'.$row['year'].'-BCT-'.$row['roll'].'</td></tr>';
-                        //}
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<tr><td>'.$count++.'</td><td>'.$row['name'].'</td><td>'.$row['code'].'</td></tr>';
+                        }
                     ?>
                 </table>
             </div>

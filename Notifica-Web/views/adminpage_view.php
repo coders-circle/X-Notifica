@@ -9,7 +9,7 @@ $views = array(
     'students'      => 'views/adminpage_studentstab_view.php',
     'employees'     => 'views/adminpage_employeestab_view.php',
     'courses'       => 'views/adminpage_coursestab_view.php',
-    'examination'   => 'views/adminpage_examinationtab_view.php'
+    'routine'   => 'views/adminpage_routinetab_view.php'
 );
 
 include $views[$tabID];

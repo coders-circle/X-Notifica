@@ -31,8 +31,8 @@
     <script>
         $rowsnum = 0;
         function AddRow() {
-            var $parent = $("#table");
-            var $row = $("#sample_row").clone().appendTo($parent).attr("id", "row"+$rowsnum);
+            var $parent = $("#day_routine");
+            var $row = $("#period").clone().appendTo($parent).attr("id", "row"+$rowsnum);
             $row.css("visibility", "visible");
             $rowsnum++;
         }

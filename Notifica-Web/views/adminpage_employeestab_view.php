@@ -9,15 +9,15 @@
                     <tr>
                         <th>S.N.</th>
                         <th>Name</th>
-                        <th>Roll</th>
+                        <th>Contact</th>
                     </tr>
                     <?php
                         $user = $GLOBALS['g_user'];
-                        //$result = $user->GetEmployees();
+                        $result = $user->GetTeachers();
                         $count = 1;
-                        //while ($row = $result->fetch_assoc()) {
-                        //    echo '<tr><td>'.$count++.'</td><td>'.$row['name'].'</td><td>'.$row['year'].'-BCT-'.$row['roll'].'</td></tr>';
-                        //}
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<tr><td>'.$count++.'</td><td>'.$row['name'].'</td><td>'.$row['contact_number'].'</td></tr>';
+                        }
                     ?>
                 </table>
             </div>

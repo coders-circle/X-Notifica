@@ -22,7 +22,7 @@ if($g_user->LoggedIn()){
         $g_adminPage->AddTab("Students", "index.php?page=adminpage&tab=students");
         $g_adminPage->AddTab("Employees", "index.php?page=adminpage&tab=employees");
         $g_adminPage->AddTab("Courses", "index.php?page=adminpage&tab=courses");
-        $g_adminPage->AddTab("Examination", "index.php?page=adminpage&tab=examination");
+        $g_adminPage->AddTab("Routine", "index.php?page=adminpage&tab=routine");
         $g_adminPage->AddJScript("js/Chart.js");
         $g_adminPage->AddJScript("js/adminpage.js");
     } else if($userType == 2){

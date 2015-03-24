@@ -44,7 +44,7 @@ else if($tabID == 'courses'){
     }
 }
 
-else if($tabID == 'examination'){
+else if($tabID == 'routine'){
     $adminPage->SetActiveTab(4);
 }
 
