@@ -38,6 +38,8 @@ class User {
     protected $group;
     protected $privilaged;
 
+    protected $id;
+
 	public function __construct() {
 		$this -> session = new Session;
         $this -> db = new Database(HOST, USER, PASSWORD, DATABASE);
@@ -97,18 +99,22 @@ class User {
                     $stmt = null;
 
                     if($this->userType == 3){
-                        $stmt = $this->db->prepare("SELECT name, faculty_id FROM central_authorities WHERE id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT id, name, faculty_id FROM central_authorities WHERE id = ? LIMIT 1");
                     }else if($this->userType == 2){
-                        $stmt = $this->db->prepare("SELECT name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
-                    }else{
-                        $stmt = $this->db->prepare("SELECT name, faculty_id, roll, year, group_id, privilege_level FROM students WHERE user_id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT id, name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
+                    }else if($this->userType == 1){
+                        $stmt = $this->db->prepare("SELECT id, name, faculty_id, roll, year, group_id, privilege_level FROM students WHERE user_id = ? LIMIT 1");
                     }
 
                     if($stmt != null){
                         $stmt->bind_param('i', $this->userid);
                         $stmt->execute();
                         $stmt->store_result();
-                        $stmt->bind_result($this->name, $this->facultyid, $this->roll, $this->year, $this->group, $this->privilaged);
+                        if($this->userType == 1){
+                            $stmt->bind_result($this->id, $this->name, $this->facultyid, $this->roll, $this->year, $this->group, $this->privilaged);
+                        }else{
+                            $stmt->bind_result($this->id, $this->name, $this->facultyid);
+                        }
 
                         $stmt->fetch();
                         $stmt->free_result();
@@ -122,6 +128,9 @@ class User {
                 //return false;
             }
         }
+    }
+    public function GetID(){
+        return $this->id;
     }
 
 	public function Login($username, $password) {
