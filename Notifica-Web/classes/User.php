@@ -88,8 +88,8 @@ class User {
 
             if ($stmt->num_rows == 1 ) {
                 if ($db_password == $password) {
-                    $this->userid = preg_replace("/[^0-9]+/", "", $this->userid);
-                    $username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
+                    //$this->userid = preg_replace("/[^0-9]+/", "", $this->userid);
+                    //$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
                     $this->loggedIn = true;
                     $this->username = $username;
                     $stmt->free_result();
@@ -101,7 +101,7 @@ class User {
                     }else if($this->userType == 2){
                         $stmt = $this->db->prepare("SELECT name, faculty_id FROM teachers WHERE id = ? LIMIT 1");
                     }else{
-                        $stmt = $this->db->prepare("SELECT name, faculty_id, roll, year, group, privilage_level FROM students WHERE id = ? LIMIT 1");
+                        $stmt = $this->db->prepare("SELECT name, faculty_id, roll, year, group_id, privilege_level FROM students WHERE user_id = ? LIMIT 1");
                     }
 
                     if($stmt != null){

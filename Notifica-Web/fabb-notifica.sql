@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Mar 23, 2015 at 11:19 PM
--- Server version: 5.5.40-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.7
+-- Host: 127.0.0.1
+-- Generation Time: Mar 24, 2015 at 04:46 AM
+-- Server version: 5.5.32
+-- PHP Version: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `fabb-notifica`
 --
+CREATE DATABASE IF NOT EXISTS `fabb-notifica` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `fabb-notifica`;
 
 -- --------------------------------------------------------
 
@@ -26,7 +28,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `assignments`
 --
 
-DROP TABLE IF EXISTS `assignments`;
 CREATE TABLE IF NOT EXISTS `assignments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `faculty_id` int(11) NOT NULL,
@@ -56,7 +57,6 @@ INSERT INTO `assignments` (`id`, `faculty_id`, `subject_id`, `year`, `groups`, `
 -- Table structure for table `central_authorities`
 --
 
-DROP TABLE IF EXISTS `central_authorities`;
 CREATE TABLE IF NOT EXISTS `central_authorities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
@@ -79,7 +79,6 @@ INSERT INTO `central_authorities` (`id`, `name`, `faculty_id`, `updated_at`, `us
 -- Table structure for table `events`
 --
 
-DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `faculty_id` int(11) NOT NULL,
@@ -109,7 +108,6 @@ INSERT INTO `events` (`id`, `faculty_id`, `year`, `groups`, `summary`, `details`
 -- Table structure for table `faculties`
 --
 
-DROP TABLE IF EXISTS `faculties`;
 CREATE TABLE IF NOT EXISTS `faculties` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
@@ -132,7 +130,6 @@ INSERT INTO `faculties` (`id`, `code`, `name`, `changed_at`) VALUES
 -- Table structure for table `routines`
 --
 
-DROP TABLE IF EXISTS `routines`;
 CREATE TABLE IF NOT EXISTS `routines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `faculty_id` int(11) NOT NULL,
@@ -150,7 +147,6 @@ CREATE TABLE IF NOT EXISTS `routines` (
 -- Table structure for table `routine_elements`
 --
 
-DROP TABLE IF EXISTS `routine_elements`;
 CREATE TABLE IF NOT EXISTS `routine_elements` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `routine_id` int(11) NOT NULL,
@@ -168,7 +164,6 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
 -- Table structure for table `students`
 --
 
-DROP TABLE IF EXISTS `students`;
 CREATE TABLE IF NOT EXISTS `students` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
@@ -176,22 +171,21 @@ CREATE TABLE IF NOT EXISTS `students` (
   `faculty_id` int(11) NOT NULL,
   `year` int(11) NOT NULL,
   `group_id` varchar(10) NOT NULL DEFAULT 'A',
-  `pivilege_level` tinyint(1) NOT NULL DEFAULT '0',
+  `privilege_level` tinyint(1) NOT NULL DEFAULT '0',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1013 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1017 ;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `roll`, `faculty_id`, `year`, `group_id`, `pivilege_level`, `updated_at`, `user_id`) VALUES
-(1000, '__dummy', -1, -1, -1, 'X', 0, '0000-00-00 00:00:00', -1),
-(1009, 'Abinash Manandhar', 501, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1009),
-(1010, 'Anish Shrestha', 502, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1010),
-(1011, 'Anjesh Kafle', 503, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1011),
-(1012, 'Ankit Mehata', 504, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1012);
+INSERT INTO `students` (`id`, `name`, `roll`, `faculty_id`, `year`, `group_id`, `privilege_level`, `updated_at`, `user_id`) VALUES
+(1013, 'Abinash Manandhar', 501, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1013),
+(1014, 'Anish Shrestha', 502, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1014),
+(1015, 'Anjesh Kafle', 503, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1015),
+(1016, 'Ankit Mehta', 504, 500, 2069, 'A', 0, '0000-00-00 00:00:00', 1016);
 
 -- --------------------------------------------------------
 
@@ -199,7 +193,6 @@ INSERT INTO `students` (`id`, `name`, `roll`, `faculty_id`, `year`, `group_id`, 
 -- Table structure for table `subjects`
 --
 
-DROP TABLE IF EXISTS `subjects`;
 CREATE TABLE IF NOT EXISTS `subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) NOT NULL,
@@ -222,7 +215,6 @@ INSERT INTO `subjects` (`id`, `code`, `name`, `faculty_id`, `changed_at`) VALUES
 -- Table structure for table `teachers`
 --
 
-DROP TABLE IF EXISTS `teachers`;
 CREATE TABLE IF NOT EXISTS `teachers` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -234,13 +226,19 @@ CREATE TABLE IF NOT EXISTS `teachers` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `teachers`
+--
+
+INSERT INTO `teachers` (`id`, `user_id`, `name`, `contact_number`, `faculty_id`, `changed_at`, `updated_at`) VALUES
+(0, 1017, 'Aditya Khatri', 'xxxx', 500, '2015-03-24 03:37:18', '0000-00-00 00:00:00');
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `teachers_subjects`
 --
 
-DROP TABLE IF EXISTS `teachers_subjects`;
 CREATE TABLE IF NOT EXISTS `teachers_subjects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `teacher_id` int(11) NOT NULL,
@@ -254,7 +252,6 @@ CREATE TABLE IF NOT EXISTS `teachers_subjects` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` tinytext NOT NULL,
@@ -263,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `usertype` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1013 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1018 ;
 
 --
 -- Dumping data for table `users`
@@ -271,10 +268,11 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `salt`, `usertype`) VALUES
 (1, 'fhx', '87d7de170920dbcabff61520b050dfa35d5cfc68f1ed9327027aeadcc67554c1307b59714fa4412bd80fe0f06fc797bef9d86440afae5d64d7e2cd156f1bb51c', '1cae87da42018b91f828bec5a1452bc2474e1f2e3b2fd0d7137d4048634f9a983f86ce0e9df0788985ed1b6b4440cb4d29aa2de92c196ed5296e14c69e60f129', 3),
-(1009, '069BCT501', '39d822c7c5c611d5144ccfb4d693d3857ae56912bc2f9af7aa718b00f5bf7ba0474d4fc2584d29929c305d4bebbadfe4c4e5ae04e280346ddea2ea1ed531c599', 'ca4e61cc48d3c905982b3bdecb83e8daa13e935bb75f722279fae567a4483a381963a5c70be5f847dcbe3973e21d2599de741cc7261e16ca7540b33488a67d07', 1),
-(1010, '069BCT502', '07348bf15f2748df0fa584456ec245aa3ef9ea802cce089c42765bea972a0ef7b6e4a06aaa374ee41c596159b6460ce86bd274cf2bbe33acc5aad28a4e220958', '043b5cf3f7500454c51e131d0f33d8cbbc818f5a96d22a93a7066067214f5fb333e319a204f73f1ad73721c3903fa5076cff41aca62ee16b94a471618d7dd2d3', 1),
-(1011, '069BCT503', 'ad5bca084a2e2f7fb50e95d5ef0306258ba3b9265120be7c0611e9722fad9445d63f41ae7be7192702a83abe02c7833ea44ba142b93b8548bd042988cd6cc303', '026bbdf0e375ce95aff4ec3fd649af304ce9f35b12de36662efa349294facda72bfcf8cbb65d1b8e02594a4ba5d30dc20f210aee64d301af16afc4961139782d', 1),
-(1012, '069BCT504', '438be242289710f2e5c35d2b53f03f445038f4c7d6cbfbc59b53edc01ac331c6775eaee3a9489a217d359f9c2302eac8755f61d0b8f194fbadc9133b15ec5db8', 'cb36e16ca752092a98202303ec617ec976879ed81a46888dcf2c2a9917e0ce161697fd5cbe28d99fb1a1febec567e2d6b7993ef9cae88efdea3ad36661430a18', 1);
+(1013, '069BCT501', '327cc3388a675f94ff27ea905e85e870c7da1e4860a3aa1ae624c89a842227db730b538862af687c11c41a15837f007958848d6eaa5fdfe7682752a2e23d3525', '67d1ef4271a1221a92ab9ca3ecd8c541bbcb02a6c848e7934fbcf0ca9b775192ec7ca97f8ff7273d0672ab34a30ad5660080c377c8216afd1751066cf883d3f4', 1),
+(1014, '069BCT502', 'e43d974aeaa197ac1b1ed785fb89315d99c80be984c7a0870e29eecf0f642319c3f1906324f0099ebc7c40a79656ae7b321ab531f85192dbe2c368067b80dd18', '11cf5cfe484d42127300efe10f8c97dec3d7af718f8dfdeffe70c0037ba6f2c4d6c50029b0f14e700c9abd03b4110505ed1014fddf0ca1a44324d2da2a755965', 1),
+(1015, '069BCT503', 'a6d5ba1387ce8b696ec4337e34990385f5d953d6beeea0814e0da13cb8038cc01cfdce97219d6e820e913f988cf8a9c48330710781ee71f1d6fa08186abd5306', '70fb1e2e4dd956586e6c9adcd136cdab0ea24c012f383a3c43328b54a428b8b4f5a20934e473c41aa08fe68150ffe90712b10457088d9553af394913c07ddff3', 1),
+(1016, '069BCT504', '82943cc98d2b27dd3ee097162de6756ef4d7a014521ed56a4fae01aeb3bd5b48058ee172207c8fc0c2495af13ac33ee59c4aa6c506c83824228e6447808d5edb', '877653db544a9efdaf783f878bdc842a99d5c8f73f0c6474a1b893cd7f3b176624a2ed3fa3f7c685024d0a3565892922d480f52cd9528f5e29999df00ab934e3', 1),
+(1017, 'noob', 'eaaa2cad660e704f51c777f5012fc6a91787be6b0e2ba577555c8150509b639ded57717dd533eeb60cd63d83298d5856d1fb149d680f7a0a46ccbbd3e4a7d6a8', 'd56f7ad9d69006241ab65434b8d7e13a25410fed753d11b83ba3b70af34885899aa11aac884c8741eec88795373fbdd6567f4f477df2cc8b27e9b695f3e7b3b5', 2);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
