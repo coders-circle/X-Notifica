@@ -125,7 +125,18 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
             List<RoutineElement> rtn = routine.get(day);
             ArrayList<CustomListAdapter.CustomListItem> infos = new ArrayList<>();
+            boolean first = true;
+            long lastTime = 0;
             for (final RoutineElement r : rtn) {
+                if (first) {
+                    lastTime = r.startTime;
+                    first = false;
+                }
+                if (lastTime != r.startTime) {
+                    CustomListAdapter.CustomListItem info = new CustomListAdapter.CustomListItem();
+                    info.teachers = "Break";
+                    infos.add(info);
+                }
                 String subject = "";
                 String teacher = "";
                 String time = "";
@@ -138,7 +149,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 String sTime = String.format("%02d", r.startTime/60) + ":" + String.format("%02d", r.startTime%60);
                 String eTime = String.format("%02d", r.endTime/60) + ":" + String.format("%02d", r.endTime%60);
                 time = sTime + " - " + eTime;
-
+                lastTime = r.endTime;
                 CustomListAdapter.CustomListItem info = new CustomListAdapter.CustomListItem();
                 info.subjects = subject;
                 info.teachers = teacher;
