@@ -299,6 +299,8 @@ class User {
     }
 
     function AddRoutineElement($routineid, $subjectid, $teacherid, $day, $starttime, $endtime){
+        if ($starttime == $end_time)
+            return;
         $mysqli = $this->db;
         if ($insert_stmt = $mysqli->prepare("INSERT INTO routine_elements (routine_id, subject_id, teacher_id, day, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)")) {
             $insert_stmt->bind_param('iiiiii', $routineid, $subjectid, $teacherid, $day, $starttime, $endtime);
