@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 24, 2015 at 10:30 PM
+-- Generation Time: Mar 25, 2015 at 04:18 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.7
 
@@ -40,17 +40,14 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `assignments`
 --
 
 INSERT INTO `assignments` (`id`, `faculty_id`, `subject_id`, `year`, `groups`, `summary`, `details`, `submission_date`, `poster_id`, `deleted`, `changed_at`) VALUES
-(1, 500, 1, 2069, '', 'test123', 'test345', '2015-03-24', 1017, 0, '2015-03-25 05:35:14'),
-(2, 400, 1, -1, '', 'test2', 'test2', '2015-03-23', 1014, 0, '2015-03-24 05:23:44'),
-(3, -1, 1, 2069, 'B', 'dijddh', 'djshvs', '2015-04-24', 1016, 0, '2015-03-24 11:55:53'),
-(4, -1, 1, 2069, '', 'hsisjvs', 'shsksvjw', '2015-04-24', 1016, 0, '2015-03-24 11:56:35');
+(6, 500, 5, 2069, '', 'Read the slides', 'Read the slides from chapters 1 2 3 4 5 6', '2015-04-26', 1031, 0, '2015-03-24 17:15:05');
 
 -- --------------------------------------------------------
 
@@ -94,16 +91,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `changed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
-
---
--- Dumping data for table `events`
---
-
-INSERT INTO `events` (`id`, `faculty_id`, `year`, `groups`, `summary`, `details`, `event_date`, `poster_id`, `deleted`, `changed_at`) VALUES
-(1, 500, -1, '', 'HELLO', 'WORLD', '2015-03-24', 1, 0, '2015-03-24 13:18:29'),
-(2, -1, -1, 'B', 'abcd', 'wert', '2016-04-24', 1010, 0, '2015-03-24 06:43:19'),
-(3, 500, 2069, 'AB', 'zxcvcx', 'test', '2015-03-23', 1017, 0, '2015-03-24 06:43:27');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -166,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
   `subject_id` int(11) NOT NULL,
   `teacher_id` int(11) NOT NULL,
   `day` int(11) NOT NULL,
+  `type` int(11) NOT NULL DEFAULT '0',
   `start_time` int(11) NOT NULL COMMENT 'stored as minutes',
   `end_time` int(11) NOT NULL COMMENT 'stored as minutes',
   PRIMARY KEY (`id`)
@@ -175,24 +164,24 @@ CREATE TABLE IF NOT EXISTS `routine_elements` (
 -- Dumping data for table `routine_elements`
 --
 
-INSERT INTO `routine_elements` (`id`, `routine_id`, `subject_id`, `teacher_id`, `day`, `start_time`, `end_time`) VALUES
-(6, 6, 3, 2, 0, 615, 660),
-(7, 6, 4, 3, 0, 660, 780),
-(8, 6, 5, 5, 0, 825, 870),
-(9, 6, 6, 4, 0, 870, 915),
-(10, 6, 6, 4, 1, 615, 705),
-(11, 6, 7, 6, 1, 705, 825),
-(12, 6, 7, 6, 2, 645, 660),
-(13, 6, 8, 7, 2, 660, 780),
-(14, 6, 9, 8, 2, 915, 960),
-(15, 6, 8, 7, 3, 615, 705),
-(16, 6, 9, 8, 3, 705, 780),
-(17, 6, 5, 5, 4, 615, 705),
-(18, 6, 4, 3, 4, 705, 780),
-(19, 6, 3, 2, 4, 825, 915),
-(20, 6, 6, 4, 5, 705, 780),
-(21, 6, 3, 2, 5, 825, 795),
-(22, 6, 9, 8, 5, 795, 960);
+INSERT INTO `routine_elements` (`id`, `routine_id`, `subject_id`, `teacher_id`, `day`, `type`, `start_time`, `end_time`) VALUES
+(6, 6, 3, 2, 0, 0, 615, 660),
+(7, 6, 4, 3, 0, 0, 660, 780),
+(8, 6, 5, 5, 0, 0, 825, 870),
+(9, 6, 6, 4, 0, 0, 870, 915),
+(10, 6, 6, 4, 1, 0, 615, 705),
+(11, 6, 7, 6, 1, 0, 705, 825),
+(12, 6, 7, 6, 2, 0, 645, 660),
+(13, 6, 8, 7, 2, 0, 660, 780),
+(14, 6, 9, 8, 2, 0, 915, 960),
+(15, 6, 8, 7, 3, 0, 615, 705),
+(16, 6, 9, 8, 3, 0, 705, 780),
+(17, 6, 5, 5, 4, 0, 615, 705),
+(18, 6, 4, 3, 4, 0, 705, 780),
+(19, 6, 3, 2, 4, 2, 825, 915),
+(20, 6, 6, 4, 5, 0, 705, 780),
+(21, 6, 3, 2, 5, 0, 825, 915),
+(22, 6, 9, 8, 5, 0, 915, 960);
 
 -- --------------------------------------------------------
 

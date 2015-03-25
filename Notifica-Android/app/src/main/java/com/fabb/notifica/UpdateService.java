@@ -143,7 +143,7 @@ public class UpdateService {
                         if (element == null)
                             continue;
                         db.AddRoutineElement(db.GetSubjectId(element.optString("subject_code")), db.GetTeacherId(element.optString("teacher_user_id")),
-                                element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"),
+                                element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"), element.optInt("type"),
                                 db.GetFacultyId(routine.optString("faculty_code")), routine.optInt("year"), routine.optString("group"));
                     }
                     rcnt += 1;
@@ -167,7 +167,7 @@ public class UpdateService {
                         if (element == null)
                             continue;
                         db.AddRoutineElement(db.GetSubjectId(element.optString("subject_code")), db.GetTeacherId(element.optString("teacher_user_id")),
-                                element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"));
+                                element.optInt("day"), element.optInt("start_time"), element.optInt("end_time"), element.optInt("type"));
                     }
                     rcnt = 1;
                 }
@@ -312,7 +312,7 @@ public class UpdateService {
                         0,
                         i,
                         startTime,
-                        startTime + 60);
+                        startTime + 60, 0);
             }
         }
 

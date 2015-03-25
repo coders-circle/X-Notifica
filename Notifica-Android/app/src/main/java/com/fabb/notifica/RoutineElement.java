@@ -7,6 +7,7 @@ public class RoutineElement {
     public int startTime;
     public int endTime;
     public Day day;
+    public int type;
 
     // for teacher only
     public Faculty faculty;

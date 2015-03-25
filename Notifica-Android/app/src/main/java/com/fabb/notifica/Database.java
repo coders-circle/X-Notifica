@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -30,6 +30,7 @@ public class Database extends SQLiteOpenHelper{
     private static final String ROUTINE_ELEMENTS_TABLE_CREATE = "CREATE TABLE "
             + ROUTINE_ELEMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "subject INTEGER, teacher INTEGER, day INTEGER, startTime INTEGER, endTime INTEGER, " // times are stored as minutes
+            + "type INTEGER DEFAULT 0, "
             + "faculty INTEGER, year INTEGER, group_id TEXT);";  // For teachers, needed extra data
     private static final String SUBJECTS_TABLE_CREATE = "CREATE TABLE "
             + SUBJECTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -92,18 +93,19 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ROUTINE_ELEMENTS_TABLE, null, null);
     }
-    public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime) {
+    public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime, int type) {
         ContentValues c = new ContentValues();
         c.put("subject", subject);
         c.put("teacher", teacher);
         c.put("day", day);
         c.put("startTime", startTime);
         c.put("endTime", endTime);
+        c.put("type", type);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(ROUTINE_ELEMENTS_TABLE, null, c);
     }
 
-    public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime, long faculty, int year, String group) {
+    public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime, int type, long faculty, int year, String group) {
         ContentValues c = new ContentValues();
         c.put("subject", subject);
         c.put("teacher", teacher);
@@ -113,6 +115,7 @@ public class Database extends SQLiteOpenHelper{
         c.put("faculty", faculty);
         c.put("year", year);
         c.put("group_id", group);
+        c.put("type", type);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(ROUTINE_ELEMENTS_TABLE, null, c);
     }
@@ -279,6 +282,7 @@ public class Database extends SQLiteOpenHelper{
             r.endTime = c.getInt(c.getColumnIndex("endTime"));
             r.subject = GetSubject(c.getLong(c.getColumnIndex("subject")));
             r.teacher = GetTeacher(c.getLong(c.getColumnIndex("teacher")));
+            r.type = c.getInt(c.getColumnIndex("type"));
             if (!c.isNull(c.getColumnIndex("faculty")))
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))
@@ -305,6 +309,7 @@ public class Database extends SQLiteOpenHelper{
             r.endTime = c.getInt(c.getColumnIndex("endTime"));
             r.subject = GetSubject(c.getLong(c.getColumnIndex("subject")));
             r.teacher = GetTeacher(c.getLong(c.getColumnIndex("teacher")));
+            r.type = c.getInt(c.getColumnIndex("type"));
             if (!c.isNull(c.getColumnIndex("faculty")))
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))

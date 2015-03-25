@@ -83,23 +83,24 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     }
 
     public void Refresh() {
-        mDaysCollection.notifyDataSetChanged();
-        //Toast.makeText(mActivity, "Routine Changed", Toast.LENGTH_SHORT).show();
+        int i = mViewPager.getCurrentItem();
+        mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(mDaysCollection);
+        mViewPager.invalidate();
+        mViewPager.setCurrentItem(i);
+        Toast.makeText(mActivity, "Routine Updated", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
-        /*
-        TODO: Refresh routine as database is just updated
-        * */
         if (routineCnt > 0) {
             routine.clear();
             Database db = new Database(mActivity);
             for (int d = 0; d < 7; ++d) {
                 routine.add(db.GetRoutine(RoutineElement.Day.values()[d]));
             }
+            Refresh();
         }
-        Refresh();
     }
 
     public static class DayFragment extends Fragment {
@@ -142,6 +143,12 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 String time = "";
                 if (r.subject != null) {
                     subject = r.subject.name;
+                    if (r.type == 0)
+                        subject += " (Lecture)";
+                    else if (r.type == 1)
+                        subject += " (Tutorial)";
+                    else if (r.type == 2)
+                        subject += " (Practical)";
                 }
                 if (r.teacher != null) {
                     teacher = r.teacher.name;

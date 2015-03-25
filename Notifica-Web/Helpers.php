@@ -123,6 +123,7 @@ function GetRoutineElements($db, $id, $teacherId=-1) {
             $element["day"] = $row["day"];
             $element["teacher_user_id"] = GetTeacherUserName($db, $row["teacher_id"]);
             $element["subject_code"] = GetSubjectCode($db, $row["subject_id"]);
+            $element["type"] = $row["type"];
             $routineSubjects[] = $row["subject_id"];
             $routineTeachers[] = $row["teacher_id"];
             $elements[$currentIndex++] = $element;
