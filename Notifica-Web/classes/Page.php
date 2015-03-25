@@ -41,7 +41,7 @@ class Page extends Navbar{
     }
 
     public function GeneratePage(){
-        $pageTitle = "test";
+        $pageTitle = "Notifica";
         echo '<!DOCTYPE HTML><html>';
         echo '<head>';
         echo '<title>' . $pageTitle . '</title>';

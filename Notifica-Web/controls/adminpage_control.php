@@ -81,9 +81,9 @@ else if($tabID == 'routine'){
         $stru = $_POST['#sat_routinesubject'];
         $strt = $_POST['#sat_routineteacher'];
 
-        $faculty_id = intval($POST['faculty']);
-        $batch = intval($POST['batch']);
-        $group = $POST['group'];
+        $faculty_id = intval($_POST['faculty']);
+        $batch = intval($_POST['batch']);
+        $group = $_POST['group'];
         $user = $GLOBALS['g_user'];
 
         $elements = array();
