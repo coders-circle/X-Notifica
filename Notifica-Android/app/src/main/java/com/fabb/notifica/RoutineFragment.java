@@ -83,12 +83,16 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     }
 
     public void Refresh() {
-        int i = mViewPager.getCurrentItem();
-        mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(mDaysCollection);
-        mViewPager.invalidate();
-        mViewPager.setCurrentItem(i);
-        Toast.makeText(mActivity, "Routine Updated", Toast.LENGTH_SHORT).show();
+        try {
+            int i = mViewPager.getCurrentItem();
+            mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
+            mViewPager.setAdapter(mDaysCollection);
+            mViewPager.invalidate();
+            mViewPager.setCurrentItem(i);
+            Toast.makeText(mActivity, "Routine Updated", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception ignore) {
+        }
     }
 
     @Override
