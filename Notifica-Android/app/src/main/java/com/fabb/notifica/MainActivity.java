@@ -175,7 +175,6 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("logged-in", false);
         editor.remove("password");
-        editor.remove("user-type");
         editor.apply();
 
         startActivity(new Intent(MainActivity.this, LoginActivity.class));

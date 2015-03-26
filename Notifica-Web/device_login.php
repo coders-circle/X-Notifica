@@ -1,6 +1,7 @@
 <?php
 
 require_once 'classes/User.php';
+require_once 'Helpers.php';
 
 header('Content-type: application/json');
 
@@ -25,6 +26,8 @@ try{
     }else if($userType == 1){
         $output_array["user_type"] = "Student";
         $output_array["privilege"] = $user->GetStudentPrivilage();
+        $output_array["faculty_code"] = GetFacultyCode($user->GetDB(), $user->GetFacultyID());
+        $output_array["batch"] = $user->GetStudentBatch();
     }
     $output_array["name"] = $user->GetFullName();
     $output_array["login_result"] = "Success";

@@ -77,12 +77,6 @@ public class EventFragment extends Fragment implements UpdateListener {
         listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
         expListView.setAdapter(listAdapter);
 
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int width = metrics.widthPixels;
-        expListView.setIndicatorBounds(width - GetPixelFromDips(70), width - GetPixelFromDips(20));
-
         UpdateService.AddUpdateListener(this);
     }
 
@@ -110,18 +104,8 @@ public class EventFragment extends Fragment implements UpdateListener {
         }
     }
 
-    public int GetPixelFromDips(float pixels) {
-        // Get the screen's density scale
-        final float scale = getResources().getDisplayMetrics().density;
-        // Convert the dps to pixels, based on density scale
-        return (int) (pixels * scale + 0.5f);
-    }
-
     @Override
     public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
-        /*
-        TODO: Refresh event list as database is just updated
-        * */
         try {
             prepareListData();
             listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);

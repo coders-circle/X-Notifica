@@ -39,6 +39,8 @@ public class EventAdder extends ActionBarActivity {
     ArrayList<Faculty> faculties;
     ArrayList<Subject> subjects;
 
+    boolean student = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,21 +83,41 @@ public class EventAdder extends ActionBarActivity {
             mSubjectList.setSelection(0);
         }
         else {
-            View temp = findViewById(R.id.event_subject_textView);
             ((LinearLayout)mSubjectList.getParent()).removeView(mSubjectList);
+            View temp = findViewById(R.id.event_subject_textView);
+            ((LinearLayout)temp.getParent()).removeView(temp);
+        }
+
+        SharedPreferences preferences = MainActivity.GetPreferences(this);
+        if (preferences.getString("user-type", "").equals("Student")) {
+            View temp = mFacultyList;
+            ((LinearLayout)temp.getParent()).removeView(temp);
+            temp = findViewById(R.id.event_faculty_textview);
+            ((LinearLayout)temp.getParent()).removeView(temp);
+            temp = mYearEdit;
+            ((LinearLayout)temp.getParent()).removeView(temp);
+            temp = findViewById(R.id.event_batch_textview);
             ((LinearLayout)temp.getParent()).removeView(temp);
         }
     }
 
     public void onPostClicked(View view) {
+        SharedPreferences preferences = MainActivity.GetPreferences(this);
+
         String summary = mSummaryEdit.getText().toString();
         String details = mDetailsEdit.getText().toString();
         String faculty_code = "";
-        if (mFacultyList.getSelectedItemId() > 0)
-            faculty_code = faculties.get((int)mFacultyList.getSelectedItemId()-1).code;
         int year = 0;
-        if (!mYearEdit.getText().toString().equals(""))
-            year = Integer.parseInt(mYearEdit.getText().toString());
+        if (preferences.getString("user-type", "").equals("Student")) {
+            faculty_code = preferences.getString("faculty-code", "");
+            year = preferences.getInt("batch", 0);
+        }
+        else {
+            if (mFacultyList.getSelectedItemId() > 0)
+                faculty_code = faculties.get((int) mFacultyList.getSelectedItemId() - 1).code;
+            if (!mYearEdit.getText().toString().equals(""))
+                year = Integer.parseInt(mYearEdit.getText().toString());
+        }
         String groups = mGroupsEdit.getText().toString();
         long date = 0;
 
@@ -103,8 +125,6 @@ public class EventAdder extends ActionBarActivity {
         cal.set(mDateEdit.getYear(), mDateEdit.getMonth(), mDateEdit.getDayOfMonth());
         date = cal.getTimeInMillis()/1000;
 
-
-        SharedPreferences preferences = MainActivity.GetPreferences(this);
         JSONObject json = new JSONObject();
         try {
             json.put("message_type", "Post Event");
