@@ -3,17 +3,9 @@
         <div class="col-md-12 main">
             <h1 class="page-header">Add New Routine</h1>
             <form class="form-adduser" action="index.php?page=adminpage&amp;tab=routine" method="post" name="registration_form" role="form">
-                <input type='number' placeholder="Batch" name="batch" id="batch" required>
-                <select placeholder="Select a faculty" name="faculty" id ="faculty" required>
-                    <?php
-                        $user = $GLOBALS['g_user'];
-                        $result = $user->GetFaculties();
-                        while($row = $result->fetch_assoc()){
-                            echo '<option value = '.$row["id"].'">'.$row["name"].'</option>';
-                        }
-                    ?>
-                </select>
-                <input type='text' placeholder="Group" name="group" id="group" required>
+                <input type='number' placeholder="Batch" name="batch" id="batch" style="width:15%;" required>
+                <input type='text' placeholder="Group" name="group" id="group" style="width:15%;" required>
+                <br/>
                 <ul class="nav nav-tabs " id="days-tab"  role="tablist">
                     <li role="presentation" class="active"><a href="#sun" id="sunday-tab" role="tab" data-toggle="tab" aria-controls="sunday" aria-expanded="true">Sunday</a></li>
                     <li role="presentation"><a href="#mon" role="tab" id="monday-tab" data-toggle="tab" aria-controls="monday">Monday</a></li>

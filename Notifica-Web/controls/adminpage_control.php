@@ -60,7 +60,6 @@ else if($tabID == 'routine'){
             $srt[$day] = $_POST['#'.$dayarr[$day].'_routineteacher'];
         }
 
-        $faculty_id = intval($_POST['faculty']);
         $batch = intval($_POST['batch']);
         $group = $_POST['group'];
         $user = $GLOBALS['g_user'];
@@ -86,7 +85,7 @@ else if($tabID == 'routine'){
 //            foreach($arr as $key => $value)
 //                echo $key . " = ". $value . "<br/>";
 //        }      
-        $user->AddRoutine($faculty_id, $batch, $group, 0, 24*60, $elements);
+        $user->AddRoutine($batch, $group, 0, 24*60, $elements);
     }
     $adminPage->SetActiveTab(4);
 }

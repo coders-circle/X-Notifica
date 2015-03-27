@@ -310,7 +310,11 @@ class User {
         }
     }
     
-    function AddRoutine($facultyid, $year, $group, $starttime, $endtime, $routine_elements){
+    function AddRoutine($year, $group, $starttime, $endtime, $routine_elements){
+        if($this->LoggedIn() == false && $this->GetUserType() != 3){
+            throw new PermissionDeniedException;
+        }
+        $facultyid = $this->facultyid;
         $mysqli = $this->db;
         if ($insert_stmt = $mysqli->prepare("INSERT INTO routines (faculty_id, year, `group`, start_time, end_time) VALUES (?, ?, ?, ?, ?)")) {
             $insert_stmt->bind_param('iisii', $facultyid, $year, $group, $starttime, $endtime);
