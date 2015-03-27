@@ -32,6 +32,7 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
     ExpandableListView expListView;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
+    boolean privileged = false;
 
     @Override
     public void onCreate(Bundle save)
@@ -39,8 +40,10 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
         super.onCreate(save);
         SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
         if (preferences.getString("user-type", "").equals("Teacher")
-                || preferences.getInt("privilege", 0) == 1)
+                || preferences.getInt("privilege", 0) == 1) {
             setHasOptionsMenu(true);
+            privileged = true;
+        }
         setRetainInstance(true);
     }
     @Override
@@ -130,6 +133,8 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        if (!privileged)
+            return;
         ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
 
         int type = ExpandableListView.getPackedPositionType(info.packedPosition);
@@ -141,6 +146,8 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        if (!privileged)
+            return super.onContextItemSelected(item);
         ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item
                 .getMenuInfo();
         SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
