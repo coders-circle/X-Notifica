@@ -33,6 +33,7 @@
                         while($count < 7){
                             if($count == 0) echo '<div role="tabpanel" class="tab-pane fade in active" id="'.$divids[$count].'" aria-labelledBy="'.$divlabels[$count].'">';
                             else echo '<div role="tabpanel" class="tab-pane fade in" id="'.$divids[$count].'" aria-labelledBy="'.$divlabels[$count].'">';
+                            echo '<br/>';
                             echo '<div id = "'.$innerdivids[$count].'">';
                             echo '</div>';
                             echo '<button type="button" class="btn btn-default btn-lg" onClick=\'AddRow("#'.$innerdivids[$count].'");\'>
@@ -49,14 +50,14 @@
     <div id = "period" style = "visibility:hidden; ">
         <div class="row">
             <div class="col-md-4">
-                <h4> Time </h4>
-                <input type="time" name="start[]"/>
+                <b> Time </b>
+                <input type="time" name="start[]" style="width:35%;"/>
                 to
-                <input type="time" name="end[]"/>
+                <input type="time" name="end[]" style="width:35%;"/>
             </div>
             <div class="col-md-4">
-                <h4> Subject </h4>
-                <select name="subject[]">
+                <b> Subject </b>
+                <select name="subject[]" style="width:70%;">
                     <?php
                     $user = $GLOBALS['g_user'];
                     $result = $user->GetCourses();
@@ -67,8 +68,8 @@
                 </select>
             </div>
             <div class="col-md-4">
-                <h4> Teacher </h4>
-                <select name="teacher[]">
+                <b> Teacher </b>
+                <select name="teacher[]" style="width:70%;">
                     <?php
                     $user = $GLOBALS['g_user'];
                     $result = $user->GetTeachers();
