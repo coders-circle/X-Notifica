@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class EventFragment extends Fragment implements UpdateListener {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_event, menu);
+        registerForContextMenu(expListView);
     }
 
     @Override
@@ -80,6 +84,7 @@ public class EventFragment extends Fragment implements UpdateListener {
         UpdateService.AddUpdateListener(this);
     }
 
+    private ArrayList<Long> mIds = new ArrayList<>();
     private void prepareListData() {
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
@@ -99,6 +104,7 @@ public class EventFragment extends Fragment implements UpdateListener {
             children.add(contents);
 
             listDataHeader.add(title);
+            mIds.add(as.id);
             listDataChild.put(listDataHeader.get(i), children);
             i++;
         }
@@ -111,8 +117,47 @@ public class EventFragment extends Fragment implements UpdateListener {
             listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
             expListView.setAdapter(listAdapter);
             expListView.invalidate();
+            registerForContextMenu(expListView);
         }
         catch (Exception ignore)
         {}
      }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
+
+        int type = ExpandableListView.getPackedPositionType(info.packedPosition);
+
+        if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+            menu.add("Delete");
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item
+                .getMenuInfo();
+        SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
+
+        int type = ExpandableListView.getPackedPositionType(info.packedPosition);
+        int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+
+        if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("message_type", "Delete Event");
+                json.put("user_id", preferences.getString("user-id",""));
+                json.put("password", preferences.getString("password", ""));
+                json.put("postid", mIds.get(groupPosition));
+
+                new EventAdder.PostTask(getActivity(), json, false).execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
 }

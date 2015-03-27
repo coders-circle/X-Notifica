@@ -67,6 +67,43 @@ try{
         }
         $output_array["post_result"] = "Success";
     }
+    elseif ($input_array["message_type"] == "Delete Event" || $input_array["message_type"] == "Delete Assignment") {
+        $userType = $user->GetUserType();
+
+        $canPost = false;
+        if($userType == 2){
+            $canPost = true;
+        }else if($userType == 1){
+            if ($user->GetStudentPrivilage() == 1)
+                $canPost = true;
+        }
+        if (!$canPost)
+            throw new Exception("Failed to Delete");
+
+        $postid = $input_array["postid"];
+        if ($input_array["message_type"] == "Delete Assignment") {
+            if ($stmt = $db->prepare("UPDATE assignments SET deleted=TRUE WHERE id=?")) {
+                $stmt->bind_param('i', $postid);
+                if (! $stmt->execute()) {
+                    throw new Exception('Failed to delete assignment from database');
+                }
+            }
+            else
+                throw new Exception('Failed to delete assignment from database');
+        }
+        else {
+            if ($stmt = $db->prepare("UPDATE events SET deleted=TRUE WHERE id=?")) {
+                $stmt->bind_param('i', $postid);
+                if (! $stmt->execute()) {
+                    throw new Exception('Failed to delete event from database');
+                }
+            }
+            else
+                throw new Exception('Failed to delete event from database');
+        }
+        $output_array["post_result"] = "Success";
+    }
+
 }
 catch(Exception $e){
     $output_array["post_result"] = "Failure";

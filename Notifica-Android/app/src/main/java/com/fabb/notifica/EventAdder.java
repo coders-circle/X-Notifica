@@ -1,5 +1,6 @@
 package com.fabb.notifica;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -148,7 +149,7 @@ public class EventAdder extends ActionBarActivity {
                 json.put("message_type", "Post Assignment");
             }
 
-            new PostTask(this, json).execute();
+            new PostTask(this, json, true).execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,16 +157,18 @@ public class EventAdder extends ActionBarActivity {
     }
 
     public static class PostTask extends AsyncTask<Void, Void, Void> {
-        private final EventAdder mActivity;
+        private final Activity mActivity;
         JSONObject mJson;
         String result="";
         boolean success=false;
-        String failureMessage = "";
+        JSONObject mReturn;
+        boolean mShutdown=false;
         UpdateService.UpdateResult mUpdateResult = new UpdateService.UpdateResult();
 
-        PostTask(EventAdder activity, JSONObject json) {
+        PostTask(Activity activity, JSONObject json, boolean shutdown) {
             mActivity = activity;
             mJson=json;
+            mShutdown=shutdown;
         }
         @Override
         protected Void doInBackground(Void... params) {
@@ -173,12 +176,11 @@ public class EventAdder extends ActionBarActivity {
                 success = false;
                 Network network = new Network(mActivity);
                 result = network.PostJson(postPhp, mJson);
-                JSONObject json = new JSONObject(result);
-                if (json.optString("post_result").equals("Success")) {
+                mReturn = new JSONObject(result);
+                if (mReturn.optString("post_result").equals("Success")) {
                     UpdateService.Update(mActivity, mUpdateResult, true);
                     success = true;
                 }
-                failureMessage =json.optString("failure_message");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -189,11 +191,12 @@ public class EventAdder extends ActionBarActivity {
         protected void onPostExecute(final Void v) {
             if (success) {
                 UpdateService.FinishUpdate(mUpdateResult);
-                Toast.makeText(mActivity, "Posted Successfully", Toast.LENGTH_SHORT).show();
-                mActivity.finish();
+                Toast.makeText(mActivity, "Success", Toast.LENGTH_SHORT).show();
+                if (mShutdown)
+                    mActivity.finish();
                 return;
             }
-            Toast.makeText(mActivity, "Posting failed\n"+ failureMessage, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "Failed\n"+ mReturn.optString("failure_message"), Toast.LENGTH_SHORT).show();
         }
     }
 }

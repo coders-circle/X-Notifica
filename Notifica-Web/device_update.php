@@ -165,6 +165,7 @@ if ($input_array["message_type"] == "Update Request") {
                     $assignment["date"] = strtotime($row["submission_date"]);
                     $assignment["summary"] = $row["summary"];
                     $assignment["details"] = $row["details"];
+                    $assignment["deleted"] = $row["deleted"];
                     if ($userType == 2) {
                         $assignment["year"] = $row["year"];
                         $assignment["faculty_code"] = GetFacultyCode($db, $row["faculty_id"]);
@@ -201,6 +202,7 @@ if ($input_array["message_type"] == "Update Request") {
                     $event["date"] = strtotime($row["event_date"]);
                     $event["summary"] = $row["summary"];
                     $event["details"] = $row["details"];
+                    $event["deleted"] = $row["deleted"];
                     if ($userType == 2) {
                         $event["year"] = $row["year"];
                         $event["faculty_code"] = GetFacultyCode($db, $row["faculty_id"]);
