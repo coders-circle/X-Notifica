@@ -1,6 +1,7 @@
 package com.fabb.notifica;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -117,6 +118,10 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
+            SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
+            boolean isteacher = false;
+            if (preferences.getString("user-type","").equals("Teacher"))
+                isteacher = true;
 
             ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
             Bundle args = getArguments();
@@ -156,7 +161,10 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                     else if (r.type == 2)
                         subject += " (Practical)";
                 }
-                if (r.teacher != null) {
+                if (isteacher) {
+                    teacher = r.year + "-" + r.faculty.code;
+                }
+                else if (r.teacher != null) {
                     teacher = r.teacher.name;
                 }
                 String sTime = String.format("%02d", r.startTime/60) + ":" + String.format("%02d", r.startTime%60);
