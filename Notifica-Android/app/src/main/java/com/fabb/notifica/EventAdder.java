@@ -32,13 +32,15 @@ public class EventAdder extends ActionBarActivity {
     EditText mSummaryEdit;
     EditText mDetailsEdit;
     DatePicker mDateEdit;
-    EditText mGroupsEdit;
+    Spinner mGroupsEdit;
     EditText mYearEdit;
 
     String parentActivity = "Events";
 
     ArrayList<Faculty> faculties;
     ArrayList<Subject> subjects;
+
+    ArrayList<String> grouplist = new ArrayList<>();
 
     boolean student = false;
 
@@ -57,7 +59,7 @@ public class EventAdder extends ActionBarActivity {
         mDetailsEdit = (EditText) findViewById(R.id.event_edit_details);
         mDateEdit = (DatePicker) findViewById(R.id.event_edit_date);
         mYearEdit = (EditText) findViewById(R.id.event_edit_year);
-        mGroupsEdit = (EditText) findViewById(R.id.event_edit_groups);
+        mGroupsEdit = (Spinner) findViewById(R.id.event_edit_groups);
         mSubjectList = (Spinner) findViewById(R.id.event_subject_list);
 
         Database db = new Database(this);
@@ -100,6 +102,14 @@ public class EventAdder extends ActionBarActivity {
             temp = findViewById(R.id.event_batch_textview);
             ((LinearLayout)temp.getParent()).removeView(temp);
         }
+
+        grouplist.add("All");
+        grouplist.add("A");
+        grouplist.add("B");
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, grouplist);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mGroupsEdit.setAdapter(adapter);
+        mGroupsEdit.setSelection(0);
     }
 
     public void onPostClicked(View view) {
@@ -119,12 +129,13 @@ public class EventAdder extends ActionBarActivity {
             if (!mYearEdit.getText().toString().equals(""))
                 year = Integer.parseInt(mYearEdit.getText().toString());
         }
-        String groups = mGroupsEdit.getText().toString();
-        long date = 0;
+        String groups = grouplist.get((int)mGroupsEdit.getSelectedItemId());
+        if (groups.equals("All"))
+            groups = "";
 
         Calendar cal = Calendar.getInstance();
         cal.set(mDateEdit.getYear(), mDateEdit.getMonth(), mDateEdit.getDayOfMonth());
-        date = cal.getTimeInMillis()/1000;
+        long date = cal.getTimeInMillis()/1000;
 
         JSONObject json = new JSONObject();
         try {

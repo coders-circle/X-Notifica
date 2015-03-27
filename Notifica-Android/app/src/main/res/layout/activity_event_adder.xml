@@ -46,8 +46,9 @@
             android:text="Date: "/>
         <DatePicker
             android:id="@+id/event_edit_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
             android:calendarViewShown="false"/>
         <!--EditText
             android:id="@+id/event_edit_date"
@@ -77,22 +78,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Groups: "/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Group: "/>
 
-        <EditText
-            android:id="@+id/event_edit_groups"
+            <Spinner
+                android:id="@+id/event_edit_groups"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"/>
-
+            android:layout_height="20dp" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Post"
-            android:onClick="onPostClicked"/>
+            android:background="#00796b"
+            android:onClick="onPostClicked"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"/>
     </LinearLayout>
 </ScrollView>
