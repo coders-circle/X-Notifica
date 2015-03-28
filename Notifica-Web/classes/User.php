@@ -309,7 +309,7 @@ class User {
             }
         }
     }
-    
+
     function AddRoutine($year, $group, $starttime, $endtime, $routine_elements){
         if($this->LoggedIn() == false && $this->GetUserType() != 3){
             throw new PermissionDeniedException;
@@ -331,13 +331,12 @@ class User {
 
 
 
-    function AddStudent($studentname, $roll, $batch){
+    function AddStudent($studentname, $roll, $batch, $group){
         if($this->LoggedIn() == false && $this->GetUserType() != 3){
             throw new PermissionDeniedException;
         }
 
         $faculty_id = $this->facultyid;
-        $group = "A";
 
         $mysqli = $this->db;
 

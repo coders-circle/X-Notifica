@@ -136,7 +136,7 @@ body {
 }
 
 
-.form-adduser {
+.form-entry {
     padding: 19px 19px 19px;
     margin: 0 auto 20px;
     background-color: #feffff;
@@ -150,8 +150,8 @@ body {
 }
 
 
-.form-adduser .form-adduser-heading,
-.form-adduser .checkbox {
+.form-entry .form-adduser-heading,
+.form-entry .checkbox {
     margin-bottom: 10px;
 }
 .adduser-icon p,
@@ -159,7 +159,7 @@ body {
     text-align: center;
 }
 
-.form-adduser input[type="submit"]{
+.form-entry input[type="submit"]{
     background-color: #66cc70;
     border: 1px solid #66cc70;
             -webkit-border-radius: 5px;
@@ -170,12 +170,13 @@ body {
                     box-shadow: 0 1px 2px rgba(0,0,0,.05);
 }
 
-.form-adduser input[type="submit"],
-.form-adduser input[type="text"],
-.form-adduser input[type="number"],
-.form-adduser input[type="password"],
-.form-adduser input[type="time"],
-.form-adduser select{
+.form-entry input[type="submit"],
+.form-entry input[type="text"],
+.form-entry input[type="number"],
+.form-entry input[type="password"],
+.form-entry input[type="time"],
+.form-entry button,
+.form-entry select{
     font-size: 16px;
     height: auto;
     margin-bottom: 20px;

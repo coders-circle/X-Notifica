@@ -19,12 +19,13 @@ if($tabID == 'home') {
 
 else if($tabID == 'students') {
     $adminPage->SetActiveTab(1);
-    if(isset($_POST['studentname']) && isset($_POST['batch']) && isset($_POST['roll'])){
+    if(isset($_POST['studentname']) && isset($_POST['batch']) && isset($_POST['roll']) && isset($_POST['group'])){
         $studentname = $_POST['studentname'];
         $batch = $_POST['batch'];
         $roll = $_POST['roll'];
+        $group = $_POST['group'];
         $user = $GLOBALS['g_user'];
-        $user->AddStudent($studentname, $roll, $batch);
+        $user->AddStudent($studentname, $roll, $batch, $group);
     }
 }
 
@@ -78,13 +79,13 @@ else if($tabID == 'routine'){
             $element = array();
         }
         }
-        
-   
+
+
 //        for ($i=0; $i<$count; $i++) {
 //            $arr = $elements[$i];
 //            foreach($arr as $key => $value)
 //                echo $key . " = ". $value . "<br/>";
-//        }      
+//        }
         $user->AddRoutine($batch, $group, 0, 24*60, $elements);
     }
     $adminPage->SetActiveTab(4);

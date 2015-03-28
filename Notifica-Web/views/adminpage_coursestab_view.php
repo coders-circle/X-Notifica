@@ -23,7 +23,7 @@
             </div>
             <div class="col-md-5">
                 <h1 class="page-header">Quick Add</h1>
-                <form class="form-adduser" action="index.php?page=adminpage&amp;tab=courses" method="post" name="registration_form" role="form">
+                <form class="form-entry" action="index.php?page=adminpage&amp;tab=courses" method="post" name="registration_form" role="form">
                     <input type='text' class="form-control" placeholder="Subject Name" name="subjectname" id="subjectname" required>
                     <input type='text' class='form-control' placeholder="Subject Code" name="subjectcode" id="subjectcode" required>
                     <select class="form-control" placeholder="Select a faculty" name="faculty" id ="faculty" required>
