@@ -8,6 +8,7 @@ public class Event {
 
     public String posterId;
 
+    boolean deleted;
 
     // for teacher only
     public Faculty faculty;

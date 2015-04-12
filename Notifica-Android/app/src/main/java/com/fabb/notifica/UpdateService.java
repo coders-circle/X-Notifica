@@ -181,16 +181,16 @@ public class UpdateService {
                 long id = assignment.optLong("id");
                 int deleted = assignment.optInt("deleted");
                 db.RemoveAssignment(id);
-                if (deleted == 0) {
+                //if (deleted == 0) {
                     long sub_id = db.GetSubjectId(assignment.optString("subject_code"));
                     if (isTeacher)
                         db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
-                                assignment.optString("details"), assignment.optString("poster_id"),
+                                assignment.optString("details"), assignment.optString("poster_id"), deleted==1,
                                 db.GetFacultyId(assignment.optString("faculty_code")), assignment.optInt("year"), assignment.optString("groups"));
                     else
                         db.AddAssignment(id, assignment.optLong("date"), sub_id, assignment.optString("summary"),
-                                assignment.optString("details"), assignment.optString("poster_id"));
-                }
+                                assignment.optString("details"), assignment.optString("poster_id"), deleted==1);
+                //}
                 acnt++;
             }
         }
@@ -203,15 +203,15 @@ public class UpdateService {
                 long id = event.optLong("id");
                 int deleted = event.optInt("deleted");
                 db.RemoveEvent(id);
-                if (deleted == 0) {
+                //if (deleted == 0) {
                     if (isTeacher)
                         db.AddEvent(id, event.optLong("date"), event.optString("summary"),
-                            event.optString("details"), event.optString("poster_id"),
+                            event.optString("details"), event.optString("poster_id"), deleted==1,
                                 db.GetFacultyId(event.optString("faculty_code")), event.optInt("year"), event.optString("groups"));
                     else
                         db.AddEvent(id, event.optLong("date"), event.optString("summary"),
-                                event.optString("details"), event.optString("poster_id"));
-                }
+                                event.optString("details"), event.optString("poster_id"), deleted==1);
+                //}
                 ecnt++;
             }
         }

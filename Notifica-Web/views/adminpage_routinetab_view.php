@@ -72,7 +72,7 @@
                         <input class="form-control" type="time" name="start[]" />
                     </div>
                     <div class="col-md-2">
-                        <div style="margin-top:30px;"><b>to</b></div>
+                        <div style="margin-top:85%;"><b>to</b></div>
                     </div>
                     <div class="col-md-5">
                         <input class="form-control" type="time" name="end[]" />
@@ -104,7 +104,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <button class="form-control" type="button" class="btn btn-default btn-lg">
+                <button class="form-control" type="button" class="btn btn-default btn-lg" onClick="RemoveElement();" >
                     <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span> Remove
                 </button>
             </div>

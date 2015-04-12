@@ -15,7 +15,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -45,11 +45,11 @@ public class Database extends SQLiteOpenHelper{
 
     private static final String EVENTS_TABLE_CREATE = "CREATE TABLE "
             + EVENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "date INTEGER, summary TEXT, details TEXT, posterId TEXT, "
+            + "date INTEGER, summary TEXT, details TEXT, posterId TEXT, deleted INTEGER, "
             + "faculty INTEGER, year INTEGER, groups TEXT);"; // Extra for teachers
     private static final String ASSIGNMENTS_TABLE_CREATE = "CREATE TABLE "
             + ASSIGNMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "date INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT, "
+            + "date INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT, deleted INTEGER, "
             + "faculty INTEGER, year INTEGER, groups TEXT);"; // Extra for teachers
 
     public Database(Context context) {
@@ -87,11 +87,13 @@ public class Database extends SQLiteOpenHelper{
         db.delete(EVENTS_TABLE, null, null);
         db.delete(ASSIGNMENTS_TABLE, null, null);
         db.delete(FACULTIES_TABLE, null, null);
+        db.close();
     }
 
     public void DeleteRoutine() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ROUTINE_ELEMENTS_TABLE, null, null);
+        db.close();
     }
     public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime, int type) {
         ContentValues c = new ContentValues();
@@ -103,6 +105,7 @@ public class Database extends SQLiteOpenHelper{
         c.put("type", type);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(ROUTINE_ELEMENTS_TABLE, null, c);
+        db.close();
     }
 
     public void AddRoutineElement(long subject, long teacher, int day, int startTime, int endTime, int type, long faculty, int year, String group) {
@@ -118,6 +121,7 @@ public class Database extends SQLiteOpenHelper{
         c.put("type", type);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(ROUTINE_ELEMENTS_TABLE, null, c);
+        db.close();
     }
 
 
@@ -125,6 +129,7 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.delete(SUBJECTS_TABLE, null, null);
         db.delete(TEACHERS_TABLE, null, null);
+        db.close();
     }
     public long AddSubject(String code, String name, long faculty) {
         if (GetSubjectId(code) != -1)
@@ -134,7 +139,9 @@ public class Database extends SQLiteOpenHelper{
         c.put("name", name);
         c.put("faculty", faculty);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(SUBJECTS_TABLE, null, c);
+        long iid = db.insert(SUBJECTS_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
     public long AddTeacher(String userid, String name, String contact, long faculty) {
@@ -146,12 +153,15 @@ public class Database extends SQLiteOpenHelper{
         c.put("contact", contact);
         c.put("faculty", faculty);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(TEACHERS_TABLE, null, c);
+        long iid =  db.insert(TEACHERS_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
     public void DeleteFaculties() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(FACULTIES_TABLE, null, null);
+        db.close();
     }
     public long AddFaculty(String name, String code) {
         if (GetFacultyId(code) != -1)
@@ -160,14 +170,17 @@ public class Database extends SQLiteOpenHelper{
         c.put("code", code);
         c.put("name", name);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(FACULTIES_TABLE, null, c);
+        long iid = db.insert(FACULTIES_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
     public void DeleteAssignments() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ASSIGNMENTS_TABLE, null, null);
+        db.close();
     }
-    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId) {
+    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId, boolean deleted) {
         ContentValues c = new ContentValues();
         c.put("id", id);
         c.put("date", date);
@@ -175,11 +188,14 @@ public class Database extends SQLiteOpenHelper{
         c.put("summary", summary);
         c.put("details", details);
         c.put("posterId", posterId);
+        c.put("deleted", deleted?1:0);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(ASSIGNMENTS_TABLE, null, c);
+        long iid = db.insert(ASSIGNMENTS_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
-    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId, long faculty, int year, String groups) {
+    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
         ContentValues c = new ContentValues();
         c.put("id", id);
         c.put("date", date);
@@ -190,51 +206,63 @@ public class Database extends SQLiteOpenHelper{
         c.put("faculty", faculty);
         c.put("year", year);
         c.put("groups", groups);
+        c.put("deleted", deleted?1:0);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(ASSIGNMENTS_TABLE, null, c);
+        long iid = db.insert(ASSIGNMENTS_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
     public void RemoveAssignment(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(ASSIGNMENTS_TABLE, "id=?", new String[]{id+""});
+        db.close();
     }
 
     public void RemoveEvent(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(EVENTS_TABLE, "id=?", new String[]{id+""});
+        db.close();
     }
 
     public void RemoveTeacher(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TEACHERS_TABLE, "id=?", new String[]{id+""});
+        db.close();
     }
 
     public void RemoveFaculty(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(FACULTIES_TABLE, "id=?", new String[]{id+""});
+        db.close();
     }
 
     public void RemoveSubject(long id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(SUBJECTS_TABLE, "id=?", new String[]{id+""});
+        db.close();
     }
 
     public void DeleteEvents() {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(EVENTS_TABLE, null, null);
+        db.close();
     }
-    public long AddEvent(long id, long date, String summary, String details, String posterId) {
+    public long AddEvent(long id, long date, String summary, String details, String posterId, boolean deleted) {
         ContentValues c = new ContentValues();
         c.put("id", id);
         c.put("date", date);
         c.put("summary", summary);
         c.put("details", details);
         c.put("posterId", posterId);
+        c.put("deleted", deleted?1:0);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(EVENTS_TABLE, null, c);
+        long iid = db.insert(EVENTS_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
-    public long AddEvent(long id, long date, String summary, String details, String posterId, long faculty, int year, String groups) {
+    public long AddEvent(long id, long date, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
         ContentValues c = new ContentValues();
         c.put("id", id);
         c.put("date", date);
@@ -244,8 +272,11 @@ public class Database extends SQLiteOpenHelper{
         c.put("faculty", faculty);
         c.put("year", year);
         c.put("groups", groups);
+        c.put("deleted", deleted?1:0);
         SQLiteDatabase db = getWritableDatabase();
-        return db.insert(EVENTS_TABLE, null, c);
+        long iid = db.insert(EVENTS_TABLE, null, c);
+        db.close();
+        return iid;
     }
 
     private Comparator<RoutineElement> rcompare = new Comparator<RoutineElement>() {
@@ -287,13 +318,14 @@ public class Database extends SQLiteOpenHelper{
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))
                 r.year = c.getInt(c.getColumnIndex("year"));
-            if (!c.isNull(c.getColumnIndex("group")))
+            if (!c.isNull(c.getColumnIndex("group_id")))
                 r.group = c.getString(c.getColumnIndex("group_id"));
             rs.add(r);
             c.moveToNext();
         }
         Collections.sort(rs, rcompare);
         c.close();
+        db.close();
         return rs;
     }
 
@@ -314,13 +346,14 @@ public class Database extends SQLiteOpenHelper{
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))
                 r.year = c.getInt(c.getColumnIndex("year"));
-            if (!c.isNull(c.getColumnIndex("group")))
+            if (!c.isNull(c.getColumnIndex("group_id")))
                 r.group = c.getString(c.getColumnIndex("group_id"));
             rs.add(r);
             c.moveToNext();
         }
         Collections.sort(rs, rcompare);
         c.close();
+        db.close();
         return rs;
     }
 
@@ -337,6 +370,7 @@ public class Database extends SQLiteOpenHelper{
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
+            r.deleted = c.getInt(c.getColumnIndex("deleted")) == 1;
             if (!c.isNull(c.getColumnIndex("faculty")))
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))
@@ -348,6 +382,7 @@ public class Database extends SQLiteOpenHelper{
         }
         Collections.sort(rs, acompare);
         c.close();
+        db.close();
         return rs;
     }
 
@@ -363,6 +398,7 @@ public class Database extends SQLiteOpenHelper{
             r.summary = c.getString(c.getColumnIndex("summary"));
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
+            r.deleted = c.getInt(c.getColumnIndex("deleted")) == 1;
             if (!c.isNull(c.getColumnIndex("faculty")))
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))
@@ -374,6 +410,7 @@ public class Database extends SQLiteOpenHelper{
         }
         Collections.sort(rs, ecompare);
         c.close();
+        db.close();
         return rs;
     }
 
@@ -390,6 +427,7 @@ public class Database extends SQLiteOpenHelper{
             rs.add(r);
         }
         c.close();
+        db.close();
         return rs;
     }
 
@@ -404,6 +442,7 @@ public class Database extends SQLiteOpenHelper{
             t.code = c.getString(c.getColumnIndex("code"));
         }
         c.close();
+        db.close();
         return t;
     }
 
@@ -418,6 +457,7 @@ public class Database extends SQLiteOpenHelper{
             t.userId = c.getString(c.getColumnIndex("user_id"));
         }
         c.close();
+        db.close();
         return t;
     }
 
@@ -446,6 +486,7 @@ public class Database extends SQLiteOpenHelper{
             rs.add(r);
         }
         c.close();
+        db.close();
         return rs;
     }
 
@@ -472,6 +513,7 @@ public class Database extends SQLiteOpenHelper{
             c2.close();
         }
         c.close();
+        db.close();
         return f;
     }
 
@@ -483,6 +525,7 @@ public class Database extends SQLiteOpenHelper{
         if (c1.getCount() > 0)
             f = GetFaculty(c1.getLong(c1.getColumnIndex("faculty")));
         c1.close();
+        db.close();
         return f;
     }
 
@@ -494,6 +537,7 @@ public class Database extends SQLiteOpenHelper{
         if (c1.getCount() > 0)
             f = GetFaculty(c1.getLong(c1.getColumnIndex("faculty")));
         c1.close();
+        db.close();
         return f;
     }
 
@@ -507,6 +551,7 @@ public class Database extends SQLiteOpenHelper{
             id = c1.getLong(c1.getColumnIndex("id"));
         }
         c1.close();
+        db.close();
         return id;
     }
 
@@ -519,6 +564,7 @@ public class Database extends SQLiteOpenHelper{
             id = c1.getLong(c1.getColumnIndex("id"));
         }
         c1.close();
+        db.close();
         return id;
     }
 
@@ -531,6 +577,7 @@ public class Database extends SQLiteOpenHelper{
             tid = c.getLong(c.getColumnIndex("id"));
         }
         c.close();
+        db.close();
         return tid;
     }
 
