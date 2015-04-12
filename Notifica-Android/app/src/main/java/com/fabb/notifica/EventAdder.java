@@ -26,7 +26,7 @@ import java.util.Date;
 
 
 public class EventAdder extends ActionBarActivity {
-    private static final String postPhp = "sample_post.php";
+    private static final String postPhp = "device_post.php";
     Spinner mFacultyList;
     Spinner mSubjectList;
     EditText mSummaryEdit;

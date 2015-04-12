@@ -10,6 +10,7 @@ public class Assignment {
 
     public String posterId;
 
+    boolean deleted;
 
     // for teacher only
     public Faculty faculty;

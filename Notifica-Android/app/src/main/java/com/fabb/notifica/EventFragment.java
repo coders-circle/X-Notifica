@@ -89,6 +89,7 @@ public class EventFragment extends Fragment implements UpdateListener {
 
     private ArrayList<Long> mIds = new ArrayList<>();
     private void prepareListData() {
+        mIds.clear();
         listDataHeader = new ArrayList<>();
         listDataChild = new HashMap<>();
         Database db = new Database(getActivity());
@@ -101,6 +102,8 @@ public class EventFragment extends Fragment implements UpdateListener {
 
             String title = as.summary
                     + "\nDate:  " + format1.format(cal.getTime());
+            if (as.deleted)
+                title += "\nCancelled";
 
             List<String> children = new ArrayList<>();
             String contents = as.details;
@@ -137,7 +140,7 @@ public class EventFragment extends Fragment implements UpdateListener {
         int type = ExpandableListView.getPackedPositionType(info.packedPosition);
 
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-            menu.add("Delete");
+            menu.add("Cancel");
         }
     }
 
