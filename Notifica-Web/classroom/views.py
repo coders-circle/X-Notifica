@@ -5,12 +5,13 @@ from django.contrib.auth import authenticate
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-from .models import Faculty, Subject, Student, Teacher, Routine, RoutineElement, Assignment, Event
 import json
-from helpers import hm_to_int, seconds_to_datetime, datetime_to_seconds
+from .models import *
+from helpers import *
 
 def index(request):
-    return HttpResponse("<h1>Testing Testing</h1>")
+    context = {}
+    return render(request, 'classroom/index.html', context)
 
 # some standard error responses
 error_response = { 'message_type':'Error' }
@@ -50,7 +51,7 @@ def json_authenticate(data):
 @csrf_exempt
 def login(request):
     if request.method != "POST":
-        return error_response
+        return JsonResponse(error_response)
 
     indata = json.loads(request.body.decode('utf-8'))
     if (indata.get("message_type","") != "Login Request"):
@@ -78,7 +79,7 @@ def login(request):
 @csrf_exempt
 def update(request):
     if request.method != "POST":
-        return error_response
+        return JsonResponse(error_response)
 
     indata = json.loads(request.body.decode('utf-8'))
     if (indata.get("message_type","") != "Update Request"):
@@ -193,7 +194,7 @@ def update(request):
 @csrf_exempt
 def post(request):   
     if request.method != "POST":
-        return error_response
+        return JsonResponse(error_response)
  
     indata = json.loads(request.body.decode('utf-8'))
 

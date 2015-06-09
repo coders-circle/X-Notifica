@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Faculty, Subject, Student, Teacher, Routine, RoutineElement, Assignment, Event
+from .models import *
 
 import time
 
