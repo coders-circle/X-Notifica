@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 public class Network {
     private final Context mContext;
 
-    public final String URL = "http://192.168.43.24/Notifica-Web/";
+    public final String URL = "http://192.168.1.103/Notifica-Web/";
     public final String ERR_CONNECTION = "{ \"message_type\": \"ERROR CONNECTION\" }";
 
     Network(Context context) {
