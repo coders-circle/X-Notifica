@@ -99,15 +99,13 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     }
 
     @Override
-    public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
-        if (routineCnt > 0) {
-            routine.clear();
-            Database db = new Database(mActivity);
-            for (int d = 0; d < 7; ++d) {
-                routine.add(db.GetRoutine(RoutineElement.Day.values()[d]));
-            }
-            Refresh();
+    public void OnUpdated(int eventCnt, int assignmentCnt) {
+        routine.clear();
+        Database db = new Database(mActivity);
+        for (int d = 0; d < 7; ++d) {
+            routine.add(db.GetRoutine(RoutineElement.Day.values()[d]));
         }
+        Refresh();
     }
 
     public static class DayFragment extends Fragment {

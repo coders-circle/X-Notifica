@@ -3,6 +3,7 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
@@ -22,7 +23,7 @@ import java.io.InputStreamReader;
 public class Network {
     private final Context mContext;
 
-    public final String URL = "http://192.168.43.24/Notifica-Web/";
+    public final String URL = "http://192.168.0.59:8000/";
     public final String ERR_CONNECTION = "{ \"message_type\": \"ERROR CONNECTION\" }";
 
     Network(Context context) {
@@ -49,7 +50,6 @@ public class Network {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(mContext, "Error: Cannot Establish Connection", Toast.LENGTH_LONG).show();
             result = ERR_CONNECTION;
         }
         return result;
@@ -67,10 +67,10 @@ public class Network {
             post.setHeader("Accept", "application/json");
             post.setEntity(new StringEntity(jsonObject.toString()));
             response = client.execute(post);
-
             if(response!=null){
                 InputStream in = response.getEntity().getContent(); //Get the data in the entity
                 result = convertStreamToString(in);
+                Log.d("Result", result);
             }
         } catch(Exception e) {
 

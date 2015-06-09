@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -180,9 +181,8 @@ public class Database extends SQLiteOpenHelper{
         db.delete(ASSIGNMENTS_TABLE, null, null);
         db.close();
     }
-    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId, boolean deleted) {
+    public long AddAssignment(long date, long subject, String summary, String details, String posterId, boolean deleted) {
         ContentValues c = new ContentValues();
-        c.put("id", id);
         c.put("date", date);
         c.put("subject", subject);
         c.put("summary", summary);
@@ -195,9 +195,8 @@ public class Database extends SQLiteOpenHelper{
         return iid;
     }
 
-    public long AddAssignment(long id, long date, long subject, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
+    public long AddAssignment(long date, long subject, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
         ContentValues c = new ContentValues();
-        c.put("id", id);
         c.put("date", date);
         c.put("subject", subject);
         c.put("summary", summary);
@@ -248,9 +247,8 @@ public class Database extends SQLiteOpenHelper{
         db.delete(EVENTS_TABLE, null, null);
         db.close();
     }
-    public long AddEvent(long id, long date, String summary, String details, String posterId, boolean deleted) {
+    public long AddEvent(long date, String summary, String details, String posterId, boolean deleted) {
         ContentValues c = new ContentValues();
-        c.put("id", id);
         c.put("date", date);
         c.put("summary", summary);
         c.put("details", details);
@@ -262,9 +260,8 @@ public class Database extends SQLiteOpenHelper{
         return iid;
     }
 
-    public long AddEvent(long id, long date, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
+    public long AddEvent( long date, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
         ContentValues c = new ContentValues();
-        c.put("id", id);
         c.put("date", date);
         c.put("summary", summary);
         c.put("details", details);
@@ -531,7 +528,7 @@ public class Database extends SQLiteOpenHelper{
 
     public Faculty GetFaculty(Teacher teacher) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c1 = db.rawQuery("SELECT * FROM " + SUBJECTS_TABLE + " WHERE user_id = ?", new String[]{teacher.userId});
+        Cursor c1 = db.rawQuery("SELECT * FROM " + TEACHERS_TABLE + " WHERE user_id = ?", new String[]{teacher.userId});
         c1.moveToFirst();
         Faculty f = null;
         if (c1.getCount() > 0)

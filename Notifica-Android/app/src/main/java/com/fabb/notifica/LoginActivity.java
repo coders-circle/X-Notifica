@@ -20,13 +20,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 
 /**
@@ -36,7 +32,7 @@ public class LoginActivity extends Activity {
     // Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask mAuthTask = null;
 
-    public final String LoginPage = "device_login.php";
+    public final String LoginUrl = "login";
 
     // UI references.
     private EditText mUserIdView;
@@ -44,8 +40,6 @@ public class LoginActivity extends Activity {
     private View mProgressView;
     private View mLoginFormView;
     private TextView mLoginMessageView;
-
-    public enum UserType { None, Student, Teacher }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +134,6 @@ public class LoginActivity extends Activity {
             // perform the user login attempt.
             showProgress(true);
 
-            // Encrypt the password before moving forward
-            password = Encrypt512(password);
             mAuthTask = new UserLoginTask(this, userId, password);
             mAuthTask.execute((Void) null);
         }
@@ -186,29 +178,13 @@ public class LoginActivity extends Activity {
     private JSONObject GetLoginJson(String userId, String password) {
         JSONObject json = new JSONObject();
         try {
+            json.put("message_type", "Login Request");
             json.put("user_id", userId);
             json.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return json;
-    }
-
-    public static String Encrypt512(String password) {
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("SHA-512");
-            md.update(password.getBytes());
-            byte byteData[] = md.digest();
-            StringBuilder sb = new StringBuilder();
-            for (byte aByteData : byteData) {
-                sb.append(String.format("%02X", aByteData));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            Log.w("ERROR ENCRYPTING", "Could not load MessageDigest: SHA-512");
-            return "";
-        }
     }
 
     /**
@@ -236,14 +212,17 @@ public class LoginActivity extends Activity {
         protected Boolean doInBackground(Void... params) {
             try {
                 Network network = new Network(LoginActivity.this);
-                String result = network.PostJson(LoginPage, GetLoginJson(mUserId, mPassword));
+                String result = network.PostJson(LoginUrl, GetLoginJson(mUserId, mPassword));
                 response = new JSONObject(result);
-                if (!response.has("message_type") || !response.optString("message_type").equals("Login Result") || !response.has("login_result")) {
-                    failureMessage = "Couldn't login. Please verify you are connected to internet and try again";
-                    return false;
-                }
-                if (!response.optString("login_result").equals("Success")) {
-                    failureMessage = response.optString("failure_message");
+
+                if (!response.has("message_type")
+                        || !response.optString("message_type").equals("Login Result")
+                        || !response.has("login_result")
+                        || !response.optString("login_result").equals("Success")) {
+                    if (response.has("failure_message"))
+                        failureMessage = response.optString("failure_message");
+                    else
+                        failureMessage = "Couldn't login. Please verify you are connected to internet and try again";
                     return false;
                 }
             } catch (Exception e) {
@@ -264,12 +243,11 @@ public class LoginActivity extends Activity {
                 editor.putInt("batch", response.optInt("batch"));
                 editor.putInt("privilege", response.optInt("privilege"));
             }
-            editor.putLong("updated-at", 0);
             editor.putInt("routine-start", 0);
             editor.putInt("routine-end", 0);
             editor.putBoolean("logged-in", true);
             editor.apply();
-            UpdateService.Update(LoginActivity.this, updateResult, true);
+            UpdateService.Update(LoginActivity.this, updateResult);
 
             return true;
         }

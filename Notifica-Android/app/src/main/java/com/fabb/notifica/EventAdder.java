@@ -1,7 +1,6 @@
 package com.fabb.notifica;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -14,19 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class EventAdder extends ActionBarActivity {
-    private static final String postPhp = "device_post.php";
+    private static final String postUrl = "post";
     Spinner mFacultyList;
     Spinner mSubjectList;
     EditText mSummaryEdit;
@@ -41,8 +35,6 @@ public class EventAdder extends ActionBarActivity {
     ArrayList<Subject> subjects;
 
     ArrayList<String> grouplist = new ArrayList<>();
-
-    boolean student = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,10 +178,10 @@ public class EventAdder extends ActionBarActivity {
             try {
                 success = false;
                 Network network = new Network(mActivity);
-                result = network.PostJson(postPhp, mJson);
+                result = network.PostJson(postUrl, mJson);
                 mReturn = new JSONObject(result);
                 if (mReturn.optString("post_result").equals("Success")) {
-                    UpdateService.Update(mActivity, mUpdateResult, true);
+                    UpdateService.Update(mActivity, mUpdateResult);
                     success = true;
                 }
             } catch (Exception e) {

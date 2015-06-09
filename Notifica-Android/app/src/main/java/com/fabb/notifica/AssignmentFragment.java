@@ -121,7 +121,7 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
     }
 
     @Override
-    public void OnUpdated(int eventCnt, int assignmentCnt, int routineCnt) {
+    public void OnUpdated(int eventCnt, int assignmentCnt) {
         try {
             prepareListData();
             listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);

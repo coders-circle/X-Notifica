@@ -6,7 +6,7 @@
         android:orderInCategory="110" app:showAsAction="never" />
 
     <item android:id="@+id/action_update" android:title="Update"
-        android:orderInCategory="105"  app:showAsAction="never" />
-
+        android:icon="@drawable/ic_sync"
+        android:orderInCategory="105"  app:showAsAction="always" />
 
 </menu>
