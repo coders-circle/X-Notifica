@@ -142,7 +142,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                     lastTime = r.startTime;
                     first = false;
                 }
-                if (lastTime != r.startTime) {
+                if (lastTime < r.startTime) {
                     CustomListAdapter.CustomListItem info = new CustomListAdapter.CustomListItem();
                     info.teachers = "Break";
                     infos.add(info);
@@ -155,8 +155,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                     if (r.type == 0)
                         subject += " (Lecture)";
                     else if (r.type == 1)
-                        subject += " (Tutorial)";
-                    else if (r.type == 2)
                         subject += " (Practical)";
                 }
                 if (isteacher) {

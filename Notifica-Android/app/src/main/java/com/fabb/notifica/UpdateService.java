@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +18,8 @@ public class UpdateService {
         updateListeners.add(listener);
     }
     private final static String updateUrl = "update";
+
+    public static boolean IsUpdating = false;
 
     static String result = "";
     public static boolean Update(Context ctx, UpdateResult updateResult) {
@@ -163,19 +166,33 @@ public class UpdateService {
     public static class UpdateTask extends AsyncTask<Void, Void, Void> {
         private final Context mContext;
         private UpdateResult result = new UpdateResult();
+        private boolean cancelled = false;
 
         UpdateTask(Context context) {
             mContext = context;
         }
         @Override
         protected Void doInBackground(Void... params) {
+            if (IsUpdating) {
+                cancelled = true;
+                return null;
+            }
+            IsUpdating = true;
             Update(mContext, result);
             return null;
         }
 
         @Override
         protected void onPostExecute(final Void v) {
+            if (cancelled)
+                return;
             FinishUpdate(result);
+            IsUpdating = false;
+            if (result.updated)
+                Toast.makeText(mContext, "Updated", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(mContext, "Update Failed", Toast.LENGTH_LONG).show();
+
             //Toast.makeText(mContext, UpdateService.result, Toast.LENGTH_LONG).show();
         }
     }

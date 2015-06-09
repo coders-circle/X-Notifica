@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 import time
-from datetime import datetime
+import datetime
 
 # Earliest datetime possible
 def DefaultDateTime():
-    return datetime(*time.gmtime(0)[:6]).isoformat()
+    return datetime.datetime.combine(datetime.datetime(*time.gmtime(0)[:6]), datetime.time())
 
 
 # Department or Faculty
