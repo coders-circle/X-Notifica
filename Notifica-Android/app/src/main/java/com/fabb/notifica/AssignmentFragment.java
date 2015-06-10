@@ -30,8 +30,7 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
 
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
-    List<String> listDataHeader;
-    HashMap<String, List<String>> listDataChild;
+    List<ExpandableListAdapter.Item> listItems;
     boolean privileged = false;
 
     @Override
@@ -82,7 +81,7 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
 
         expListView = (ExpandableListView) getActivity().findViewById(R.id.assignment_list);
         prepareListData();
-        listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapter(getActivity(), listItems);
         expListView.setAdapter(listAdapter);
 
         UpdateService.AddUpdateListener(this);
@@ -92,31 +91,23 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
     private ArrayList<Long> mIds = new ArrayList<>();
     private void prepareListData() {
         mIds.clear();
-        listDataHeader = new ArrayList<>();
-        listDataChild = new HashMap<>();
+        listItems = new ArrayList<>();
         Database db = new Database(getActivity());
         List<Assignment> ass = db.GetAssignments();
-        int i = 0;
         for (Assignment as: ass){
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(as.date*1000);
             SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
-            String title = as.summary;
+            String extra = "";
             if (as.subject != null)
-                title += "\nSubject: " + as.subject.name;
-            title += "\nDate of Submission:\n    " + format1.format(cal.getTime());
+                extra += "Subject: " + as.subject.name;
+            extra += "\nDate of Submission:\n    " + format1.format(cal.getTime());
             if (as.deleted)
-                title += "\nCancelled";
+                extra += "\nCancelled";
 
-            List<String> children = new ArrayList<>();
-            String contents = as.details;
-            children.add(contents);
-
-            listDataHeader.add(title);
+            listItems.add(new ExpandableListAdapter.Item(as.summary, as.details, extra));
             mIds.add(as.id);
-            listDataChild.put(listDataHeader.get(i), children);
-            i++;
         }
     }
 
@@ -126,7 +117,7 @@ public class AssignmentFragment extends Fragment implements UpdateListener {
             return;
         try {
             prepareListData();
-            listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
+            listAdapter = new ExpandableListAdapter(getActivity(), listItems);
             expListView.setAdapter(listAdapter);
             expListView.invalidate();
             registerForContextMenu(expListView);

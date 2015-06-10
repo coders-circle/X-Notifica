@@ -13,21 +13,26 @@ import java.util.List;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
+    public static class Item {
+        String summary, details, extra;
+        public Item(String summary, String details, String extra) {
+            this.summary = summary;
+            this.details = details;
+            this.extra = extra;
+        }
+    }
+
     private Context mContext;
-    private List<String> mListDataHeader;
+    private List<Item> mListItems;
 
-    private HashMap<String, List<String>> mListDataChild;
-
-    public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData) {
+    public ExpandableListAdapter(Context context, List<Item> listItems) {
         this.mContext = context;
-        this.mListDataHeader = listDataHeader;
-        this.mListDataChild = listChildData;
+        this.mListItems = listItems;
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return this.mListDataChild.get(this.mListDataHeader.get(groupPosition))
-                .get(childPosition);
+        return mListItems.get(groupPosition).details;
     }
 
     @Override
@@ -45,24 +50,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.list_item, parent, false);
         }
 
-        TextView txtListChild = (TextView) convertView.findViewById(R.id.lblListItem);
+        TextView txtListChild = (TextView) convertView.findViewById(R.id.details_view);
         txtListChild.setText(childText);
         return convertView;
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return this.mListDataChild.get(this.mListDataHeader.get(groupPosition)).size();
+        return 1;
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return this.mListDataHeader.get(groupPosition);
+        return mListItems.get(groupPosition);
     }
 
     @Override
     public int getGroupCount() {
-        return this.mListDataHeader.size();
+        return mListItems.size();
     }
 
     @Override
@@ -72,13 +77,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+        Item item = (Item) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_group, parent, false);
         }
 
-        TextView lblListHeader = (TextView) convertView.findViewById(R.id.lblListHeader);
+        String headerTitle = item.summary + "\n" + item.extra;
+        TextView lblListHeader = (TextView) convertView.findViewById(R.id.summary_view);
         lblListHeader.setText(headerTitle);
         return convertView;
     }
