@@ -117,7 +117,9 @@ public class EventFragment extends Fragment implements UpdateListener {
     }
 
     @Override
-    public void OnUpdated(int eventCnt, int assignmentCnt) {
+    public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
+        if (!hasUpdated)
+            return;
         try {
             prepareListData();
             listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);

@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 import json
 from .models import *
 from helpers import *
+from datetime import datetime
 
 def index(request):
     context = {}
@@ -73,7 +74,8 @@ def login(request):
 """
  Update Request and Response
  { "message_type" : "Login Request", "user_id":<username>, "password":<password> }
- { "message_type" : "Update Result", "update_result":"Success", <update data>... }
+ { "message_type" : "Update Result", "update_result":"Success", "updated_at":<timestamp>, <update data>... }
+ { "message_type" : "Update Successful", "user_id":<username>, "password":<password>, "updated_at":<timestamp> }
 """
 
 @csrf_exempt
@@ -82,7 +84,12 @@ def update(request):
         return JsonResponse(error_response)
 
     indata = json.loads(request.body.decode('utf-8'))
-    if (indata.get("message_type","") != "Update Request"):
+
+    if (indata.get("message_type","") == "Update Request"):
+        urequest = True
+    elif (indata.get("message_type","") == "Update Successful"):
+        urequest = False
+    else:
         return JsonResponse(error_response)
     
     user_type, user = json_authenticate(indata)
@@ -91,6 +98,11 @@ def update(request):
 
     outdata = {"message_type":"Database Update", "update_result":"Success"}
 
+    # Update "updated_at" field of user is update is successful
+    if not urequest:
+        user.updated_at = seconds_to_datetime(indata.get("updated_at", datetime_to_seconds(DefaultDateTime())))
+        user.save()
+    
     """
      Response contains:
      - all faculties
@@ -98,7 +110,11 @@ def update(request):
      - assignments
      - events
      - subjects and teachers referenced in the routine, assignments and events
+     - update timestamp
+     - new events and assignments since user last updated
     """
+   
+    outdata["updated_at"] = datetime_to_seconds(datetime.now())
 
     faculties_objects = Faculty.objects.all()
     faculties = []
@@ -112,6 +128,9 @@ def update(request):
     elements = []
     assignments = []
     events = []
+
+    ecnt = 0
+    acnt = 0
     
     # For student, routine, assignments and events are filtered with batch, faculty and group
     # Assignments and events may not contain batch, faculty or group fields, so the queries are OR-ed
@@ -148,6 +167,8 @@ def update(request):
         teachers_objects.add(el.teacher)
 
     for asgn in assignments_objects:
+        if asgn.modified_at > user.updated_at:
+            acnt += 1
         assignment = {"date":datetime_to_seconds(asgn.date), "summary":asgn.summary, "subject_code":asgn.subject.code,
                             "details":asgn.details, "poster_id":asgn.poster.username}
         if user_type == "Teacher":
@@ -158,6 +179,8 @@ def update(request):
         subjects_objects.add(asgn.subject)
 
     for evnt in events_objects:
+        if evnt.modified_at > user.updated_at:
+            ecnt += 1
         event = {"date":datetime_to_seconds(evnt.date), "summary":evnt.summary,
                             "details":evnt.details, "poster_id":evnt.poster.username}
         if user_type == "Teacher":
@@ -182,6 +205,8 @@ def update(request):
     outdata["subjects"] = subjects
     outdata["teachers"] = teachers
     outdata["faculties"] = faculties
+    outdata["new_assignments_count"] = acnt
+    outdata["new_events_count"] = ecnt
     return JsonResponse(outdata)
 
 

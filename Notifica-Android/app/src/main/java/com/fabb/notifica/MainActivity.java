@@ -21,13 +21,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements UpdateListener {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mPageTitles;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    public Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +78,35 @@ public class MainActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        /*
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }*/
         selectItem(0);
 
+        UpdateService.AddUpdateListener(this);
+    }
+
+    private int new_assignment_cnt = 0;
+    private int new_event_cnt = 0;
+    public void UpdateDrawer() {
+        if (new_assignment_cnt > 0)
+            mPageTitles[1] = "Assignments    (" + new_assignment_cnt + " new)";
+        else
+            mPageTitles[1] = "Assignments";
+        if (new_event_cnt > 0)
+            mPageTitles[2] = "Events    (" + new_event_cnt + " new)";
+        else
+            mPageTitles[2] = "Events";
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mPageTitles));
+    }
+
+    @Override
+    public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
+        if (menu != null)
+            menu.findItem(R.id.action_update).setVisible(true);
+
+        if (hasUpdated) {
+            new_assignment_cnt = assignmentCnt;
+            new_event_cnt = eventCnt;
+            UpdateDrawer();
+        }
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -105,9 +128,13 @@ public class MainActivity extends ActionBarActivity {
                 break;
             case 1:
                 fragment = assignment_fragment;
+                new_assignment_cnt = 0;
+                UpdateDrawer();
                 break;
             case 2:
                 fragment = event_fragment;
+                new_event_cnt = 0;
+                UpdateDrawer();
                 break;
             default:
                 fragment = null;
@@ -136,6 +163,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -159,6 +187,7 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         else if (id == R.id.action_update) {
+            item.setVisible(false);
             new UpdateService.UpdateTask(this).execute();
             return true;
         }

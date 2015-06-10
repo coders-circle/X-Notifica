@@ -3,7 +3,6 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -41,6 +40,7 @@ public class UpdateService {
             json.put("message_type", "Update Successful");
             json.put("user_id", preferences.getString("user-id", ""));
             json.put("password", preferences.getString("password", ""));
+            json.put("updated_at", resJson.optInt("updated_at"));
             network.PostJson(updateUrl, json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,10 +156,8 @@ public class UpdateService {
         updateResult.updated = true;
     }
     public static void FinishUpdate(UpdateResult updateResult) {
-        if (!updateResult.updated)
-            return;
         for (UpdateListener listener: updateListeners) {
-            listener.OnUpdated(updateResult.event_count, updateResult.assignment_count);
+            listener.OnUpdateComplete(updateResult.updated, updateResult.event_count, updateResult.assignment_count);
         }
     }
 
@@ -189,9 +187,9 @@ public class UpdateService {
             FinishUpdate(result);
             IsUpdating = false;
             if (result.updated)
-                Toast.makeText(mContext, "Updated", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Update successful.\nEverything is now up-to-date.", Toast.LENGTH_LONG).show();
             else
-                Toast.makeText(mContext, "Update Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Update failed.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
 
             //Toast.makeText(mContext, UpdateService.result, Toast.LENGTH_LONG).show();
         }

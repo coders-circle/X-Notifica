@@ -39,7 +39,7 @@ class Student(models.Model):
     privilege = models.IntegerField(default=0, choices=Privileges)
     user = models.ForeignKey(User)
 
-    updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated? - not impemented yet
+    updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
 
     def __str__(self):
         return self.name + " (" + str(self.roll) + ")"
@@ -58,7 +58,7 @@ class Teacher(models.Model):
     subjects = models.ManyToManyField(Subject)
     user = models.ForeignKey(User)
     
-    updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated? - not impemented yet
+    updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
 
     def __str__(self):
         return self.name

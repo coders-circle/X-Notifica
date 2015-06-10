@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -99,7 +101,9 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     }
 
     @Override
-    public void OnUpdated(int eventCnt, int assignmentCnt) {
+    public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
+        if (!hasUpdated)
+            return;
         routine.clear();
         Database db = new Database(mActivity);
         for (int d = 0; d < 7; ++d) {
