@@ -113,7 +113,7 @@ class Assignment(models.Model):
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
     groups = models.CharField(max_length=10, blank=True, null=True, default="")
     subject = models.ForeignKey(Subject)
-    date = models.DateField()
+    date = models.DateField(verbose_name="date of submission")
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -126,7 +126,7 @@ class Event(models.Model):
     batch = models.IntegerField(blank=True, null=True, default=None)
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
     groups = models.CharField(max_length=10, blank=True, null=True, default="")
-    date = models.DateField()
+    date = models.DateField(verbose_name="date of occurrence")
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

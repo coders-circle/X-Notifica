@@ -12,6 +12,6 @@ def seconds_to_datetime(value):
     return datetime.fromtimestamp(value)
 
 def datetime_to_seconds(value):
-    return int((time.mktime(value.timetuple())))
+    return int(time.mktime(value.timetuple()))
 
 
