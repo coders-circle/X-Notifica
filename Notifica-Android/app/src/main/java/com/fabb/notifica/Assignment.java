@@ -7,6 +7,7 @@ public class Assignment {
     public String summary;
     public String details;
     public long date;
+    public long remote_id;
 
     public String posterId;
 

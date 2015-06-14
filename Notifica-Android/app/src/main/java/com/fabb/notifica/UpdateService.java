@@ -127,12 +127,12 @@ public class UpdateService {
                     continue;
                 long sub_id = db.GetSubjectId(assignment.optString("subject_code"));
                 if (isTeacher)
-                    db.AddAssignment(assignment.optLong("date"), sub_id, assignment.optString("summary"),
-                            assignment.optString("details"), assignment.optString("poster_id"), false,
+                    db.AddAssignment(assignment.optLong("remote_id"), assignment.optLong("date"), sub_id, assignment.optString("summary"),
+                            assignment.optString("details"), assignment.optString("poster_id"), assignment.optBoolean("deleted"),
                             db.GetFacultyId(assignment.optString("faculty_code")), assignment.optInt("year"), assignment.optString("groups"));
                 else
-                    db.AddAssignment(assignment.optLong("date"), sub_id, assignment.optString("summary"),
-                            assignment.optString("details"), assignment.optString("poster_id"), false);
+                    db.AddAssignment(assignment.optLong("remote_id"), assignment.optLong("date"), sub_id, assignment.optString("summary"),
+                            assignment.optString("details"), assignment.optString("poster_id"), assignment.optBoolean("deleted"));
             }
         }
 
@@ -142,12 +142,12 @@ public class UpdateService {
                 if (event == null)
                     continue;
                 if (isTeacher)
-                    db.AddEvent(event.optLong("date"), event.optString("summary"),
-                        event.optString("details"), event.optString("poster_id"), false,
+                    db.AddEvent(event.optLong("remote_id"), event.optLong("date"), event.optString("summary"),
+                        event.optString("details"), event.optString("poster_id"), event.optBoolean("deleted"),
                             db.GetFacultyId(event.optString("faculty_code")), event.optInt("year"), event.optString("groups"));
                 else
-                    db.AddEvent(event.optLong("date"), event.optString("summary"),
-                            event.optString("details"), event.optString("poster_id"), false);
+                    db.AddEvent(event.optLong("remote_id"), event.optLong("date"), event.optString("summary"),
+                            event.optString("details"), event.optString("poster_id"), event.optBoolean("deleted"));
             }
         }
 

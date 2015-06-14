@@ -5,10 +5,9 @@ public class Event {
     public long date;
     public String summary;
     public String details;
-
     public String posterId;
-
     boolean deleted;
+    public long remote_id;
 
     // for teacher only
     public Faculty faculty;

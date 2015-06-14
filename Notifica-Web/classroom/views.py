@@ -10,6 +10,21 @@ from .models import *
 from helpers import *
 from datetime import datetime
 
+# get value from a key from settings table
+def GetSetting(key):
+    try:
+        setting = Setting.objects.get(key=key)
+        return setting.value
+    except:
+        return None
+
+# set value to a key in the settings table
+def SetSetting(key, value):
+    setting = Setting()
+    settings.key = key      # using primary-key while saving will Update existing element
+    setting.value = value
+    setting.save()
+
 def index(request):
     context = {}
     return render(request, 'classroom/index.html', context)
@@ -98,10 +113,11 @@ def update(request):
 
     outdata = {"message_type":"Database Update", "update_result":"Success"}
 
-    # Update "updated_at" field of user is update is successful
+    # Update "updated_at" field of user is update if successful
     if not urequest:
         user.updated_at = seconds_to_datetime(indata.get("updated_at", datetime_to_seconds(DefaultDateTime())))
         user.save()
+        return JsonResponse({"message_type": "Success"})
     
     """
      Response contains:
@@ -170,7 +186,7 @@ def update(request):
         if asgn.modified_at > user.updated_at:
             acnt += 1
         assignment = {"date":datetime_to_seconds(asgn.date), "summary":asgn.summary, "subject_code":asgn.subject.code,
-                            "details":asgn.details, "poster_id":asgn.poster.username}
+                            "details":asgn.details, "poster_id":asgn.poster.username, "remote_id":asgn.pk, "deleted":asgn.cancelled}
         if user_type == "Teacher":
             assignment["faculty_code"] = "" if asgn.faculty is None else asgn.faculty.code
             assignment["year"] = 0 if asgn.batch is None else asgn.batch
@@ -182,7 +198,7 @@ def update(request):
         if evnt.modified_at > user.updated_at:
             ecnt += 1
         event = {"date":datetime_to_seconds(evnt.date), "summary":evnt.summary,
-                            "details":evnt.details, "poster_id":evnt.poster.username}
+                            "details":evnt.details, "poster_id":evnt.poster.username, "remote_id":evnt.pk, "deleted":evnt.cancelled}
         if user_type == "Teacher":
             event["faculty_code"] = "" if evnt.faculty is None else evnt.faculty.code
             event["year"] = 0 if evnt.batch is None else evnt.batch
@@ -214,6 +230,7 @@ def update(request):
  Post Request and Response
  { "message_type" : "Post Event/Assignment", "user_id":<username>, "password":<password>, <post details>... }
  { "message_type" : "Post Result", "update_result":"Success" }
+ { "message_type" : "Delete Event/Assignment", "user_id":<username>, "password":<password>, "postid":<asgn/event id> }
 """
 
 @csrf_exempt
@@ -222,11 +239,14 @@ def post(request):
         return JsonResponse(error_response)
  
     indata = json.loads(request.body.decode('utf-8'))
-
     if (indata.get("message_type","") == "Post Event"):
         posttype = 1
     elif (indata.get("message_type","") == "Post Assignment"):
         posttype = 0
+    elif (indata.get("message_type","") == "Delete Event"):
+        posttype = 3
+    elif (indata.get("message_type","") == "Delete Assignment"):
+        posttype = 2
     else:
         return JsonResponse(error_response)
     
@@ -234,36 +254,51 @@ def post(request):
     if (user is None or user_type=="Invalid" or (user_type == "Student" and user.privilege != Student.PRIVILEGE_CR)):
         return JsonResponse(error_response_auth)
 
-    summary = indata.get("summary", "")
-    details = indata.get("details", "")
-    date = seconds_to_datetime(indata.get("date", 0))
-    batch = indata.get("year", 0)
-    groups = indata.get("groups", "")
-    faculty_code = indata.get("faculty_code", "")
+    # handle the delete messages first
+    if posttype == 2:
+        assignment = Assignment.objects.get(pk=indata.get("postid", -1))
+        assignment.cancelled = True
+        assignment.save()
 
-    faculties = Faculty.objects.filter(code=faculty_code)
-    if (faculties.count() > 0):
-        faculty = list(faculties)[0]
+    elif posttype == 3:
+        event = Event.objects.get(pk=indata.get("postid", -1))
+        event.cancelled = True
+        event.save()
+
+    # next handle the post messages
+
     else:
-        faculty = None
+        summary = indata.get("summary", "")
+        details = indata.get("details", "")
+        date = seconds_to_datetime(indata.get("date", 0))
+        batch = indata.get("year", 0)
+        groups = indata.get("groups", "")
+        faculty_code = indata.get("faculty_code", "")
 
-    if posttype == 0:
-        newpost = Assignment()
-    else:
-        newpost = Event()
+        faculties = Faculty.objects.filter(code=faculty_code)
+        if (faculties.count() > 0):
+            faculty = list(faculties)[0]
+        else:
+            faculty = None
 
-    newpost.summary = summary
-    newpost.details = details
-    newpost.date = date
-    newpost.batch = batch
-    newpost.groups = groups
-    newpost.faculty = faculty
-    newpost.poster = user.user
+        if posttype == 0:
+            newpost = Assignment()
+        else:
+            newpost = Event()
 
-    if posttype == 0:
-        newpost.subject = Subject.objects.get(code=indata.get("subject_code",""))
-    
-    newpost.save()
+        newpost.summary = summary
+        newpost.details = details
+        newpost.date = date
+        newpost.batch = batch
+        newpost.groups = groups
+        newpost.faculty = faculty
+        newpost.poster = user.user
+
+        if posttype == 0:
+            newpost.subject = Subject.objects.get(code=indata.get("subject_code",""))
+        
+        newpost.save()
+
     outdata = {"message_type":"Post Result", "post_result":"Success"}
 
     return JsonResponse(outdata)

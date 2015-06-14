@@ -114,6 +114,7 @@ class Assignment(models.Model):
     groups = models.CharField(max_length=10, blank=True, null=True, default="")
     subject = models.ForeignKey(Subject)
     date = models.DateField(verbose_name="date of submission")
+    cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -127,8 +128,16 @@ class Event(models.Model):
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
     groups = models.CharField(max_length=10, blank=True, null=True, default="")
     date = models.DateField(verbose_name="date of occurrence")
+    cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.summary
 
+
+class Setting(models.Model):
+    key = models.CharField(max_length=20, primary_key=True)
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.key + ": " + self.value

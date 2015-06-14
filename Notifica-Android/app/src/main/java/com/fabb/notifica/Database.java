@@ -16,7 +16,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "notifica";
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     private static final String ROUTINE_ELEMENTS_TABLE = "routine_elements";
     private static final String SUBJECTS_TABLE = "subjects";
@@ -47,10 +47,12 @@ public class Database extends SQLiteOpenHelper{
     private static final String EVENTS_TABLE_CREATE = "CREATE TABLE "
             + EVENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "date INTEGER, summary TEXT, details TEXT, posterId TEXT, deleted INTEGER, "
+            + "remote_id INTEGER DEFAULT -1, "
             + "faculty INTEGER, year INTEGER, groups TEXT);"; // Extra for teachers
     private static final String ASSIGNMENTS_TABLE_CREATE = "CREATE TABLE "
             + ASSIGNMENTS_TABLE + " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
             + "date INTEGER, subject INTEGER, summary TEXT, details TEXT, posterId TEXT, deleted INTEGER, "
+            + "remote_id INTEGER DEFAULT -1, "
             + "faculty INTEGER, year INTEGER, groups TEXT);"; // Extra for teachers
 
     public Database(Context context) {
@@ -181,7 +183,7 @@ public class Database extends SQLiteOpenHelper{
         db.delete(ASSIGNMENTS_TABLE, null, null);
         db.close();
     }
-    public long AddAssignment(long date, long subject, String summary, String details, String posterId, boolean deleted) {
+    public long AddAssignment(long remote_id, long date, long subject, String summary, String details, String posterId, boolean deleted) {
         ContentValues c = new ContentValues();
         c.put("date", date);
         c.put("subject", subject);
@@ -189,13 +191,14 @@ public class Database extends SQLiteOpenHelper{
         c.put("details", details);
         c.put("posterId", posterId);
         c.put("deleted", deleted?1:0);
+        c.put("remote_id", remote_id);
         SQLiteDatabase db = getWritableDatabase();
         long iid = db.insert(ASSIGNMENTS_TABLE, null, c);
         db.close();
         return iid;
     }
 
-    public long AddAssignment(long date, long subject, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
+    public long AddAssignment(long remote_id, long date, long subject, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
         ContentValues c = new ContentValues();
         c.put("date", date);
         c.put("subject", subject);
@@ -206,6 +209,7 @@ public class Database extends SQLiteOpenHelper{
         c.put("year", year);
         c.put("groups", groups);
         c.put("deleted", deleted?1:0);
+        c.put("remote_id", remote_id);
         SQLiteDatabase db = getWritableDatabase();
         long iid = db.insert(ASSIGNMENTS_TABLE, null, c);
         db.close();
@@ -247,20 +251,21 @@ public class Database extends SQLiteOpenHelper{
         db.delete(EVENTS_TABLE, null, null);
         db.close();
     }
-    public long AddEvent(long date, String summary, String details, String posterId, boolean deleted) {
+    public long AddEvent(long remote_id, long date, String summary, String details, String posterId, boolean deleted) {
         ContentValues c = new ContentValues();
         c.put("date", date);
         c.put("summary", summary);
         c.put("details", details);
         c.put("posterId", posterId);
         c.put("deleted", deleted?1:0);
+        c.put("remote_id", remote_id);
         SQLiteDatabase db = getWritableDatabase();
         long iid = db.insert(EVENTS_TABLE, null, c);
         db.close();
         return iid;
     }
 
-    public long AddEvent( long date, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
+    public long AddEvent(long remote_id, long date, String summary, String details, String posterId, boolean deleted, long faculty, int year, String groups) {
         ContentValues c = new ContentValues();
         c.put("date", date);
         c.put("summary", summary);
@@ -270,6 +275,7 @@ public class Database extends SQLiteOpenHelper{
         c.put("year", year);
         c.put("groups", groups);
         c.put("deleted", deleted?1:0);
+        c.put("remote_id", remote_id);
         SQLiteDatabase db = getWritableDatabase();
         long iid = db.insert(EVENTS_TABLE, null, c);
         db.close();
@@ -368,6 +374,7 @@ public class Database extends SQLiteOpenHelper{
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
             r.deleted = c.getInt(c.getColumnIndex("deleted")) == 1;
+            r.remote_id = c.getLong(c.getColumnIndex("remote_id"));
             if (!c.isNull(c.getColumnIndex("faculty")))
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))
@@ -396,6 +403,7 @@ public class Database extends SQLiteOpenHelper{
             r.details = c .getString(c.getColumnIndex("details"));
             r.posterId = c.getString(c.getColumnIndex("posterId"));
             r.deleted = c.getInt(c.getColumnIndex("deleted")) == 1;
+            r.remote_id = c.getLong(c.getColumnIndex("remote_id"));
             if (!c.isNull(c.getColumnIndex("faculty")))
                 r.faculty = GetFaculty(c.getLong(c.getColumnIndex("faculty")));
             if (!c.isNull(c.getColumnIndex("year")))

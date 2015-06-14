@@ -62,6 +62,7 @@ public class Network {
 
         String result = "";
         try {
+            Log.d("Request", jsonObject.toString());
             HttpPost post = new HttpPost(URL + address);
             post.setHeader("Content-Type", "application/json");
             post.setHeader("Accept", "application/json");

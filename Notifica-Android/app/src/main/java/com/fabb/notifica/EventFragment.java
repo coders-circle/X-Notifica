@@ -103,7 +103,7 @@ public class EventFragment extends Fragment implements UpdateListener {
                 extra += "\nCancelled";
 
             listItems.add(new ExpandableListAdapter.Item(as.summary, as.details, extra));
-            mIds.add(as.id);
+            mIds.add(as.remote_id);
             i++;
         }
     }

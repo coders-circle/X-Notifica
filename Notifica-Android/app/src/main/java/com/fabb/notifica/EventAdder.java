@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -105,6 +106,8 @@ public class EventAdder extends ActionBarActivity {
     }
 
     public void onPostClicked(View view) {
+        Button postButton = (Button) findViewById(R.id.post_button);
+        postButton.setEnabled(false);
         SharedPreferences preferences = MainActivity.GetPreferences(this);
 
         String summary = mSummaryEdit.getText().toString();
