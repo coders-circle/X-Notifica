@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -147,6 +148,29 @@ public class Database extends SQLiteOpenHelper{
         return iid;
     }
 
+    public long UpdateSubject(long id, String code, String name, long faculty) {
+        ContentValues c = new ContentValues();
+        c.put("code", code);
+        c.put("name", name);
+        c.put("faculty", faculty);
+        SQLiteDatabase db = getWritableDatabase();
+        long iid = db.update(SUBJECTS_TABLE, c, "id = ?", new String[]{id + ""});
+        db.close();
+        return iid;
+    }
+
+    public long UpdateTeacher(long id, String userid, String name, String contact, long faculty) {
+        ContentValues c = new ContentValues();
+        c.put("name", name);
+        c.put("user_id", userid);
+        c.put("contact", contact);
+        c.put("faculty", faculty);
+        SQLiteDatabase db = getWritableDatabase();
+        long iid = db.update(TEACHERS_TABLE, c, "id = ?", new String[]{id + ""});
+        db.close();
+        return iid;
+    }
+
     public long AddTeacher(String userid, String name, String contact, long faculty) {
         if (GetTeacherId(userid) != -1)
             return -1;
@@ -174,6 +198,16 @@ public class Database extends SQLiteOpenHelper{
         c.put("name", name);
         SQLiteDatabase db = getWritableDatabase();
         long iid = db.insert(FACULTIES_TABLE, null, c);
+        db.close();
+        return iid;
+    }
+
+    public long ChangeFaculty(long id, String name, String code) {
+        ContentValues c = new ContentValues();
+        c.put("code", code);
+        c.put("name", name);
+        SQLiteDatabase db = getWritableDatabase();
+        long iid = db.update(FACULTIES_TABLE, c, "id = ?", new String[]{id + ""});
         db.close();
         return iid;
     }
@@ -586,4 +620,39 @@ public class Database extends SQLiteOpenHelper{
         return tid;
     }
 
+    public long GetAssignmentFromRemoteId(long remote_id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + ASSIGNMENTS_TABLE + " WHERE remote_id = ?", new String[]{remote_id+""});
+        long tid = -1;
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            tid = c.getLong(c.getColumnIndex("id"));
+        }
+        c.close();
+        db.close();
+        return tid;
+    }
+
+    public long GetEventFromRemoteId(long remote_id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + EVENTS_TABLE + " WHERE remote_id = ?", new String[]{remote_id+""});
+        long tid = -1;
+        c.moveToFirst();
+        if (c.getCount() > 0) {
+            tid = c.getLong(c.getColumnIndex("id"));
+        }
+        c.close();
+        db.close();
+        return tid;
+    }
+
+    public void DeletePassedData() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        long date = cal.getTimeInMillis()/1000;
+
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(EVENTS_TABLE, "date < ?", new String[]{date+""});
+        db.delete(ASSIGNMENTS_TABLE, "date < ?", new String[]{date + ""});
+    }
 }

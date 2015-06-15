@@ -35,6 +35,9 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Database db = new Database(this);
+        db.DeletePassedData();
+
         SharedPreferences preferences = GetPreferences(this);
         String toast = preferences.getString("user-name", "") + "\n" + preferences.getString("user-type", "");
         Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
@@ -107,6 +110,9 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             new_event_cnt = eventCnt;
             UpdateDrawer();
         }
+
+        Database db = new Database(this);
+        db.DeletePassedData();
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

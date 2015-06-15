@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 import json
 from .models import *
 from helpers import *
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # get value from a key from settings table
 def GetSetting(key):
@@ -17,6 +17,12 @@ def GetSetting(key):
         return setting.value
     except:
         return None
+
+# delete all passed assignments and events
+def DeletePassed():
+    yesterday = datetime.now() - timedelta(days=1)
+    Assignment.objects.filter(date__lt = yesterday).delete()
+    Event.objects.filter(date__lt = yesterday).delete()
 
 # set value to a key in the settings table
 def SetSetting(key, value):
@@ -95,6 +101,7 @@ def login(request):
 
 @csrf_exempt
 def update(request):
+    DeletePassed()
     if request.method != "POST":
         return JsonResponse(error_response)
 
@@ -113,10 +120,11 @@ def update(request):
 
     outdata = {"message_type":"Database Update", "update_result":"Success"}
 
-    # Update "updated_at" field of user is update if successful
+    # Update "updated_at" field of user
+    user.updated_at = seconds_to_datetime(indata.get("updated_at", datetime_to_seconds(DefaultDateTime())))
+    user.save()
+
     if not urequest:
-        user.updated_at = seconds_to_datetime(indata.get("updated_at", datetime_to_seconds(DefaultDateTime())))
-        user.save()
         return JsonResponse({"message_type": "Success"})
     
     """
@@ -151,24 +159,26 @@ def update(request):
     # For student, routine, assignments and events are filtered with batch, faculty and group
     # Assignments and events may not contain batch, faculty or group fields, so the queries are OR-ed
     if user_type == "Student":
-        routine_object = Routine.objects.filter(batch=user.batch, faculty=user.faculty, groups__contains=user.group)
+        routine_object = Routine.objects.filter(batch=user.batch, faculty=user.faculty, groups__contains=user.group, modified_at__gt = user.updated_at)
         elements_objects = RoutineElement.objects.filter(routine=routine_object)
         assignments_objects = Assignment.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
             Q(faculty=user.faculty) | Q(faculty = None), 
-            Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
+            Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
+            modified_at__gt = user.updated_at
         )
         events_objects = Event.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
             Q(faculty=user.faculty) | Q(faculty = None), 
-            Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
+            Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
+            modified_at__gt = user.updated_at
         )
 
     # For teacher, routine, assignments and events that reference this teacher are returned
     elif user_type == "Teacher":
-        elements_objects = RoutineElement.objects.filter(teacher=user)
-        assignments_objects = Assignment.objects.filter(poster=user.user)
-        events_objects = Event.objects.filter(poster=user.user)
+        elements_objects = RoutineElement.objects.filter(teacher=user, routine__modified_at__gt = user.updated_at)
+        assignments_objects = Assignment.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
+        events_objects = Event.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
     else:
         return JsonResponse(error_response)
     
@@ -205,7 +215,8 @@ def update(request):
             event["groups"] = "" if evnt.groups is None else evnt.groups
         events.append(event)
 
-    routine["elements"] = elements
+    if len(elements) > 0:
+        routine["elements"] = elements
     
     subjects = []
     teachers = []

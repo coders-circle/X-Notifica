@@ -31,6 +31,7 @@ public class UpdateService {
             json.put("message_type", "Update Request");
             json.put("user_id", preferences.getString("user-id",""));
             json.put("password", preferences.getString("password", ""));
+            json.put("updated_at", preferences.getLong("updated-at", 0));
 
             result = network.PostJson(updateUrl, json);
             JSONObject resJson = new JSONObject(result);
@@ -40,8 +41,12 @@ public class UpdateService {
             json.put("message_type", "Update Successful");
             json.put("user_id", preferences.getString("user-id", ""));
             json.put("password", preferences.getString("password", ""));
-            json.put("updated_at", resJson.optInt("updated_at"));
+            json.put("updated_at", resJson.optLong("updated_at"));
             network.PostJson(updateUrl, json);
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong("updated-at", resJson.optLong("updated_at"));
+            editor.apply();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -71,14 +76,18 @@ public class UpdateService {
         String user_type = MainActivity.GetPreferences(ctx).getString("user-type", "");
         boolean isTeacher = user_type != null && user_type.equals("Teacher");
 
-        db.DeleteAll();
+        //db.DeleteAll();
 
         if (faculties != null) {
             for (int i=0; i < faculties.length(); ++i) {
                 JSONObject faculty = faculties.optJSONObject(i);
                 if (faculty == null || !faculty.has("code"))
                     continue;
-                db.AddFaculty(faculty.optString("name"), faculty.optString("code"));
+                long id = db.GetFacultyId(faculty.optString("code"));
+                if (id >= 0)
+                    db.ChangeFaculty(id, faculty.optString("name"), faculty.optString("code"));
+                else
+                    db.AddFaculty(faculty.optString("name"), faculty.optString("code"));
             }
         }
 
@@ -88,7 +97,11 @@ public class UpdateService {
                 JSONObject teacher = teachers.optJSONObject(i);
                 if (teacher == null || !teacher.has("user_id"))
                     continue;
-                db.AddTeacher(teacher.optString("user_id"), teacher.optString("name"), "xxxx", db.GetFacultyId(teacher.optString("faculty_code")));
+                long id = db.GetTeacherId(teacher.optString("user_id"));
+                if (id >= 0)
+                    db.UpdateTeacher(id, teacher.optString("user_id"), teacher.optString("name"), "xxxx", db.GetFacultyId(teacher.optString("faculty_code")));
+                else
+                    db.AddTeacher(teacher.optString("user_id"), teacher.optString("name"), "xxxx", db.GetFacultyId(teacher.optString("faculty_code")));
             }
         }
 
@@ -97,7 +110,11 @@ public class UpdateService {
                 JSONObject subject = subjects.optJSONObject(i);
                 if (subject == null || !subject.has("code"))
                     continue;
-                db.AddSubject(subject.optString("code"), subject.optString("name"), db.GetFacultyId(subject.optString("faculty_code")));
+                long id = db.GetSubjectId(subject.optString("code"));
+                if (id >= 0)
+                    db.UpdateSubject(id, subject.optString("code"), subject.optString("name"), db.GetFacultyId(subject.optString("faculty_code")));
+                else
+                    db.AddSubject(subject.optString("code"), subject.optString("name"), db.GetFacultyId(subject.optString("faculty_code")));
             }
         }
 
@@ -105,6 +122,7 @@ public class UpdateService {
         if (routine != null) {
             JSONArray elements = routine.optJSONArray("elements");
             if (elements != null) {
+                db.DeleteRoutine();
                 for (int i = 0; i < elements.length(); ++i) {
                     JSONObject element = elements.optJSONObject(i);
                     if (element == null)
@@ -125,6 +143,9 @@ public class UpdateService {
                 JSONObject assignment = assignments.optJSONObject(i);
                 if (assignment == null)
                     continue;
+                long id = db.GetAssignmentFromRemoteId(assignment.optLong("remote_id"));
+                if (id >= 0)
+                    db.RemoveAssignment(id);
                 long sub_id = db.GetSubjectId(assignment.optString("subject_code"));
                 if (isTeacher)
                     db.AddAssignment(assignment.optLong("remote_id"), assignment.optLong("date"), sub_id, assignment.optString("summary"),
@@ -141,6 +162,9 @@ public class UpdateService {
                 JSONObject event = events.optJSONObject(i);
                 if (event == null)
                     continue;
+                long id = db.GetEventFromRemoteId(event.optLong("remote_id"));
+                if (id >= 0)
+                    db.RemoveEvent(id);
                 if (isTeacher)
                     db.AddEvent(event.optLong("remote_id"), event.optLong("date"), event.optString("summary"),
                         event.optString("details"), event.optString("poster_id"), event.optBoolean("deleted"),

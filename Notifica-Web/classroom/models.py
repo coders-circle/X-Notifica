@@ -12,6 +12,8 @@ def DefaultDateTime():
 class Faculty(models.Model):
     code = models.CharField(max_length=5)
     name = models.CharField(max_length=30)
+    modified_at = models.DateTimeField(auto_now=True)
+
     class Meta:
         verbose_name_plural = "Faculties"
 
@@ -40,6 +42,7 @@ class Student(models.Model):
     user = models.ForeignKey(User)
 
     updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name + " (" + str(self.roll) + ")"
@@ -48,6 +51,7 @@ class Subject(models.Model):
     code = models.CharField(max_length=7)
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
+    modified_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.name
@@ -59,6 +63,7 @@ class Teacher(models.Model):
     user = models.ForeignKey(User)
     
     updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -67,6 +72,7 @@ class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
     groups = models.CharField(max_length=10, default='AB')
+    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.batch) + "-" + self.faculty.code + "-" + self.groups
