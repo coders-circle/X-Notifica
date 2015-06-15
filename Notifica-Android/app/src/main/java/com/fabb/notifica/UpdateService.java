@@ -210,10 +210,16 @@ public class UpdateService {
                 return;
             FinishUpdate(result);
             IsUpdating = false;
-            if (result.updated)
-                Toast.makeText(mContext, "Update successful.\nEverything is now up-to-date.", Toast.LENGTH_LONG).show();
+            if (result.updated) {
+                String res = "";
+                if (result.assignment_count > 0)
+                    res += "\n" + result.assignment_count + " new " + (result.assignment_count > 1 ? "assignments" : "assignment");
+                if (result.event_count > 0)
+                    res += "\n" + result.event_count + " new "+ (result.event_count > 1 ? "events" : "event");
+                Toast.makeText(mContext, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
+            }
             else
-                Toast.makeText(mContext, "Update failed.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
 
             //Toast.makeText(mContext, UpdateService.result, Toast.LENGTH_LONG).show();
         }

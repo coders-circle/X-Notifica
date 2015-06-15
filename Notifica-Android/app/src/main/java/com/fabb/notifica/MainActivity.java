@@ -38,9 +38,9 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         Database db = new Database(this);
         db.DeletePassedData();
 
-        SharedPreferences preferences = GetPreferences(this);
-        String toast = preferences.getString("user-name", "") + "\n" + preferences.getString("user-type", "");
-        Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
+        //SharedPreferences preferences = GetPreferences(this);
+        //String toast = preferences.getString("user-name", "") + "\n" + preferences.getString("user-type", "");
+        //Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
 
         //GcmRegister.Register(this);
 
@@ -84,6 +84,8 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         selectItem(0);
 
         UpdateService.AddUpdateListener(this);
+
+        new UpdateService.UpdateTask(this).execute();
     }
 
     private int new_assignment_cnt = 0;
