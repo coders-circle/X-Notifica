@@ -1,0 +1,1 @@
+web: gunicorn Notifica.wsgi --log-file -
