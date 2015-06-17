@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,10 @@ public class MyGcmListenerService extends  GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
+        SharedPreferences preferences = MainActivity.GetPreferences(this);
+        if (!preferences.getBoolean("logged-in", false))
+            return;
+        
         String message = data.getString("message");
         String title = data.getString("title");
         Log.d(TAG, "From: " + from);
