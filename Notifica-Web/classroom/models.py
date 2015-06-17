@@ -10,7 +10,7 @@ def DefaultDateTime():
 
 # Department or Faculty
 class Faculty(models.Model):
-    code = models.CharField(max_length=5)
+    code = models.CharField(max_length=5, unique=True)
     name = models.CharField(max_length=30)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -48,7 +48,7 @@ class Student(models.Model):
         return self.name + " (" + str(self.roll) + ")"
 
 class Subject(models.Model):
-    code = models.CharField(max_length=7)
+    code = models.CharField(max_length=7, unique=True)
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
     modified_at = models.DateTimeField(auto_now=True)
@@ -123,6 +123,10 @@ class Assignment(models.Model):
     cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        super(Assignment, self).save(*args, **kwargs)
+        Notify("Assignment", self)
+
     def __str__(self):
         return self.summary
 
@@ -137,13 +141,29 @@ class Event(models.Model):
     cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 
+
+    def save(self, *args, **kwargs):
+        super(Event, self).save(*args, **kwargs)
+        Notify("Notice", self)
+
     def __str__(self):
         return self.summary
 
 
 class Setting(models.Model):
-    key = models.CharField(max_length=20, primary_key=True)
+    key = models.CharField(max_length=20, primary_key=True, unique=True)
     value = models.CharField(max_length=100)
 
     def __str__(self):
         return self.key + ": " + self.value
+
+
+class GcmRegistration(models.Model):
+    user = models.ForeignKey(User)
+    token = models.TextField()
+
+    def __str__(self):
+        return self.user.username + ": " + self.token
+
+
+from .notifications import Notify

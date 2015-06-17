@@ -313,3 +313,30 @@ def post(request):
     outdata = {"message_type":"Post Result", "post_result":"Success"}
 
     return JsonResponse(outdata)
+
+
+
+"""
+ Gcm Registration Request and Response
+ { "message_type" : "Gcm Registration", "user_id":<username>, "password":<password>, "token":<token> }
+ { "message_type" : "Registration Result", "register_result":"Success" }
+"""
+
+@csrf_exempt
+def register(request):   
+    if request.method != "POST":
+        return JsonResponse(error_response)
+ 
+    indata = json.loads(request.body.decode('utf-8'))
+    if (indata.get("message_type","") != "Gcm Registration"):
+        return JsonResponse(error_response)
+    
+    user_type, user = json_authenticate(indata)
+    if (user is None or user_type=="Invalid"):
+        return JsonResponse(error_response_auth)
+
+    GcmRegistration.objects.update_or_create(user=user.user, defaults={"token":indata.get("token","")})
+
+    outdata = {"message_type":"Registration Result", "register_result":"Success"}
+
+    return JsonResponse(outdata)

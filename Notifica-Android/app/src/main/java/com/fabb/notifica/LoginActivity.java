@@ -247,6 +247,9 @@ public class LoginActivity extends Activity {
             editor.putInt("routine-end", 0);
             editor.putBoolean("logged-in", true);
             editor.putLong("updated-at", 0);
+
+            editor.putString("gcm_token", "");
+            editor.putBoolean("gcm_token_sent", false);
             editor.apply();
             UpdateService.Update(LoginActivity.this, updateResult);
 

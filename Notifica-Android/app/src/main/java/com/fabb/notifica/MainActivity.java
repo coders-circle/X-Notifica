@@ -3,7 +3,6 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,11 +81,31 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        selectItem(0);
+
+        String notification_title = getIntent().getStringExtra("notification-title");
+        int fragment_id;
+        if (notification_title == null)
+            fragment_id = 0;
+        else if (notification_title.equals("Assignment"))
+            fragment_id = 1;
+        else
+            fragment_id = 2;
+        selectItem(fragment_id);
 
         UpdateService.AddUpdateListener(this);
-
         new UpdateService.UpdateTask(this).execute();
+
+        SharedPreferences preferences = GetPreferences(this);
+        String token = preferences.getString("gcm_token", "");
+        if (token == null || token.equals("")) {
+            Intent intent = new Intent(this, GcmRegisterIntent.class);
+            startService(intent);
+        }
+
+        token = preferences.getString("gcm_token", "");
+        if (token != null && !token.equals(""))
+        if (!GetPreferences(this).getBoolean("gcm_token_sent", false))
+            GcmRegisterIntent.sendRegistrationToServer(this,  preferences.getString("gcm_token", ""));
     }
 
     private int new_assignment_cnt = 0;

@@ -216,7 +216,10 @@ public class UpdateService {
                     res += "\n" + result.assignment_count + " new " + (result.assignment_count > 1 ? "assignments" : "assignment");
                 if (result.event_count > 0)
                     res += "\n" + result.event_count + " new "+ (result.event_count > 1 ? "events" : "event");
-                Toast.makeText(mContext, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
+                if (res.equals(""))
+                    Toast.makeText(mContext, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(mContext, "Notifica updated" + res, Toast.LENGTH_LONG).show();
             }
             else
                 Toast.makeText(mContext, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
