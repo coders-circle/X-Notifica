@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Update Preferences"
+        android:key="pref_key_storage_settings">
+        <CheckBoxPreference
+            android:key="pref_key_push_notify"
+            android:summary="Notify and update when new assignments and notices are posted, even when app is not running"
+            android:title="Push Notifications"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref_key_auto_update"
+            android:summary="Automatically update when app is started "
+            android:title="Auto update on start"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Misc"
+        android:key="pref_key_misc">
+
+        <Preference
+            android:title="Logout"
+            android:summary="Log yourself out from Notifica"
+            android:key="pref_key_logout">
+        </Preference>
+
+        <Preference
+            android:title="About"
+            android:summary="About this application">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.fabb.notifica"
+                android:targetClass="com.fabb.notifica.AboutActivity"
+                />
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

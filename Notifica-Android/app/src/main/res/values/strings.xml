@@ -23,7 +23,5 @@
         <item>Settings</item>
     </string-array>
     <string name="title_activity_event_adder">EventAdder</string>
-
-    <string name="hello_world">Hello world!</string>
-
+    <string name="action_update">Update</string>
 </resources>

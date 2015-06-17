@@ -288,6 +288,17 @@ public class LoginActivity extends Activity {
             showProgress(false);
         }
     }
+
+    public static void LogOut(Context context) {
+        Database db = new Database(context);
+        db.DeleteAll();
+
+        SharedPreferences preferences = MainActivity.GetPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean("logged-in", false);
+        editor.remove("password");
+        editor.apply();
+    }
 }
 
 

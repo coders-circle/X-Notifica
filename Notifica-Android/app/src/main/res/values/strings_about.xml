@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_about">
+        Version: 0.1 Beta\n\n
+        Created By:\n
+        Bibek Dahal\n
+        Ankit Mehata\n
+        Aditya Khatri\n
+    </string>
+</resources>

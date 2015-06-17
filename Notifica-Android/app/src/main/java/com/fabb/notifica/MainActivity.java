@@ -3,6 +3,7 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements UpdateListener {
 
+    public static boolean logged_out = false;
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mPageTitles;
@@ -37,12 +40,6 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
         Database db = new Database(this);
         db.DeletePassedData();
-
-        //SharedPreferences preferences = GetPreferences(this);
-        //String toast = preferences.getString("user-name", "") + "\n" + preferences.getString("user-type", "");
-        //Toast.makeText(this, toast, Toast.LENGTH_LONG).show();
-
-        //GcmRegister.Register(this);
 
         mPageTitles = getResources().getStringArray(R.array.page_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -92,8 +89,11 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             fragment_id = 2;
         selectItem(fragment_id);
 
-        UpdateService.AddUpdateListener(this);
-        new UpdateService.UpdateTask(this).execute();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (settings.getBoolean("pref_key_auto_update", true)) {
+            UpdateService.AddUpdateListener(this);
+            new UpdateService.UpdateTask(this).execute();
+        }
 
         SharedPreferences preferences = GetPreferences(this);
         String token = preferences.getString("gcm_token", "");
@@ -128,10 +128,20 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             menu.findItem(R.id.action_update).setVisible(true);
 
         if (hasUpdated) {
+                String res = "";
+                if (assignmentCnt > 0)
+                    res += "\n" + assignmentCnt + " new " + (assignmentCnt > 1 ? "assignments" : "assignment");
+                if (eventCnt > 0)
+                    res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "events" : "event");
+                Toast.makeText(this, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
+
             new_assignment_cnt = assignmentCnt;
             new_event_cnt = eventCnt;
             UpdateDrawer();
         }
+        else
+            Toast.makeText(this, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
+
 
         Database db = new Database(this);
         db.DeletePassedData();
@@ -147,6 +157,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     private Fragment routine_fragment = new RoutineFragment();
     private Fragment assignment_fragment = new AssignmentFragment();
     private Fragment event_fragment = new EventFragment();
+    private int lastItemSelected = 0;
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {
         Fragment fragment;
@@ -164,9 +175,15 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 new_event_cnt = 0;
                 UpdateDrawer();
                 break;
+            case 3:
+                startActivityForResult(new Intent(this, SettingsActivity.class), 0);
+                selectItem(lastItemSelected);
+                return;
             default:
                 fragment = null;
         }
+        lastItemSelected = position;
+
         if (fragment != null) {// Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -208,10 +225,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
-        }
-        else if (id == R.id.action_logout) {
-            LogOut();
+            startActivityForResult(new Intent(this, SettingsActivity.class), 0);
             return true;
         }
         else if (id == R.id.action_update) {
@@ -225,15 +239,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
 
     public void LogOut() {
-        Database db = new Database(this);
-        db.DeleteAll();
-
-        SharedPreferences preferences = GetPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("logged-in", false);
-        editor.remove("password");
-        editor.apply();
-
+        LoginActivity.LogOut(this);
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
     }
@@ -255,6 +261,14 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
     public static SharedPreferences GetPreferences(Context context) {
         return context.getSharedPreferences("Notifica_Main_Preferences", Context.MODE_PRIVATE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (logged_out) {
+            logged_out = false;
+            LogOut();
+        }
     }
 
 }

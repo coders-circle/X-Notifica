@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -20,6 +21,10 @@ public class MyGcmListenerService extends  GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (settings.getBoolean("pref_key_push_notify", true))
+            return;
+
         SharedPreferences preferences = MainActivity.GetPreferences(this);
         if (!preferences.getBoolean("logged-in", false))
             return;
