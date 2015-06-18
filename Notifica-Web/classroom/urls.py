@@ -3,9 +3,10 @@ from classroom import views
 
 urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
-    url(r'^update$', views.update, name='update'),
-    url(r'^login$', views.login, name='login'),
-    url(r'^post$', views.post, name='post'),
-    url(r'^register$', views.register, name='register'),
+    url(r'^home/$', views.index, name='home'),
+    url(r'^login/$', views.login_user, name='login'),
+    url(r'^logout/$', views.logout_user, name='logout'),
+    url(r'^student/$', views.student, name='student'),
+    url(r'^teacher/$', views.teacher, name='teacher'),
 )
 

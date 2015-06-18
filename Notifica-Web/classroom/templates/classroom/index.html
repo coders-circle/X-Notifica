@@ -110,7 +110,7 @@
 
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                   <hr>
-                    <a href="#" class="btn btn-lg btn-outline">
+                    <a href="https://drive.google.com/file/d/0B4m35FfIXswwVHV5V2JlRUZMQzQ/view?usp=sharing" class="btn btn-lg btn-outline">
 
                         <i class="fa fa-download"></i> Download the Android app
                     </a>
@@ -131,18 +131,19 @@
             </div>
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <form name="login" id="loginForm" novalidate>
+                    <form action="{% url 'classroom:login' %}" method="post" name="login" id="loginForm" novalidate>
+                    {% csrf_token %}
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Username</label>
-                                <input type="text" class="form-control" placeholder="username or email" id="username" required data-validation-required-message="Please enter your Username.">
+                                <input type="text" name="username" class="form-control" placeholder="username or email" id="username" required data-validation-required-message="Please enter your Username.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Password</label>
-                                <input type="password" class="form-control" placeholder="password" id="password" required data-validation-required-message="Please enter your Password.">
+                                <input type="password" name="password" class="form-control" placeholder="password" id="password" required data-validation-required-message="Please enter your Password.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
