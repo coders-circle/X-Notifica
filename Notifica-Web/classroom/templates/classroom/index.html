@@ -1,14 +1,222 @@
 {% extends 'classroom/base.html' %}
 
-{% block content %}
+{% load static %}
 
-<div class="jumbotron">
-    <h1> Notifica </h1>
-    <p> It's awesome ! </p>
-</div>
+{% block head %}
 
+<link href = "{% static 'css/home.css' %}" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
-Konichiwa 
 
 {% endblock %}
 
+
+
+{% block body %}
+
+<body id="page-top" class="index">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header page-scroll">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#notifica-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#page-top">Notifica</a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
+              <ul class="nav navbar-nav navbar-right">
+                  <li class="hidden">
+                      <a href="#page-top"></a>
+                  </li>
+                  <li class="page-scroll">
+                      <a href="#todo">To-do list</a>
+                  </li>
+                  <li class="page-scroll">
+                      <a href="#about">About</a>
+                  </li>
+                  <li class="page-scroll">
+                      <a href="#login">Login</a>
+                  </li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <img class="img-responsive" src="{% static 'imgs/notifica-logo.png' %}" alt="">
+                    <div class="intro-text">
+                        <span class="name">Notifica</span>
+                        <span class="skills">A must have routine app for students</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Portfolio Grid Section -->
+    <section id="todo">
+        <div class="container">
+          <div class="row">
+              <div class="col-lg-12 text-center">
+                  <h2>To-do for this Project</h2>
+                  <hr>
+              </div>
+          </div>
+          <div class="row todo-text">
+              <ul class="todo-list">
+                <li> Web interface for students and teachers </li>
+                <li> Admin pannel </li>
+                <li> Facebook synchronization for CR </li>
+                <li> Cloud integration for study-material sharing </li>
+              </ul>
+          </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="success" id="about">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>About</h2>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-lg-offset-2">
+                    <p>Notifica is a free and open-source routine app created by the group FABs. It consists of web interface as well as smartphone app for the users. The app is currently available only on Android platform</p>
+                </div>
+                <div class="col-lg-4">
+                    <p>If you are a student or a teacher looking for a good routine app with a professional looking and easy-to-use UI, Notifica is the perfect solution for you!</p>
+                </div>
+
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+                  <hr>
+                    <a href="#" class="btn btn-lg btn-outline">
+
+                        <i class="fa fa-download"></i> Download the Android app
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Login Section -->
+    <section id="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Login</h2>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <form name="login" id="loginForm" novalidate>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Username</label>
+                                <input type="text" class="form-control" placeholder="username or email" id="username" required data-validation-required-message="Please enter your Username.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                                <label>Password</label>
+                                <input type="password" class="form-control" placeholder="password" id="password" required data-validation-required-message="Please enter your Password.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <button type="submit" class="btn btn-success btn-lg">Login</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Footer -->
+   <footer class="text-center">
+       <div class="footer-above">
+           <div class="container">
+               <div class="row">
+                   <div class="footer-col col-md-4">
+                       <h3>Available for</h3>
+                       <p>Institute of Engineering<br>Central Campus</p>
+                   </div>
+                   <div class="footer-col col-md-4">
+                       <h3>Download the App</h3>
+                       <ul class="list-inline">
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-android"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-apple"></i></a>
+                            </li>
+                            <li>
+                                <a href="#" class="btn-social btn-outline"><i class="fa fa-windows"></i></a>
+                            </li>
+                        </ul>
+                   </div>
+                   <div class="footer-col col-md-4">
+                       <h3>About Notifica</h3>
+                       <p>Notifica is a free to use, open source routine app developed by FABs team.</p>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div class="footer-below">
+           <div class="container">
+               <div class="row">
+                   <div class="col-lg-12">
+                       Copyright &copy; FABs
+                   </div>
+               </div>
+           </div>
+       </div>
+   </footer>
+
+   <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+   <div class="scroll-top page-scroll visible-xs visible-sm">
+       <a class="btn btn-primary" href="#page-top">
+           <i class="fa fa-chevron-up"></i>
+       </a>
+   </div>
+
+   <!-- jQuery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Plugin JavaScript -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'js/home.js' %}"></script>
+</body>
+
+{% endblock %}
