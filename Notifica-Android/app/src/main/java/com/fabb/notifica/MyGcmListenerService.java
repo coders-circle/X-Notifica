@@ -22,7 +22,7 @@ public class MyGcmListenerService extends  GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getBoolean("pref_key_push_notify", true))
+        if (!settings.getBoolean("pref_key_push_notify", true))
             return;
 
         SharedPreferences preferences = MainActivity.GetPreferences(this);
