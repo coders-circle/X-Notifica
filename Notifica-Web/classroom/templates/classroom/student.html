@@ -1,0 +1,12 @@
+
+{% extends 'classroom/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block body %}
+
+{% for day, element in routine.items %}
+{{day}} {{ element }} <br>
+{% endfor %}
+
+{% endblock %}

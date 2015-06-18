@@ -19,7 +19,7 @@
     <string-array name="page_titles">
         <item>Routine</item>
         <item>Assignments</item>
-        <item>Events</item>
+        <item>Notices</item>
         <item>Settings</item>
     </string-array>
     <string name="title_activity_event_adder">EventAdder</string>

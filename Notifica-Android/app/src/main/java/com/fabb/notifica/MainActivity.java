@@ -116,9 +116,9 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         else
             mPageTitles[1] = "Assignments";
         if (new_event_cnt > 0)
-            mPageTitles[2] = "Events    (" + new_event_cnt + " new)";
+            mPageTitles[2] = "Notices    (" + new_event_cnt + " new)";
         else
-            mPageTitles[2] = "Events";
+            mPageTitles[2] = "Notices";
         mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mPageTitles));
     }
 
@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 if (assignmentCnt > 0)
                     res += "\n" + assignmentCnt + " new " + (assignmentCnt > 1 ? "assignments" : "assignment");
                 if (eventCnt > 0)
-                    res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "events" : "event");
+                    res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "notices" : "notice");
                 Toast.makeText(this, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
 
             new_assignment_cnt = assignmentCnt;

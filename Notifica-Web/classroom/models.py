@@ -39,7 +39,7 @@ class Student(models.Model):
     batch = models.IntegerField()                   # batch-year
     group = models.CharField(max_length=2, default='A')
     privilege = models.IntegerField(default=0, choices=Privileges)
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
 
     updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
     modified_at = models.DateTimeField(auto_now=True)
@@ -60,7 +60,7 @@ class Teacher(models.Model):
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
     subjects = models.ManyToManyField(Subject)
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     
     updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
     modified_at = models.DateTimeField(auto_now=True)
@@ -159,7 +159,7 @@ class Setting(models.Model):
 
 
 class GcmRegistration(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     token = models.TextField()
 
     def __str__(self):

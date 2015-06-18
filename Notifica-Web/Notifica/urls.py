@@ -18,5 +18,10 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^classroom/', include('classroom.urls', namespace="classroom")),
+
+    # root url "/" is for classroom app
+    url(r'^', include('classroom.urls', namespace="classroom")),
+
+    # /classroom is used for mobile urls
+    url(r'^classroom/', include('classroom.mobile_urls')),
 ]
