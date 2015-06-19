@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.db.models import Q
 from .models import *
-   
+
 def redirect_user(user):
     try:
        teacher = Teacher.objects.get(user=user)
@@ -17,7 +17,7 @@ def redirect_user(user):
            return redirect('classroom:student')
        except:
            return None
- 
+
 def index(request):
     if request.user.is_authenticated():
         redir = redirect_user(request.user)
@@ -36,19 +36,21 @@ def student(request):
     routine_object = Routine.objects.filter(batch=user.batch, faculty=user.faculty, groups__contains=user.group)
     elements_objects = RoutineElement.objects.filter(routine=routine_object)
     assignments_objects = Assignment.objects.filter(
-        Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
-        Q(faculty=user.faculty) | Q(faculty = None), 
+        Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
+        Q(faculty=user.faculty) | Q(faculty = None),
         Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
     )
     events_objects = Event.objects.filter(
-            Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
-            Q(faculty=user.faculty) | Q(faculty = None), 
+            Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
+            Q(faculty=user.faculty) | Q(faculty = None),
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
         )
 
     routine = {}
+    loopcount = 0
     for elem in elements_objects:
-        routine[elem.day] = elem
+        routine[loopcount] = elem
+        loopcount += 1
 
 
     context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects}
@@ -64,7 +66,7 @@ def login_user(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        
+
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
