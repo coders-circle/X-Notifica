@@ -3,6 +3,8 @@ import requests
 import json
 
 def Notify(title, event):
+    if event.cancelled:
+        return
     url = "https://gcm-http.googleapis.com/gcm/send"
     ids = []
     students = Student.objects.all()
