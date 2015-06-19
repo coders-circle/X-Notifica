@@ -3,10 +3,59 @@
 {% load static %}
 {% load humanize %}
 
+{% block head %}
+
+<link href = "{% static 'css/student.css' %}" type="text/css" rel="stylesheet">
+
+{% endblock %}
+
+
+
 {% block body %}
 
-{% for day, element in routine.items %}
-{{day}} {{ element }} <br>
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#notifica-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#page-top">Notifica</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#">Routine</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#">Assignments</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<div class="content">
+  <div class="row"
+
+
+</div>
+{% for sn, period in routine.items %}
+  {{sn}}.{{period.start_time}} --> {{period.subject}}, {{ period.teacher }} <br/>
 {% endfor %}
 
 {% endblock %}
