@@ -46,14 +46,18 @@ def student(request):
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
         )
 
-    routine = {}
-    loopcount = 0
+    routine = [[]] * 7
+    days = [""] * 7
+    day_tuple_list = list(Days)
     for elem in elements_objects:
-        routine[loopcount] = elem
-        loopcount += 1
+        routine[elem.day].append(elem)
 
+    for i in range(7):
+        days[i] = day_tuple_list[i][1]
 
-    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects}
+    routine = zip(routine, days)
+
+    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'days':days}
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):

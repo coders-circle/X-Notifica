@@ -40,7 +40,7 @@
                     <a href="#">Assignments</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#">Logout</a>
+                    <a href="/logout">Logout</a>
                 </li>
             </ul>
         </div>
@@ -50,12 +50,16 @@
 </nav>
 
 <div class="content">
-  <div class="row"
+<br><br><br><br><br><br>
 
-
-</div>
-{% for sn, period in routine.items %}
-  {{sn}}.{{period.start_time}} --> {{period.subject}}, {{ period.teacher }} <br/>
+{% for day_periods, day in routine %}
+{{ day }}
+<br>
+{% for period in day_periods %}
+  {{period.start_time}} -- {{period.subject}}, {{ period.teacher }} &nbsp; &nbsp; &nbsp;
+{% endfor %}
+<br><br>
 {% endfor %}
 
+</div>
 {% endblock %}
