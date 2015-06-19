@@ -46,6 +46,7 @@ def student(request):
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
         )
 
+    workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
     loopcount = 0
     for elem in elements_objects:
@@ -53,7 +54,7 @@ def student(request):
         loopcount += 1
 
 
-    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects}
+    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'workingweek':workingweek}
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):

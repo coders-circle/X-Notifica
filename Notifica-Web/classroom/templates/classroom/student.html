@@ -33,15 +33,10 @@
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
-                <li class="page-scroll">
-                    <a href="#">Routine</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="#">Assignments</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="#">Logout</a>
-                </li>
+                <li class="active"><a data-toggle="pill" href="#routine">Routine</a></li>
+                <li><a data-toggle="pill" href="#assignments">Assignments</a></li>
+                <li><a data-toggle="pill" href="#notices">Notices</a></li>
+                <li><a data-toggle="pill" href="#">Logout</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -49,13 +44,77 @@
     <!-- /.container-fluid -->
 </nav>
 
-<div class="content">
-  <div class="row"
+<div class="tab-content">
 
+  <div id="routine" class="tab-pane fade in active">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Routine</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+          {% for a_day in workingweek %}
+            <div class="col-md-2">
+                <h3> {{ a_day }} </h3>
+                {% for sn, element in routine.items %}
+                {% if element.day == forloop.parentloop.counter0 %}
+                  <div class="list-group">
+                    <a href="#" class="list-group-item">
+                      <p class="list-group-item-text">{{element.start_time}} to {{element.end_time}}</p>
+                      <p class="list-group-item-heading"><strong>{{element.subject}}</strong></p>
+                      <p class="list-group-item-text">{{element.teacher}}</p>
+                    </a>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+  </div>
 
+  <div id="assignments" class="tab-pane fade">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Assignments</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+          <div class="list-group">
+            {% for assignment in assignments %}
+              <a href="#" class="list-group-item">
+                <p class="list-group-item-heading"><strong>{{assignment.subject}}</strong></p>
+                <p class="list-group-item-text">{{assignment.summary}}</p>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  </div>
+  <div id="notices" class="tab-pane fade">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Notices</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+          <div class="list-group">
+            {% for notice in events %}
+              <a href="#" class="list-group-item">
+                <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
+                <p class="list-group-item-text">{{notice.details}}</p>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  </div>
 </div>
-{% for sn, period in routine.items %}
-  {{sn}}.{{period.start_time}} --> {{period.subject}}, {{ period.teacher }} <br/>
-{% endfor %}
 
 {% endblock %}
