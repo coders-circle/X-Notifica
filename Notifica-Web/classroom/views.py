@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.db.models import Q
 from .models import *
+from .mobile_views import DeletePassed
 
 def redirect_user(user):
     try:
@@ -31,10 +32,12 @@ def index(request):
 def student(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
+    
+    DeletePassed()
 
     user = Student.objects.get(user=request.user)
     routine_object = Routine.objects.filter(batch=user.batch, faculty=user.faculty, groups__contains=user.group)
-    elements_objects = RoutineElement.objects.filter(routine=routine_object)
+    elements_objects = RoutineElement.objects.filter(routine=routine_object).order_by('start_time')
     assignments_objects = Assignment.objects.filter(
         Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
         Q(faculty=user.faculty) | Q(faculty = None),
