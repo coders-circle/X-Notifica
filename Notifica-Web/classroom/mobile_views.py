@@ -95,7 +95,7 @@ def login(request):
 
 """
  Update Request and Response
- { "message_type" : "Login Request", "user_id":<username>, "password":<password> }
+ { "message_type" : "Update Request", "user_id":<username>, "password":<password> }
  { "message_type" : "Update Result", "update_result":"Success", "updated_at":<timestamp>, <update data>... }
  { "message_type" : "Update Successful", "user_id":<username>, "password":<password>, "updated_at":<timestamp> }
 """

@@ -6,52 +6,33 @@
 
 <link href = "{% static 'css/home.css' %}" type="text/css" rel="stylesheet">
 
-
 {% endblock %}
 
 
 
+
+
+{% block navbar %}
+<div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
+<ul class="nav navbar-nav navbar-right">
+    <li class="hidden">
+        <a href="#page-top"></a>
+    </li>
+    <li class="page-scroll">
+        <a href="#todo">To-do list</a>
+    </li>
+    <li class="page-scroll">
+        <a href="#about">About</a>
+    </li>
+    <li class="page-scroll">
+        <a href="#login">Login</a>
+    </li>
+
+</ul>
+</div>
+{% endblock %}
+
 {% block body %}
-
-
-
-  <!-- Navigation -->
-  <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header page-scroll">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#notifica-navbar-collapse-1">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#page-top">Notifica</a>
-          </div>
-
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
-              <ul class="nav navbar-nav navbar-right">
-                  <li class="hidden">
-                      <a href="#page-top"></a>
-                  </li>
-                  <li class="page-scroll">
-                      <a href="#todo">To-do list</a>
-                  </li>
-                  <li class="page-scroll">
-                      <a href="#about">About</a>
-                  </li>
-                  <li class="page-scroll">
-                      <a href="#login">Login</a>
-                  </li>
-
-              </ul>
-          </div>
-          <!-- /.navbar-collapse -->
-      </div>
-      <!-- /.container-fluid -->
-  </nav>
-
     <!-- Header -->
     <header>
         <div class="container">
@@ -108,7 +89,6 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                   <hr>
                     <a href="https://drive.google.com/file/d/0B4m35FfIXswwVHV5V2JlRUZMQzQ/view?usp=sharing" class="btn btn-lg btn-outline">
-
                         <i class="fa fa-download"></i> Download the Android app
                     </a>
                 </div>
@@ -128,20 +108,25 @@
             </div>
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
-                    <form action="{% url 'classroom:login' %}" method="post" name="login" id="loginForm" novalidate>
+
+                    <form action="#login" method="post" name="login" id="loginForm">
                     {% csrf_token %}
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Username</label>
-                                <input type="text" name="username" class="form-control" placeholder="username or email" id="username" required data-validation-required-message="Please enter your Username.">
-                                <p class="help-block text-danger"></p>
+                                <input type="text" name="username" class="form-control" placeholder="username" id="username" required data-validation-required-message="Please enter your Username." value="{{username}}">
+                                {% if wrong_username %}
+                                    <p class="text-danger">Invalid Username</p>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Password</label>
                                 <input type="password" name="password" class="form-control" placeholder="password" id="password" required data-validation-required-message="Please enter your Password.">
-                                <p class="help-block text-danger"></p>
+                                {% if wrong_password %}
+                                    <p class="text-danger">Invalid Password</p>
+                                {% endif %}
                             </div>
                         </div>
                         <br>
@@ -156,20 +141,7 @@
         </div>
     </section>
 
-
-
-
-  
-
-   <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-   <div class="scroll-top page-scroll visible-xs visible-sm">
-       <a class="btn btn-primary" href="#page-top">
-           <i class="fa fa-chevron-up"></i>
-       </a>
-   </div>
-
-    <!-- Plugin JavaScript -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <!-- Custom Theme JavaScript -->
+{% endblock %}
+{% block footer %}
     <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

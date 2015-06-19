@@ -20,19 +20,56 @@ def redirect_user(user):
            return None
 
 def index(request):
+    context = {}
     if request.user.is_authenticated():
         redir = redirect_user(request.user)
         if redir is not None:
             return redir
+    
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
-    context = {}
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                redir = redirect_user(user)
+                if redir is not None:
+                    return redir
+        try:
+            User.objects.get(username=username)
+            context = {"wrong_password":True, "username":username}
+        except:
+            context = {"wrong_username":True}
+
     return render(request, 'classroom/index.html', context)
+
+def change_password(request):
+    user = request.user
+    context = {'oldpass':request.POST.get("oldpass"), "newpass":request.POST.get("newpass"), "renewpass":request.POST.get("renewpass")}
+    if not user.is_authenticated():
+        return {}
+    if not user.check_password(request.POST.get("oldpass")):
+        context.update({'wrong_password':True})
+        return context
+    if request.POST.get("newpass") != request.POST.get("renewpass"):
+        context.update({'wrong_retype_password':True})
+        return context
+
+    user.set_password(request.POST.get("newpass"))
+    user.save()
+    return {'password_changed':True}
 
 
 def student(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
     
+    context = {}
+    if request.method == "POST":
+        context.update(change_password(request))
+
     DeletePassed()
 
     user = Student.objects.get(user=request.user)
@@ -59,7 +96,7 @@ def student(request):
         loopcount += 1
 
 
-    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'workingweek':workingweek}
+    context.update({'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'workingweek':workingweek})
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):
@@ -68,21 +105,7 @@ def teacher(request):
     context = {}
     return render(request, 'classroom/student.html', context)
 
-def login_user(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                redir = redirect_user(user)
-                if redir is not None:
-                    return redir
-
-    raise Http404("Login not found")
-
 def logout_user(request):
     logout(request)
     return redirect('classroom:index')
+
