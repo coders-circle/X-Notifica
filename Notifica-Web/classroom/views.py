@@ -38,26 +38,25 @@ def student(request):
     assignments_objects = Assignment.objects.filter(
         Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
         Q(faculty=user.faculty) | Q(faculty = None),
-        Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
-    )
+        Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
+        cancelled = False
+    ).order_by('-date')
     events_objects = Event.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
             Q(faculty=user.faculty) | Q(faculty = None),
-            Q(groups__contains=user.group) | Q(groups = None) | Q(groups="")
-        )
+            Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
+            cancelled = False
+        ).order_by('-date')
 
-    routine = [[]] * 7
-    days = [""] * 7
-    day_tuple_list = list(Days)
+    workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    routine = {}
+    loopcount = 0
     for elem in elements_objects:
-        routine[elem.day].append(elem)
+        routine[loopcount] = elem
+        loopcount += 1
 
-    for i in range(7):
-        days[i] = day_tuple_list[i][1]
 
-    routine = zip(routine, days)
-
-    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'days':days}
+    context = {'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'workingweek':workingweek}
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):
