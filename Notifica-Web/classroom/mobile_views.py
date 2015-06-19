@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 import json
 from .models import *
 from helpers import *
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 # get value from a key from settings table
 def GetSetting(key):
@@ -19,11 +19,15 @@ def GetSetting(key):
     except:
         return None
 
+def GetYesterday(delta=1):
+    yesterday = datetime.fromordinal(date.today().toordinal()) - timedelta(days=delta)
+    return yesterday
+
 # delete all passed assignments and events
 def DeletePassed():
-    yesterday = datetime.now() - timedelta(days=1)
-    Assignment.objects.filter(date__lt = yesterday).delete()
-    Event.objects.filter(date__lt = yesterday).delete()
+    yesterday = GetYesterday()
+    Assignment.objects.filter(date__lte = yesterday).delete()
+    Event.objects.filter(date__lte = yesterday).delete()
 
 # set value to a key in the settings table
 def SetSetting(key, value):
@@ -98,9 +102,9 @@ def login(request):
 
 @csrf_exempt
 def update(request):
-    DeletePassed()
     if request.method != "POST":
         return JsonResponse(error_response)
+    DeletePassed()
 
     indata = json.loads(request.body.decode('utf-8'))
 
@@ -190,10 +194,12 @@ def update(request):
         teachers_objects.add(el.teacher)
 
     for asgn in assignments_objects:
-        if asgn.modified_at > user.updated_at:
+        if asgn.modified_at > user.updated_at and not asgn.cancelled:
             acnt += 1
         assignment = {"date":datetime_to_seconds(asgn.date), "summary":asgn.summary, "subject_code":asgn.subject.code,
                             "details":asgn.details, "poster_id":asgn.poster.username, "remote_id":asgn.pk, "deleted":asgn.cancelled}
+        if asgn.cancelled:
+            assignment["date"] = datetime_to_seconds(GetYesterday())
         if user_type == "Teacher":
             assignment["faculty_code"] = "" if asgn.faculty is None else asgn.faculty.code
             assignment["year"] = 0 if asgn.batch is None else asgn.batch
@@ -202,10 +208,12 @@ def update(request):
         subjects_objects.add(asgn.subject)
 
     for evnt in events_objects:
-        if evnt.modified_at > user.updated_at:
+        if evnt.modified_at > user.updated_at and not evnt.cancelled:
             ecnt += 1
         event = {"date":datetime_to_seconds(evnt.date), "summary":evnt.summary,
                             "details":evnt.details, "poster_id":evnt.poster.username, "remote_id":evnt.pk, "deleted":evnt.cancelled}
+        if evnt.cancelled:
+            event["date"] = datetime_to_seconds(GetYesterday())
         if user_type == "Teacher":
             event["faculty_code"] = "" if evnt.faculty is None else evnt.faculty.code
             event["year"] = 0 if evnt.batch is None else evnt.batch
@@ -231,6 +239,7 @@ def update(request):
     outdata["faculties"] = faculties
     outdata["new_assignments_count"] = acnt
     outdata["new_events_count"] = ecnt
+
     return JsonResponse(outdata)
 
 
