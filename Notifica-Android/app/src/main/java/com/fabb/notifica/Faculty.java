@@ -1,7 +1,9 @@
 package com.fabb.notifica;
 
-public class Faculty {
+import com.orm.SugarRecord;
+
+public class Faculty extends SugarRecord<Faculty> {
     public String code;
     public String name;
-    public Subject[] subjects;
+    //public Subject[] subjects;
 }

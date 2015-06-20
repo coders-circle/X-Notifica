@@ -1,10 +1,6 @@
 package com.fabb.notifica;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -21,21 +17,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class Network {
-    private final Context mContext;
 
     public final String URL = "http://notifica.herokuapp.com/classroom/";
     public final String ERR_CONNECTION = "{ \"message_type\": \"ERROR CONNECTION\" }";
-
-    Network(Context context) {
-        mContext = context;
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager cm = (ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        // if no network is available networkInfo will be null otherwise check if we are connected
-        return networkInfo != null && networkInfo.isConnected();
-    }
 
     public String Get(String address) {
         HttpClient client = new DefaultHttpClient();

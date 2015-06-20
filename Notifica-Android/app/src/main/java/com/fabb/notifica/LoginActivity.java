@@ -46,6 +46,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences preferences = MainActivity.GetPreferences(this);
+        //noinspection ConstantConditions
         if (preferences.getBoolean("logged-in", false)
                 && !preferences.getString("user-id", "").equals("")
                 && !preferences.getString("password", "").equals("")
@@ -55,7 +56,6 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        // UpdateService.AddNewData(this);
 
         setContentView(R.layout.activity_login);
 
@@ -211,7 +211,7 @@ public class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                Network network = new Network(LoginActivity.this);
+                Network network = new Network();
                 String result = network.PostJson(LoginUrl, GetLoginJson(mUserId, mPassword));
                 response = new JSONObject(result);
 
@@ -289,8 +289,7 @@ public class LoginActivity extends Activity {
     }
 
     public static void LogOut(Context context) {
-        Database db = new Database(context);
-        db.DeleteAll();
+        Database.DeleteAll();
 
         SharedPreferences preferences = MainActivity.GetPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();

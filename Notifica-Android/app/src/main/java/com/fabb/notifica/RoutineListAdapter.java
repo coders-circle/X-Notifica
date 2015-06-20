@@ -1,17 +1,15 @@
 package com.fabb.notifica;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class RoutineListAdapter extends BaseExpandableListAdapter {
 
     public static class Item {
         String summary, details, extra;
@@ -25,7 +23,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private List<Item> mListItems;
 
-    public ExpandableListAdapter(Context context, List<Item> listItems) {
+    public RoutineListAdapter(Context context, List<Item> listItems) {
         this.mContext = context;
         this.mListItems = listItems;
     }

@@ -28,6 +28,10 @@ public class MyGcmListenerService extends  GcmListenerService {
         SharedPreferences preferences = MainActivity.GetPreferences(this);
         if (!preferences.getBoolean("logged-in", false))
             return;
+
+        String userType = preferences.getString("user-type","");
+        if (userType != null && userType.equals("Teacher"))
+            return;
         
         String message = data.getString("message");
         String title = data.getString("title");

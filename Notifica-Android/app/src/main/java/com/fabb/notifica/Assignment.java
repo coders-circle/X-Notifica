@@ -1,19 +1,18 @@
 package com.fabb.notifica;
 
+import com.orm.SugarRecord;
 
-public class Assignment {
+public class Assignment extends SugarRecord<Assignment>{
     public long id;
-    public Subject subject;
+    public long date;
     public String summary;
     public String details;
-    public long date;
-    public long remote_id;
-
     public String posterId;
-
     boolean deleted;
+    public long remoteId;
+    public Subject subject;
 
-    // for teacher only
+    // for teachers only
     public Faculty faculty;
     public int year;
     public String groups;

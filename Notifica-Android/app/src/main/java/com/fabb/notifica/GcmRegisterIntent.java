@@ -53,7 +53,7 @@ public class GcmRegisterIntent extends IntentService {
             json.put("password", preferences.getString("password", ""));
             json.put("token", token);
 
-            new GcmRegisterTask(context, json, true).execute();
+            new GcmRegisterTask(context, json).execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,7 +67,7 @@ public class GcmRegisterIntent extends IntentService {
         JSONObject mReturn;
         Context mContext;
 
-        GcmRegisterTask(Context context, JSONObject json, boolean shutdown) {
+        GcmRegisterTask(Context context, JSONObject json) {
             mJson=json;
             mContext = context;
         }
@@ -75,7 +75,7 @@ public class GcmRegisterIntent extends IntentService {
         protected Void doInBackground(Void... params) {
             try {
                 success = false;
-                Network network = new Network(mContext);
+                Network network = new Network();
                 result = network.PostJson(registerUrl, mJson);
                 mReturn = new JSONObject(result);
                 if (mReturn.optString("register_result").equals("Success"))

@@ -1,6 +1,7 @@
 package com.fabb.notifica;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -18,9 +19,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
-public class EventAdder extends ActionBarActivity {
+public class InfoAdder extends ActionBarActivity {
     private static final String postUrl = "post";
     Spinner mFacultyList;
     Spinner mSubjectList;
@@ -32,15 +34,15 @@ public class EventAdder extends ActionBarActivity {
 
     String parentActivity = "Events";
 
-    ArrayList<Faculty> faculties;
-    ArrayList<Subject> subjects;
+    List<Faculty> faculties;
+    List<Subject> subjects;
 
     ArrayList<String> grouplist = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_adder);
+        setContentView(R.layout.activity_info_adder);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -55,8 +57,7 @@ public class EventAdder extends ActionBarActivity {
         mGroupsEdit = (Spinner) findViewById(R.id.event_edit_groups);
         mSubjectList = (Spinner) findViewById(R.id.event_subject_list);
 
-        Database db = new Database(this);
-        faculties = db.GetFaculties();
+        faculties = Faculty.listAll(Faculty.class);
         ArrayList<String> faculty_names = new ArrayList<>();
         faculty_names.add("None");
         for (Faculty f: faculties) {
@@ -68,7 +69,7 @@ public class EventAdder extends ActionBarActivity {
         mFacultyList.setSelection(0);
 
         if (parentActivity.equals("Assignments")) {
-            subjects = db.GetSubjects();
+            subjects = Subject.listAll(Subject.class);
             ArrayList<String> subject_names = new ArrayList<>();
             for (Subject f: subjects) {
                 subject_names.add(f.name);
@@ -85,7 +86,8 @@ public class EventAdder extends ActionBarActivity {
         }
 
         SharedPreferences preferences = MainActivity.GetPreferences(this);
-        if (preferences.getString("user-type", "").equals("Student")) {
+        String user_type = preferences.getString("user-type", "");
+        if (user_type == null || user_type.equals("Student")) {
             View temp = mFacultyList;
             ((LinearLayout)temp.getParent()).removeView(temp);
             temp = findViewById(R.id.event_faculty_textview);
@@ -97,8 +99,9 @@ public class EventAdder extends ActionBarActivity {
         }
 
         grouplist.add("All");
-        grouplist.add("A");
-        grouplist.add("B");
+        for (int i=0; i<26; ++i) {
+            grouplist.add(String.valueOf((char)(i + 65)));
+        }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, grouplist);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mGroupsEdit.setAdapter(adapter);
@@ -114,7 +117,8 @@ public class EventAdder extends ActionBarActivity {
         String details = mDetailsEdit.getText().toString();
         String faculty_code = "";
         int year = 0;
-        if (preferences.getString("user-type", "").equals("Student")) {
+        String user_type = preferences.getString("user-type", "");
+        if (user_type == null || user_type.equals("Student")) {
             faculty_code = preferences.getString("faculty-code", "");
             year = preferences.getInt("batch", 0);
         }
@@ -144,6 +148,7 @@ public class EventAdder extends ActionBarActivity {
             json.put("groups", groups);
             json.put("faculty_code", faculty_code);
 
+            String posting_message = "Posting Notice";
             if (parentActivity.equals("Assignments")) {
                 if (mSubjectList.getSelectedItemId() >= 0) {
                     String subject_code = subjects.get((int) mSubjectList.getSelectedItemId()).code;
@@ -153,9 +158,11 @@ public class EventAdder extends ActionBarActivity {
                     return;
 
                 json.put("message_type", "Post Assignment");
+                posting_message = "Posting Assignment";
             }
 
-            new PostTask(this, json, true).execute();
+
+            new PostTask(this, json, true, posting_message).execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,16 +178,28 @@ public class EventAdder extends ActionBarActivity {
         boolean mShutdown=false;
         UpdateService.UpdateResult mUpdateResult = new UpdateService.UpdateResult();
 
-        PostTask(Activity activity, JSONObject json, boolean shutdown) {
+        private ProgressDialog mDialog;
+
+        PostTask(Activity activity, JSONObject json, boolean shutdown, String postingMessage) {
             mActivity = activity;
             mJson=json;
             mShutdown=shutdown;
+
+            mDialog = new ProgressDialog(mActivity);
+            mDialog.setMessage(postingMessage);
         }
+
+        @Override
+        protected void onPreExecute() {
+            mDialog.show();
+        }
+
+
         @Override
         protected Void doInBackground(Void... params) {
             try {
                 success = false;
-                Network network = new Network(mActivity);
+                Network network = new Network();
                 result = network.PostJson(postUrl, mJson);
                 mReturn = new JSONObject(result);
                 if (mReturn.optString("post_result").equals("Success")) {
@@ -195,6 +214,9 @@ public class EventAdder extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(final Void v) {
+            if (mDialog.isShowing())
+                mDialog.dismiss();
+
             if (success) {
                 UpdateService.FinishUpdate(mUpdateResult);
                 Toast.makeText(mActivity, "Success", Toast.LENGTH_SHORT).show();

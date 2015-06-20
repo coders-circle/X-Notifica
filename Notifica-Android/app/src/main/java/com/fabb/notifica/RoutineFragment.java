@@ -1,9 +1,6 @@
 package com.fabb.notifica;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,19 +8,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import org.apache.http.client.RedirectException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,8 +21,6 @@ import java.util.List;
 public class RoutineFragment extends Fragment implements UpdateListener {
     DaysCollectionPagerAdapter mDaysCollection;
     ViewPager mViewPager;
-
-    private Activity mActivity;
 
     private static boolean mLoaded = false;
     private static List<List<RoutineElement>> routine = new ArrayList<>();
@@ -69,11 +55,9 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         strip.setDrawFullUnderline(true);
 
 
-        mActivity = getActivity();
         if (!mLoaded) {
-            Database db = new Database(getActivity());
             for (int d = 0; d < 7; ++d) {
-                routine.add(db.GetRoutine(RoutineElement.Day.values()[d]));
+                routine.add(RoutineElement.find(RoutineElement.class, "day = ?", new String[]{d+""}, null, "start_time", null));
             }
             mLoaded = true;
         }
@@ -105,9 +89,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         if (!hasUpdated)
             return;
         routine.clear();
-        Database db = new Database(mActivity);
         for (int d = 0; d < 7; ++d) {
-            routine.add(db.GetRoutine(RoutineElement.Day.values()[d]));
+            routine.add(RoutineElement.find(RoutineElement.class, "day = ?", new String[]{d+""}, null, "start_time", null));
         }
         Refresh();
     }
@@ -121,39 +104,42 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
             SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
-            boolean isteacher = false;
-            if (preferences.getString("user-type","").equals("Teacher"))
-                isteacher = true;
+
+            String user_type = preferences.getString("user-type","");
+            boolean isteacher = user_type != null && user_type.equals("Teacher");
 
             ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
             Bundle args = getArguments();
 
             Calendar c = Calendar.getInstance();
-            long now = c.getTimeInMillis();
             c.set(Calendar.HOUR_OF_DAY, 0);
             c.set(Calendar.MINUTE, 0);
             c.set(Calendar.SECOND, 0);
             c.set(Calendar.MILLISECOND, 0);
-            long passed = (now - c.getTimeInMillis())/1000/60;
 
             int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
             List<RoutineElement> rtn = routine.get(day);
-            ArrayList<CustomListAdapter.CustomListItem> infos = new ArrayList<>();
-            boolean first = true;
-            long lastTime = 0;
+            ArrayList<InfoListAdapter.InfoListItem> infos = new ArrayList<>();
+            RoutineElement lastElement = null;
+            InfoListAdapter.InfoListItem lastInfo = null;
+
             for (final RoutineElement r : rtn) {
-                if (first) {
-                    lastTime = r.startTime;
-                    first = false;
-                }
-                if (lastTime < r.startTime) {
-                    CustomListAdapter.CustomListItem info = new CustomListAdapter.CustomListItem();
-                    info.teachers = "Break";
-                    infos.add(info);
+                if (lastElement != null) {
+                    if (lastElement.startTime == r.startTime && lastElement.endTime == r.endTime && lastElement.type == r.type) {
+                        if (isteacher && lastElement.year == r.year && lastElement.faculty.code.equals(r.faculty.code)) {
+                            lastInfo.teachers = lastInfo.teachers.substring(0, lastInfo.teachers.indexOf("Group:"));
+                            continue;
+                        }
+                    }
+                    if (lastElement.endTime < r.startTime) {
+                        InfoListAdapter.InfoListItem info = new InfoListAdapter.InfoListItem();
+                        info.teachers = "Break";
+                        infos.add(info);
+                    }
                 }
                 String subject = "";
                 String teacher = "";
-                String time = "";
+                String time;
                 if (r.subject != null) {
                     subject = r.subject.name;
                     if (r.type == 0)
@@ -162,7 +148,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                         subject += " (Practical)";
                 }
                 if (isteacher) {
-                    teacher = r.year + "-" + r.faculty.code;
+                    teacher = r.year + "-" + r.faculty.code + " Group: " + r.groups;
                 }
                 else if (r.teacher != null) {
                     teacher = r.teacher.name;
@@ -170,16 +156,17 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 String sTime = String.format("%02d", r.startTime/60) + ":" + String.format("%02d", r.startTime%60);
                 String eTime = String.format("%02d", r.endTime/60) + ":" + String.format("%02d", r.endTime%60);
                 time = sTime + " - " + eTime;
-                lastTime = r.endTime;
-                CustomListAdapter.CustomListItem info = new CustomListAdapter.CustomListItem();
+                InfoListAdapter.InfoListItem info = new InfoListAdapter.InfoListItem();
                 info.subjects = subject;
                 info.teachers = teacher;
                 info.times = time;
                 infos.add(info);
 
+                lastInfo = info;
+                lastElement = r;
             }
 
-            CustomListAdapter adapter = new CustomListAdapter(getActivity(), infos);
+            InfoListAdapter adapter = new InfoListAdapter(getActivity(), infos);
             lv.setAdapter(adapter);
             return rootView;
         }

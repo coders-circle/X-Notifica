@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,8 +37,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Database db = new Database(this);
-        db.DeletePassedData();
+        Database.DeleteExpired();
 
         mPageTitles = getResources().getStringArray(R.array.page_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -56,15 +54,11 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //if (getSupportActionBar() != null)
-                    //getSupportActionBar().setTitle("Notifica");
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                //if (getSupportActionBar() != null)
-                    //getSupportActionBar().setTitle("Notifica");
             }
         };
 
@@ -108,19 +102,19 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             GcmRegisterIntent.sendRegistrationToServer(this,  preferences.getString("gcm_token", ""));
     }
 
-    private int new_assignment_cnt = 0;
-    private int new_event_cnt = 0;
-    public void UpdateDrawer() {
-        if (new_assignment_cnt > 0)
-            mPageTitles[1] = "Assignments    (" + new_assignment_cnt + " new)";
-        else
-            mPageTitles[1] = "Assignments";
-        if (new_event_cnt > 0)
-            mPageTitles[2] = "Notices    (" + new_event_cnt + " new)";
-        else
-            mPageTitles[2] = "Notices";
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mPageTitles));
-    }
+//    private int new_assignment_cnt = 0;
+//    private int new_event_cnt = 0;
+//    public void UpdateDrawer() {
+//        if (new_assignment_cnt > 0)
+//            mPageTitles[1] = "Assignments    (" + new_assignment_cnt + " new)";
+//        else
+//            mPageTitles[1] = "Assignments";
+//        if (new_event_cnt > 0)
+//            mPageTitles[2] = "Notices    (" + new_event_cnt + " new)";
+//        else
+//            mPageTitles[2] = "Notices";
+//        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mPageTitles));
+//    }
 
     @Override
     public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
@@ -135,16 +129,15 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                     res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "notices" : "notice");
                 Toast.makeText(this, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
 
-            new_assignment_cnt = assignmentCnt;
-            new_event_cnt = eventCnt;
-            UpdateDrawer();
+//            new_assignment_cnt = assignmentCnt;
+//            new_event_cnt = eventCnt;
+//            UpdateDrawer();
         }
         else
             Toast.makeText(this, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
 
 
-        Database db = new Database(this);
-        db.DeletePassedData();
+        Database.DeleteExpired();
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -167,13 +160,13 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 break;
             case 1:
                 fragment = assignment_fragment;
-                new_assignment_cnt = 0;
-                UpdateDrawer();
+//                new_assignment_cnt = 0;
+//                UpdateDrawer();
                 break;
             case 2:
                 fragment = event_fragment;
-                new_event_cnt = 0;
-                UpdateDrawer();
+//                new_event_cnt = 0;
+//                UpdateDrawer();
                 break;
             case 3:
                 startActivityForResult(new Intent(this, SettingsActivity.class), 0);
