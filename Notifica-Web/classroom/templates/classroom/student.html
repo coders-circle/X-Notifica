@@ -18,18 +18,18 @@
         <li class="active"><a data-toggle="pill" href="#routine">Routine</a></li>
         <li><a data-toggle="pill" href="#assignments">Assignments</a></li>
         <li><a data-toggle="pill" href="#notices">Notices</a></li>
-    
+
         <li class="dropdown ">
             <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" aria-labelledby="settingsMenu">
+            <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
               <li><a data-toggle="pill" href="#changepass">Change Password</a></li>
               <li><a href="/logout">Logout</a></li>
             </ul>
         </li>
-    
+
     </ul>
 </div>
 {% endblock %}
@@ -46,18 +46,28 @@
             </div>
         </div>
         <div class="row">
+          {% now 'w' as today %}
           {% for a_day in workingweek %}
+            {% if today|add:'0' == forloop.counter0 %}
+            <div class="col-md-2 today">
+            {%else%}
             <div class="col-md-2">
+            {%endif%}
                 <h3> {{ a_day }} </h3>
                 {% for sn, element in routine.items %}
                 {% if element.day == forloop.parentloop.counter0 %}
-                  <div class="list-group">
-                    <a href="#" class="list-group-item">
-                      <p class="list-group-item-text">{{element.start_time}} to {{element.end_time}}</p>
-                      <p class="list-group-item-heading"><strong>{{element.subject}}</strong></p>
-                      <p class="list-group-item-text">{{element.teacher}}</p>
-                    </a>
-                  </div>
+                    <div class="list-group">
+                      <a href="#" class="list-group-item">
+                        <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
+                        <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                        <p class="list-group-item-text">{{element.start_time}} to {{element.end_time}}</p>
+                        {% if element.class_type == 0 %}
+                        <p class ="list-group-item-text">(Lecture)</p>
+                        {% else %}
+                        <p class ="list-group-item-text">(Practical)</p>
+                        {% endif %}
+                      </a>
+                    </div>
                 {% endif %}
               {% endfor %}
             </div>
@@ -168,7 +178,6 @@
         </div>
       </div>
   </div>
-
 </div>
 {% endblock %}
 

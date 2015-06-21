@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 from django.db.models import Q
 from .models import *
@@ -25,7 +26,7 @@ def index(request):
         redir = redirect_user(request.user)
         if redir is not None:
             return redir
-    
+
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -65,7 +66,7 @@ def change_password(request):
 def student(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
-    
+
     context = {}
     if request.method == "POST":
         context.update(change_password(request))
@@ -90,12 +91,12 @@ def student(request):
 
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
-    loopcount = 0
-    for elem in elements_objects:
+    for loopcount, elem in enumerate(elements_objects):
         routine[loopcount] = elem
-        loopcount += 1
 
-    context.update({'user':request.user, 'routine':routine, 'assignments':assignments_objects, 'events':events_objects, 'workingweek':workingweek})
+    names = user.name.split(' ')
+    context.update({'user':user, 'routine':routine, 'assignments':assignments_objects, 
+                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1] })
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):
@@ -107,4 +108,3 @@ def teacher(request):
 def logout_user(request):
     logout(request)
     return redirect('classroom:index')
-
