@@ -21,7 +21,7 @@
 
         <li class="dropdown ">
             <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              {{firstname}}
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
@@ -60,11 +60,11 @@
                       <a href="#" class="list-group-item">
                         <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
                         <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
-                        <p class="list-group-item-text">{{element.start_time}} to {{element.end_time}}</p>
+                        <p class="list-group-item-text"><small>{{element.start_time}} to {{element.end_time}}</small></p>
                         {% if element.class_type == 0 %}
-                        <p class ="list-group-item-text">(Lecture)</p>
+                        <p class ="list-group-item-text"><small>(Lecture)</small></p>
                         {% else %}
-                        <p class ="list-group-item-text">(Practical)</p>
+                        <p class ="list-group-item-text"><small>(Practical)</small></p>
                         {% endif %}
                       </a>
                     </div>
@@ -84,6 +84,44 @@
                 <hr>
             </div>
         </div>
+        <div class="row">
+          <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment"><i class="fa fa-plus"></i></a></p>
+          <div class="span4 collapse-group">
+              <form class="collapse col-lg-10 col-lg-offset-1" method="post" name="newassignment" id="addassignment">
+                  {% csrf_token %}
+                  <div class="row control-group">
+                    <h3> Post New Assignment </h3>
+                  </div>
+                  <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Date</label>
+                          <input type="datetime-local" name="date" class="form-control" placeholder="date" id="date">
+                      </div>
+
+                  </div>
+                  <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Summary</label>
+                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary">
+
+                      </div>
+                  </div>
+                  <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Details</label>
+                          <textarea rows="3" class="form-control" placeholder="detail" id="detail"></textarea>
+                          <p class="help-block text-danger"></p>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="form-group col-xs-12">
+                          <button type="submit" class="btn btn-success btn-lg">Post</button>
+                      </div>
+                  </div>
+              </form>
+          </div>
+        </div>
+
         <div class="row">
           <div class="list-group">
             {% for assignment in assignments %}
@@ -109,6 +147,47 @@
                 <hr>
             </div>
         </div>
+
+        <div class="row">
+          <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
+          <div class="span4 collapse-group">
+              <form class="collapse col-lg-10 col-lg-offset-1" method="post" name="newnotice" id="addnotice" >
+                  {% csrf_token %}
+                  <div class="row control-group">
+                    <h3> Post New Notice </h3>
+                  </div>
+                  <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Date</label>
+                          <input type="datetime-local" name="date" class="form-control" placeholder="date" id="date">
+                      </div>
+
+                  </div>
+                  <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Summary</label>
+                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary">
+
+                      </div>
+                  </div>
+                  <div class="row control-group">
+                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                          <label>Details</label>
+                          <textarea rows="3" class="form-control" placeholder="detail" id="detail"></textarea>
+                          <p class="help-block text-danger"></p>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="form-group col-xs-12">
+                          <button type="submit" class="btn btn-success btn-lg">Post</button>
+                      </div>
+                  </div>
+              </form>
+          </div>
+        </div>
+
+
+
         <div class="row">
           <div class="list-group">
             {% for notice in events %}
