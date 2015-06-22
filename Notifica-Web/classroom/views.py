@@ -95,7 +95,7 @@ def student(request):
         routine[loopcount] = elem
 
     names = user.name.split(' ')
-    context.update({'user':user, 'routine':routine, 'assignments':assignments_objects, 
+    context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
                     'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1] })
     return render(request, 'classroom/student.html', context)
 

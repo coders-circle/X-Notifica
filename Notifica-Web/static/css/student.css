@@ -9,17 +9,27 @@
 
 .nav button{
   background:#fff;
-  font-size: 2em;
-  padding:5px;
+  text-transform: uppercase;
+  font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding:15px;
   margin:0;
-  padding-left:16px;
-  padding-right:10px;
   border:none;
+  border-radius: 0;
 }
 
 h3 {
     padding:20px 10px;
     margin:0;
+    font-size:1.2em;
+}
+
+.tab-content{
+  background: #eaf1f1;
+}
+.list-group-item{
+  background: #eaf1f1;
 }
 
 .col-md-2{
@@ -33,10 +43,16 @@ h3 {
 }
 
 a.list-group-item{
-  padding:20px 10px;
+  padding:24px 10px;
   margin:0;
+  margin-right: 10px;
   border:0;
-  min-height:120px;
+  min-height:140px;
+}
+
+a.list-group-item:hover{
+  background: #fff;
+  color:#445;
 }
 
 .usersettings > li{
@@ -45,10 +61,33 @@ a.list-group-item{
 }
 
 .today .list-group-item{
-  background:#eefff1;
+  background:#18bc9c;
+  color:#fff;
   border:none;
   border-radius:0;
 }
 .today > h3{
   color:#18bc9c;
+}
+
+.addbtn{
+  font-size:2em;
+}
+
+.addbtn:hover{
+  color:#33dfce;
+}
+
+.floating-label-form-group {
+    border-bottom: 1px solid #ccc;
+}
+
+.btn-success{
+  margin-left:-14px;
+  margin-top:30px;
+}
+
+#addnotice,
+#addassignment{
+  padding-bottom:40px;
 }
