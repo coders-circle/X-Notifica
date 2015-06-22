@@ -96,7 +96,8 @@ def student(request):
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
-                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1] })
+                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1],
+                    'subjectlist':['Professional Development ', 'Art of Murders', 'Highway to Hell', 'Stairways to Heaven'], 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):
