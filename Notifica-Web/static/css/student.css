@@ -82,6 +82,23 @@ a.list-group-item:hover{
     border-bottom: 1px solid #ccc;
 }
 
+.form-group select{
+  padding:12px;
+  padding-left:20px;
+  padding-right:20px;
+  margin-left:10px;
+  font-size:1.2em;
+  background: transparent;
+  margin-top:16px;
+}
+
+.groupselect{
+  border:none;
+}
+.noborder{
+  border:none;
+}
+
 .btn-success{
   margin-left:-14px;
   margin-top:30px;

@@ -141,7 +141,6 @@ class Event(models.Model):
     cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 
-
     def save(self, *args, **kwargs):
         super(Event, self).save(*args, **kwargs)
         Notify("Notice", self)

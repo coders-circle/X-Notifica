@@ -92,30 +92,42 @@
                   <div class="row control-group">
                     <h3> Post New Assignment </h3>
                   </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Date</label>
-                          <input type="datetime-local" name="date" class="form-control" placeholder="date" id="date">
-                      </div>
-
+                  <div class="form-group col-md-6 floating-label-form-group controls">
+                      <label>Date</label>
+                      <input type="date" name="date" class="form-control" placeholder="date" id="date" required>
+                  </div>
+                  <div class="form-group col-md-4 subjectselect">
+                    
+                    <select name="subject" id="subjects">
+                      {% for subject in subjectlist %}
+                        <option value="{{subject.code}}">{{subject.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group col-md-2 groupselect">
+                      <label>Group</label>
+                      <select name="group" id="groups">
+                        {% for value in grouplist %}
+                          <option value="{{value}}">{{value}}</option>
+                        {% endfor %}
+                      </select>
                   </div>
                   <div class="row control-group">
                       <div class="form-group col-xs-12 floating-label-form-group controls">
                           <label>Summary</label>
-                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary">
-
+                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary" required>
                       </div>
                   </div>
                   <div class="row control-group">
                       <div class="form-group col-xs-12 floating-label-form-group controls">
                           <label>Details</label>
-                          <textarea rows="3" class="form-control" placeholder="detail" id="detail"></textarea>
+                          <textarea rows="3" name="details" class="form-control" placeholder="detail" id="detail" required></textarea>
                           <p class="help-block text-danger"></p>
                       </div>
                   </div>
                   <div class="row">
                       <div class="form-group col-xs-12">
-                          <button type="submit" class="btn btn-success btn-lg">Post</button>
+                          <button name="post_assignment" type="submit" class="btn btn-success btn-lg">Post</button>
                       </div>
                   </div>
               </form>
@@ -157,29 +169,37 @@
                     <h3> Post New Notice </h3>
                   </div>
                   <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
+                      <div class="form-group col-md-8 floating-label-form-group controls">
                           <label>Date</label>
-                          <input type="datetime-local" name="date" class="form-control" placeholder="date" id="date">
+                          <input type="date" name="date" class="form-control" placeholder="date" id="date" required>
                       </div>
-
+                      <div class="col-md-2"></div>
+                      <div class="form-group col-md-2 groupselect">
+                          <label>Group</label>
+                          <select name="group" id="groups">
+                            {% for value in grouplist %}
+                              <option value="{{value}}">{{value}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
                   </div>
                   <div class="row control-group">
                       <div class="form-group col-xs-12 floating-label-form-group controls">
                           <label>Summary</label>
-                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary">
+                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary" required>
 
                       </div>
                   </div>
                   <div class="row control-group">
                       <div class="form-group col-xs-12 floating-label-form-group controls">
                           <label>Details</label>
-                          <textarea rows="3" class="form-control" placeholder="detail" id="detail"></textarea>
+                          <textarea rows="3" name="details" class="form-control" placeholder="detail" id="detail" required></textarea>
                           <p class="help-block text-danger"></p>
                       </div>
                   </div>
                   <div class="row">
                       <div class="form-group col-xs-12">
-                          <button type="submit" class="btn btn-success btn-lg">Post</button>
+                          <button name="post_notice" type="submit" class="btn btn-success btn-lg">Post</button>
                       </div>
                   </div>
               </form>
@@ -248,7 +268,7 @@
                   <br>
                   <div class="row">
                       <div class="form-group col-xs-12">
-                          <button type="submit" class="btn btn-success btn-lg">Change Password</button>
+                          <button name="change_password" type="submit" class="btn btn-success btn-lg">Change Password</button>
                       </div>
                   </div>
               </form>

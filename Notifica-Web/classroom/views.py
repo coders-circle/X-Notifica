@@ -51,16 +51,55 @@ def change_password(request):
     context = {'oldpass':request.POST.get("oldpass"), "newpass":request.POST.get("newpass"), "renewpass":request.POST.get("renewpass")}
     if not user.is_authenticated():
         return {}
-    if not user.check_password(request.POST.get("oldpass")):
+    if not user.check_password(context["oldpass"]):
         context.update({'wrong_password':True})
         return context
-    if request.POST.get("newpass") != request.POST.get("renewpass"):
+    if context["newpass"] != context["renewpass"]:
         context.update({'wrong_retype_password':True})
         return context
 
-    user.set_password(request.POST.get("newpass"))
+    user.set_password(context["newpass"])
     user.save()
     return {'password_changed':True}
+
+def post_assignment(request):
+    context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
+               "summary":request.POST.get("summary"), "details":request.POST.get("details")}
+    if not request.user.is_authenticated():
+        return {}
+    
+    user = Student.objects.get(user=request.user)
+    assignment = Assignment()
+    assignment.faculty = user.faculty
+    assignment.batch = user.batch
+    assignment.groups = "" if context["group"] == "All" else context["group"]
+    assignment.poster = request.user
+    assignment.subject = Subject.objects.get(code=context["subject"])
+    assignment.summary = context["summary"]
+    assignment.details = context["details"]
+    assignment.date = context["date"]
+    assignment.save()
+
+    return {'assignment_posted':True}
+
+def post_notice(request):
+    context = {"date":request.POST.get("date"), "group":request.POST.get("group"),
+               "summary":request.POST.get("summary"), "details":request.POST.get("details")}
+    if not request.user.is_authenticated():
+        return {}
+    
+    user = Student.objects.get(user=request.user)
+    notice = Event()
+    notice.faculty = user.faculty
+    notice.batch = user.batch
+    notice.groups = "" if context["group"] == "All" else context["group"]
+    notice.poster = request.user
+    notice.summary = context["summary"]
+    notice.details = context["details"]
+    notice.date = context["date"]
+    notice.save()
+
+    return {'notice_posted':True}
 
 
 def student(request):
@@ -69,7 +108,12 @@ def student(request):
 
     context = {}
     if request.method == "POST":
-        context.update(change_password(request))
+        if 'post_assignment' in request.POST:
+            context.update(post_assignment(request))
+        elif 'post_notice' in request.POST:
+            context.update(post_notice(request))
+        elif 'change_password' in request.POST:
+            context.update(change_password(request))
 
     DeletePassed()
 
@@ -89,6 +133,10 @@ def student(request):
             cancelled = False
         ).order_by('-date')
 
+    subjects = set()
+    for element in elements_objects:
+        subjects.add(element.subject)
+
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
     for loopcount, elem in enumerate(elements_objects):
@@ -96,7 +144,8 @@ def student(request):
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
-                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1] })
+                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1],
+                    'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/student.html', context)
 
 def teacher(request):
