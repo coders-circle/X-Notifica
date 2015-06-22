@@ -66,6 +66,32 @@ a.list-group-item:hover{
   border:none;
   border-radius:0;
 }
+
+.assignmentlist .list-group-item,
+.noticelist .list-group-item{
+  padding-left:30px;
+}
+
+.submission-date{
+  color:#900!important;
+}
+
+.assignment-summary{
+  padding-top:8px;
+  padding-bottom:5px;
+}
+
+.notice-detail{
+  padding-top:20px;
+}
+
+
+
+.nottoday .list-group-item{
+  border:none;
+  border-radius:0;
+}
+
 .today > h3{
   color:#18bc9c;
 }
@@ -83,18 +109,17 @@ a.list-group-item:hover{
 }
 
 .form-group select{
-  padding:12px;
-  padding-left:20px;
-  padding-right:20px;
-  margin-left:10px;
+  padding-top:10px;
+  padding-bottom:10px;
+  padding-left:8px;
+  padding-right:4px;
   font-size:1.2em;
   background: transparent;
   margin-top:16px;
+  margin-left:6px;
 }
 
-.groupselect{
-  border:none;
-}
+
 .noborder{
   border:none;
 }
