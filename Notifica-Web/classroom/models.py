@@ -158,6 +158,7 @@ class Setting(models.Model):
 
 
 class GcmRegistration(models.Model):
+    device_id = models.TextField(default="")
     user = models.OneToOneField(User)
     token = models.TextField()
 

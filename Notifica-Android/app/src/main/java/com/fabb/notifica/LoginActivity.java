@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -295,7 +297,10 @@ public class LoginActivity extends Activity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("logged-in", false);
         editor.remove("password");
+        editor.remove("fb-group-id");
         editor.apply();
+
+        LoginManager.getInstance().logOut();
     }
 }
 

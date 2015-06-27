@@ -1,13 +1,17 @@
 package com.fabb.notifica;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.Locale;
 
 
 public class AssignmentFragment extends InfoFragment {
+
+    public AssignmentFragment() {
+        super();
+        this.info_name = "Assignment";
+    }
 
     @Override
     protected void prepareListData() {
@@ -18,7 +22,7 @@ public class AssignmentFragment extends InfoFragment {
             Assignment as = ass.next();
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(as.date*1000);
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+            DateFormat format1 = DateFormat.getDateInstance();
 
             String extra = "";
             if (as.subject != null)

@@ -324,7 +324,7 @@ def post(request):
 
 """
  Gcm Registration Request and Response
- { "message_type" : "Gcm Registration", "user_id":<username>, "password":<password>, "token":<token> }
+ { "message_type" : "Gcm Registration", "user_id":<username>, "password":<password>, "token":<token>, "device_id":<device_id> }
  { "message_type" : "Registration Result", "register_result":"Success" }
 """
 
@@ -341,7 +341,21 @@ def register(request):
     if (user is None or user_type=="Invalid"):
         return JsonResponse(error_response_auth)
 
-    GcmRegistration.objects.update_or_create(user=user.user, defaults={"token":indata.get("token","")})
+    dev_id = indata.get("device_id", "")
+    token = indata.get("token", "")
+
+    if dev_id == "":
+        GcmRegistration.objects.update_or_create(user=user.user, defaults={"token":token})
+    else:
+        try:
+            registration = GcmRegistration.objects.get(device_id=dev_id)
+        except:
+            registration = GcmRegistration()
+            registration.device_id = dev_id
+
+        registration.user = user.user
+        registration.token = token
+        registration.save()
 
     outdata = {"message_type":"Registration Result", "register_result":"Success"}
 

@@ -20,9 +20,14 @@
         android:key="pref_key_misc">
 
         <Preference
-            android:title="Logout"
-            android:summary="Log yourself out from Notifica"
-            android:key="pref_key_logout">
+            android:title="Facebook Connection"
+            android:summary="Connect Notifica to your facebook account"
+            android:key="pref_key_fb">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.fabb.notifica"
+                android:targetClass="com.fabb.notifica.FacebookSettingsActivity"
+                />
         </Preference>
 
         <Preference
@@ -33,6 +38,12 @@
                 android:targetPackage="com.fabb.notifica"
                 android:targetClass="com.fabb.notifica.AboutActivity"
                 />
+        </Preference>
+
+        <Preference
+            android:title="Logout"
+            android:summary="Log yourself out from Notifica"
+            android:key="pref_key_logout">
         </Preference>
 
     </PreferenceCategory>

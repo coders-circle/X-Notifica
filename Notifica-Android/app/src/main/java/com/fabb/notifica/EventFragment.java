@@ -1,13 +1,17 @@
 package com.fabb.notifica;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.Locale;
 
 
 public class EventFragment extends InfoFragment {
+
+    public EventFragment() {
+        super();
+        this.info_name = "Event";
+    }
 
      protected void prepareListData() {
         mIds.clear();
@@ -17,7 +21,7 @@ public class EventFragment extends InfoFragment {
             Event as = ass.next();
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(as.date*1000);
-            SimpleDateFormat format1 = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
+            DateFormat format1 = DateFormat.getDateInstance();
 
             String extra = "Date:  " + format1.format(cal.getTime());
             if (as.deleted)
