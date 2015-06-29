@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -46,11 +47,13 @@ public class GcmRegisterIntent extends IntentService {
     public static void sendRegistrationToServer(Context context, String token) {
         JSONObject json = new JSONObject();
         SharedPreferences preferences = MainActivity.GetPreferences(context);
+        //String device_id = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         try {
             json.put("message_type", "Gcm Registration");
             json.put("user_id", preferences.getString("user-id",""));
             json.put("password", preferences.getString("password", ""));
+            //json.put("device_id", device_id);
             json.put("token", token);
 
             new GcmRegisterTask(context, json).execute();

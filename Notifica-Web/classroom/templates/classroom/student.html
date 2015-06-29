@@ -84,6 +84,7 @@
                 <hr>
             </div>
         </div>
+        {% if user.privilege == 1 %}
         <div class="row">
           <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment"><i class="fa fa-plus"></i></a></p>
           <div class="span4 collapse-group">
@@ -133,7 +134,7 @@
               </form>
           </div>
         </div>
-
+        {% endif %}
         <div class="row">
           <div class="list-group assignmentlist">
             {% for assignment in assignments %}
@@ -167,6 +168,7 @@
             </div>
         </div>
 
+        {% if user.privilege == 1 %}
         <div class="row">
           <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
           <div class="span4 collapse-group">
@@ -212,7 +214,7 @@
               </form>
           </div>
         </div>
-
+        {% endif %}
 
 
         <div class="row">

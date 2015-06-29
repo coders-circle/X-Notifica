@@ -106,6 +106,11 @@ def student(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
 
+    try:
+        user = Student.objects.get(user=request.user)
+    except:
+        return redirect('classroom:index')
+
     context = {}
     if request.method == "POST":
         if 'post_assignment' in request.POST:
@@ -117,7 +122,6 @@ def student(request):
 
     DeletePassed()
 
-    user = Student.objects.get(user=request.user)
     routine_object = Routine.objects.filter(batch=user.batch, faculty=user.faculty, groups__contains=user.group)
     elements_objects = RoutineElement.objects.filter(routine=routine_object).order_by('start_time')
     assignments_objects = Assignment.objects.filter(

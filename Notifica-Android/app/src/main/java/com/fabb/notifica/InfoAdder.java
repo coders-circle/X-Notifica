@@ -6,17 +6,25 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -137,6 +145,9 @@ public class InfoAdder extends ActionBarActivity {
         long date = cal.getTimeInMillis()/1000;
 
         JSONObject json = new JSONObject();
+
+        String fb_message;
+        Subject subject = null;
         try {
             json.put("message_type", "Post Event");
             json.put("user_id", preferences.getString("user-id",""));
@@ -148,10 +159,11 @@ public class InfoAdder extends ActionBarActivity {
             json.put("groups", groups);
             json.put("faculty_code", faculty_code);
 
-            String posting_message = "Posting Notice";
+            String posting_message;
             if (parentActivity.equals("Assignments")) {
                 if (mSubjectList.getSelectedItemId() >= 0) {
-                    String subject_code = subjects.get((int) mSubjectList.getSelectedItemId()).code;
+                    subject = subjects.get((int) mSubjectList.getSelectedItemId());
+                    String subject_code = subject.code;
                     json.put("subject_code", subject_code);
                 }
                 else
@@ -159,15 +171,61 @@ public class InfoAdder extends ActionBarActivity {
 
                 json.put("message_type", "Post Assignment");
                 posting_message = "Posting Assignment";
+
+                fb_message = "New Assignment\n\n";
+            }
+            else {
+                fb_message = "New Notice\n\n";
+                posting_message = "Posting Notice";
             }
 
-
             new PostTask(this, json, true, posting_message).execute();
+
+
+            String fb_groupId = preferences.getString("fb-group-id", "");
+            if (((CheckBox)findViewById(R.id.checkbox_fb_post)).isChecked()
+                    && fb_groupId!=null && !fb_groupId.equals("")) {
+
+                // Facebook message details
+                if (!groups.equals(""))
+                    fb_message += "For group: " + groups;
+                if (subject != null)
+                    fb_message += "Subject: " + subject.name + "\n\n";
+                fb_message += summary + "\n\n" + details + "\n\n";
+
+                DateFormat sdf = DateFormat.getDateInstance();
+                fb_message += "Submission Date: " + sdf.format(cal.getTime());
+
+                // Post the message using graph api
+                Bundle params = new Bundle();
+                params.putString("message", fb_message);
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/" + fb_groupId + "/feed",
+                        params,
+                        HttpMethod.POST,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+                                if (response.getRawResponse() == null || response.getError() != null)
+                                    Toast.makeText(InfoAdder.this, "Failed to post on Facebook", Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(InfoAdder.this, "Posted on Facebook", Toast.LENGTH_SHORT).show();
+                                Log.d("FB Post Response", response.toString());
+                            }
+                        }
+                ).executeAsync();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        callbackManager.onActivityResult(requestCode, resultCode, data);
+//    }
 
     public static class PostTask extends AsyncTask<Void, Void, Void> {
         private final Activity mActivity;
