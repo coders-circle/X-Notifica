@@ -20,6 +20,13 @@ class Faculty(models.Model):
     def __str__(self):
         return self.name
 
+class Authority(models.Model):
+    name = models.CharField(max_length=50)
+    faculty = models.ForeignKey(Faculty)
+    user = models.OneToOneField(User)
+
+    class Meta:
+        verbose_name_plural = "Authorities"
 
 class Student(models.Model):
     
@@ -47,6 +54,7 @@ class Student(models.Model):
     def __str__(self):
         return self.name + " (" + str(self.roll) + ")"
 
+
 class Subject(models.Model):
     code = models.CharField(max_length=7, unique=True)
     name = models.CharField(max_length=50)
@@ -56,6 +64,7 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
     
+
 class Teacher(models.Model):
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
@@ -68,6 +77,7 @@ class Teacher(models.Model):
     def __str__(self):
         return self.name
 
+
 class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
@@ -76,6 +86,7 @@ class Routine(models.Model):
 
     def __str__(self):
         return str(self.batch) + "-" + self.faculty.code + "-" + self.groups
+
 
 # Days in a week as (number, day) pairs
 Days = (
@@ -130,6 +141,7 @@ class Assignment(models.Model):
     def __str__(self):
         return self.summary
 
+
 class Event(models.Model):
     summary = models.TextField()
     details = models.TextField()
@@ -164,6 +176,5 @@ class GcmRegistration(models.Model):
 
     def __str__(self):
         return self.user.username + ": " + self.token
-
 
 from .notifications import Notify

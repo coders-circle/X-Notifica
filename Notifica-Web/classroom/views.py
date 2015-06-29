@@ -11,14 +11,18 @@ from .mobile_views import DeletePassed
 
 def redirect_user(user):
     try:
-       teacher = Teacher.objects.get(user=user)
-       return redirect('classroom:teacher')
+        teacher = Teacher.objects.get(user=user)
+        return redirect('classroom:teacher')
     except:
-       try:
-           student = Student.objects.get(user=user)
-           return redirect('classroom:student')
-       except:
-           return None
+        try:
+            student = Student.objects.get(user=user)
+            return redirect('classroom:student')
+        except:
+            try:
+                authority = Authority.objects.get(user=user)
+                return redirect('classroom:authority')
+            except:
+                return None
 
 def index(request):
     context = {}
@@ -161,7 +165,20 @@ def teacher(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
     context = {}
-    return render(request, 'classroom/student.html', context)
+    return render(request, 'classroom/teacher.html', context)
+
+def authority(request):
+    if not request.user.is_authenticated():
+        return redirect('classroom:index')
+
+    try:
+        user = Authority.objects.get(user=request.user)
+    except:
+        return redirect('classroom:index')
+
+    context = {'user':user}
+    return render(request, 'classroom/authority.html', context)
+
 
 def logout_user(request):
     logout(request)
