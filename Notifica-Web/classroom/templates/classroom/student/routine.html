@@ -1,0 +1,43 @@
+<div id="routine" class="tab-pane fade in active">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Routine</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            {% now 'w' as today %}
+            {% for a_day in workingweek %}
+                {% if today|add:'0' == forloop.counter0 %}
+                    <div class="col-md-2 today">
+                {%else%}
+                    <div class="col-md-2 nottoday">
+                {%endif%}
+                        <h3> {{ a_day }} </h3>
+                        {% for sn, element in routine.items %}
+                            {% if element.day == forloop.parentloop.counter0 %}
+                                <div class="list-group">
+                                    <a class="list-group-item">
+                                        <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
+                                        <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                                        <p class="list-group-item-text"><small>{{element.start_time}} to {{element.end_time}}</small></p>
+                                        {% if element.class_type == 0 %}
+                                            <p class ="list-group-item-text"><small>(Lecture)</small></p>
+                                        {% else %}
+                                            <p class ="list-group-item-text"><small>(Practical)</small></p>
+                                            {% if assignment_mark %}
+                                                <div class="text-right" style="color:#882222">
+                                                <i class="fa fa-exclamation-circle text-right"></i>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

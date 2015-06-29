@@ -1,300 +1,46 @@
-
 {% extends 'classroom/base.html' %}
 {% load staticfiles %}
 {% load humanize %}
 
 {% block head %}
-
 <link href = "{% static 'css/student.css' %}" type="text/css" rel="stylesheet">
-
 {% endblock %}
+
+{%block navbarIconBars%}
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+{%endblock%}
 
 {% block navbar %}
 <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
     <ul class="nav navbar-nav navbar-right">
-        <li class="hidden">
-            <a href="#page-top"></a>
-        </li>
+        <li class="hidden"><a href="#page-top"></a></li>
         <li class="active"><a data-toggle="pill" href="#routine">Routine</a></li>
         <li><a data-toggle="pill" href="#assignments">Assignments</a></li>
         <li><a data-toggle="pill" href="#notices">Notices</a></li>
-
         <li class="dropdown ">
             <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              {{firstname}}
-              <span class="caret"></span>
+              {{firstname}}<span class="caret"></span>
             </button>
             <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
               <li><a data-toggle="pill" href="#changepass">Change Password</a></li>
               <li><a href="/logout">Logout</a></li>
             </ul>
         </li>
-
     </ul>
 </div>
 {% endblock %}
 
 {% block body %}
 <div class="tab-content">
-
-  <div id="routine" class="tab-pane fade in active">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Routine</h2>
-                <hr>
-            </div>
-        </div>
-        <div class="row">
-          {% now 'w' as today %}
-          {% for a_day in workingweek %}
-            {% if today|add:'0' == forloop.counter0 %}
-            <div class="col-md-2 today">
-            {%else%}
-            <div class="col-md-2 nottoday">
-            {%endif%}
-                <h3> {{ a_day }} </h3>
-                {% for sn, element in routine.items %}
-                {% if element.day == forloop.parentloop.counter0 %}
-                    <div class="list-group">
-                      <a href="#" class="list-group-item">
-                        <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
-                        <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
-                        <p class="list-group-item-text"><small>{{element.start_time}} to {{element.end_time}}</small></p>
-                        {% if element.class_type == 0 %}
-                        <p class ="list-group-item-text"><small>(Lecture)</small></p>
-                        {% else %}
-                        <p class ="list-group-item-text"><small>(Practical)</small></p>
-                        {% endif %}
-                      </a>
-                    </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-  </div>
-
-  <div id="assignments" class="tab-pane fade">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Assignments</h2>
-                <hr>
-            </div>
-        </div>
-        {% if user.privilege == 1 %}
-        <div class="row">
-          <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment"><i class="fa fa-plus"></i></a></p>
-          <div class="span4 collapse-group">
-              <form class="collapse col-lg-10 col-lg-offset-1" method="post" name="newassignment" id="addassignment">
-                  {% csrf_token %}
-                  <div class="row control-group">
-                    <h3> Post New Assignment </h3>
-                  </div>
-                  <div class="form-group col-md-3 floating-label-form-group controls">
-                      <label>Date</label>
-                      <input type="date" name="date" class="form-control" placeholder="date" id="date" required>
-                  </div>
-                  <div class="form-group col-md-6 col-md-offset-1  subjectselect">
-                    <label  class="lab">Subject: </label>
-                    <select name="subject" id="subjects">
-                      {% for subject in subjectlist %}
-                      <option value="{{subject.code}}">{{subject.name}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                  <div class="form-group col-md-2 groupselect">
-                      <label  class="lab">Group: </label>
-                      <select name="group" id="groups">
-                        {% for value in grouplist %}
-                          <option value="{{value}}">{{value}}</option>
-                        {% endfor %}
-                      </select>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Summary</label>
-                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary" required>
-                      </div>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Details</label>
-                          <textarea rows="3" name="details" class="form-control" placeholder="detail" id="detail" required></textarea>
-                          <p class="help-block text-danger"></p>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="form-group col-xs-12">
-                          <button name="post_assignment" type="submit" class="btn btn-success btn-lg">Post</button>
-                      </div>
-                  </div>
-              </form>
-          </div>
-        </div>
-        {% endif %}
-        <div class="row">
-          <div class="list-group assignmentlist">
-            {% for assignment in assignments %}
-              <a href="#" class="list-group-item ">
-                <div class="row">
-                  <div class="col-md-8">
-                    <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
-                  </div>
-                  <div class="col-md-4">
-                    <p class="list-group-item-heading submission-date"><small>Submission Date: {{assignment.date}}</small></p>
-                  </div>
-                </div>
-
-                <p class="list-group-item-text assignment-summary">
-                    <em>{{assignment.summary}}</em>
-                  </p>
-                <p class="list-group-item-text assignment-detail"><small>{{assignment.details}}</small></p>
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-  </div>
-
-  <div id="notices" class="tab-pane fade">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Notices</h2>
-                <hr>
-            </div>
-        </div>
-
-        {% if user.privilege == 1 %}
-        <div class="row">
-          <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
-          <div class="span4 collapse-group">
-              <form class="collapse col-lg-10 col-lg-offset-1" method="post" name="newnotice" id="addnotice" >
-                  {% csrf_token %}
-                  <div class="row control-group">
-                    <h3> Post New Notice </h3>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-md-8 floating-label-form-group controls">
-                          <label>Date</label>
-                          <input type="date" name="date" class="form-control" placeholder="date" id="date" required>
-                      </div>
-                      <div class="col-md-2"></div>
-                      <div class="form-group col-md-2 groupselect">
-                          <label>Group</label>
-                          <select name="group" id="groups">
-                            {% for value in grouplist %}
-                              <option value="{{value}}">{{value}}</option>
-                            {% endfor %}
-                          </select>
-                      </div>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Summary</label>
-                          <input type="text" name="summary" class="form-control" placeholder="summary" id="summary" required>
-
-                      </div>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Details</label>
-                          <textarea rows="3" name="details" class="form-control" placeholder="detail" id="detail" required></textarea>
-                          <p class="help-block text-danger"></p>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="form-group col-xs-12">
-                          <button name="post_notice" type="submit" class="btn btn-success btn-lg">Post</button>
-                      </div>
-                  </div>
-              </form>
-          </div>
-        </div>
-        {% endif %}
-
-
-        <div class="row">
-          <div class="list-group noticelist">
-            {% for notice in events %}
-              <a href="#" class="list-group-item">
-                <div class="row">
-                  <div class="col-md-9">
-                    <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
-                  </div>
-                  <div class="col-md-3">
-                    <p class="list-group-item-text notice-date"><small>Date: {{notice.date}}</small></p>
-                  </div>
-                </div>
-                <p class="list-group-item-text notice-detail">{{notice.details}}</p>
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-  </div>
-
-
-  <div id="changepass" class="tab-pane fade">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Change Password</h2>
-                <hr>
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-8 col-lg-offset-2">
-
-                {% if password_changed %}
-                    <p class="text-success">Your password has been changed successfully.</p>
-                {% endif %}
-
-              <form method="post" name="login" id="loginForm">
-              {% csrf_token %}
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Old password</label>
-                          <input type="password" name="oldpass" class="form-control" placeholder="old password" id="oldpass" required data-validation-required-message="Please enter your old Password." value="{{oldpass}}">
-                          {% if wrong_password %}
-                            <p class="text-danger">Wrong Password</p>
-                          {% endif %}
-                      </div>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>New password</label>
-                          <input type="password" name="newpass" class="form-control" placeholder="new password" id="newpass" required data-validation-required-message="Please enter your new Password." value="{{newpass}}">
-                          <p class="text-danger"></p>
-                      </div>
-                  </div>
-                  <div class="row control-group">
-                      <div class="form-group col-xs-12 floating-label-form-group controls">
-                          <label>Retype password</label>
-                          <input type="password" name="renewpass" class="form-control" placeholder="retype password" id="renewpass" required data-validation-required-message="Please enter your new Password." value="{{renewpass}}">
-                          {% if wrong_retype_password %}
-                            <p class="text-danger">This password doesn't match with above one.</p>
-                          {% endif %}
-                      </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                      <div class="form-group col-xs-12">
-                          <button name="change_password" type="submit" class="btn btn-success btn-lg">Change Password</button>
-                      </div>
-                  </div>
-              </form>
-          </div>
-      </div>
-        </div>
-      </div>
-  </div>
+  {% include "classroom/student/routine.html" %}
+  {% include "classroom/student/assignments.html" %}
+  {% include "classroom/student/notices.html" %}
+  {% include "classroom/student/changepass.html" %}
 </div>
 {% endblock %}
 
 {% block footer %}
-    <script src="{% static 'js/student.js' %}"></script>
+<script src="{% static 'js/student.js' %}"></script>
 {% endblock %}

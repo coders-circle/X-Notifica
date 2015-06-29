@@ -67,7 +67,7 @@ def post_assignment(request):
                "summary":request.POST.get("summary"), "details":request.POST.get("details")}
     if not request.user.is_authenticated():
         return {}
-    
+
     user = Student.objects.get(user=request.user)
     assignment = Assignment()
     assignment.faculty = user.faculty
@@ -87,7 +87,7 @@ def post_notice(request):
                "summary":request.POST.get("summary"), "details":request.POST.get("details")}
     if not request.user.is_authenticated():
         return {}
-    
+
     user = Student.objects.get(user=request.user)
     notice = Event()
     notice.faculty = user.faculty
@@ -145,6 +145,11 @@ def student(request):
     routine = {}
     for loopcount, elem in enumerate(elements_objects):
         routine[loopcount] = elem
+
+    assignments = {}
+    for loopcount, assignment in enumerate(assignments_objects):
+        assignments[loopcount] = assignment
+        assignments[loopcount].details = assignment.details.encode('ascii', 'xmlcharrefreplace')
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
