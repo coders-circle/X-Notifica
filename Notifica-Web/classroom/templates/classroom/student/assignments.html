@@ -55,26 +55,28 @@
                 </div>
             </form>
         </div>
-      </div>
-      {% endif %}
-      <div class="row">
+     </div>
+     {% endif %}
+
+    <div class="row">
         <div class="list-group assignmentlist">
           {% for assignment in assignments %}
+          <a class="list-group-item" style="margin-bottom:20px;">
               <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-9">
                   <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                   <p class="list-group-item-heading submission-date"><small>Submission Date: {{assignment.date}}</small></p>
                 </div>
               </div>
-
               <p class="list-group-item-text assignment-summary">
                   <em>{{assignment.summary}}</em>
                 </p>
                 {% autoescape off %}
-              <p class="list-group-item-text assignment-detail"><pre>{{assignment.details}}</pre></p>
-              {% endautoescape %}
+                <p class="list-group-item-text assignment-detail"><div style="white-space: pre-wrap;">{{assignment.details}}</div></p>
+                {% endautoescape %}
+            </a>
           {% endfor %}
         </div>
       </div>
