@@ -130,7 +130,7 @@ class Assignment(models.Model):
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
     groups = models.CharField(max_length=10, blank=True, null=True, default="")
     subject = models.ForeignKey(Subject)
-    date = models.DateField(verbose_name="date of submission")
+    date = models.DateField(verbose_name="date of submission", null=True, blank=True)
     cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -149,7 +149,7 @@ class Event(models.Model):
     batch = models.IntegerField(blank=True, null=True, default=None)
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
     groups = models.CharField(max_length=10, blank=True, null=True, default="")
-    date = models.DateField(verbose_name="date of occurrence")
+    date = models.DateField(verbose_name="date of occurrence", null=True, blank=True)
     cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
 

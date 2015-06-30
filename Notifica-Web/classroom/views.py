@@ -81,7 +81,7 @@ def post_assignment(request):
     assignment.subject = Subject.objects.get(code=context["subject"])
     assignment.summary = context["summary"]
     assignment.details = context["details"]
-    assignment.date = context["date"]
+    assignment.date = context["date"] if context["date"] != "" else None
     assignment.save()
 
     return {'assignment_posted':True}
@@ -100,7 +100,7 @@ def post_notice(request):
     notice.poster = request.user
     notice.summary = context["summary"]
     notice.details = context["details"]
-    notice.date = context["date"]
+    notice.date = context["date"] if context["date"] != "" else None
     notice.save()
 
     return {'notice_posted':True}
@@ -133,13 +133,13 @@ def student(request):
         Q(faculty=user.faculty) | Q(faculty = None),
         Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
         cancelled = False
-    ).order_by('-date')
+    ).order_by('-modified_at')
     events_objects = Event.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
             Q(faculty=user.faculty) | Q(faculty = None),
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
             cancelled = False
-        ).order_by('-date')
+        ).order_by('-modified_at')
 
     subjects = set()
     for element in elements_objects:

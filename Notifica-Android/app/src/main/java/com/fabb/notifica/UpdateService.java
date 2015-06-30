@@ -147,6 +147,8 @@ public class UpdateService {
             }
         }
 
+        Database.DeletePinned();
+
         if (assignments != null) {
             for (int i=0; i < assignments.length(); ++i) {
                 JSONObject assignment = assignments.optJSONObject(i);

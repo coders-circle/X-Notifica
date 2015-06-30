@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class EventFragment extends InfoFragment {
@@ -16,19 +17,22 @@ public class EventFragment extends InfoFragment {
      protected void prepareListData() {
         mIds.clear();
         listItems = new ArrayList<>();
-        Iterator<Event> ass = Event.findAll(Event.class);
-        while (ass.hasNext()){
-            Event as = ass.next();
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(as.date*1000);
-            DateFormat format1 = DateFormat.getDateInstance();
+         List<Event> ass = Event.listAll(Event.class);
+         for (int i=ass.size()-1; i>=0; --i){
+             Event as = ass.get(i);
+             String extra = "";
 
-            String extra = "Date:  " + format1.format(cal.getTime());
-            if (as.deleted)
-                extra += "\nDeleted";
+             if (as.date != -1) {
+                 Calendar cal = Calendar.getInstance();
+                 cal.setTimeInMillis(as.date*1000);
+                 DateFormat format1 = DateFormat.getDateInstance();
+                 extra += "Date:  " + format1.format(cal.getTime());
+             }
+             if (as.deleted)
+                 extra += "\nDeleted";
 
-            listItems.add(new RoutineListAdapter.Item(as.summary, as.details, extra));
-            mIds.add(as.remoteId);
+             listItems.add(new RoutineListAdapter.Item(as.summary, as.details, extra));
+             mIds.add(as.remoteId);
         }
     }
 

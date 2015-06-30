@@ -18,12 +18,17 @@ public class Database {
         cal.add(Calendar.DATE, -1);
         long date = cal.getTimeInMillis()/1000;
 
-        Event.deleteAll(Event.class, "date < ?", date+"");
-        Assignment.deleteAll(Assignment.class, "date < ?", date + "");
+        Event.deleteAll(Event.class, "date < ? AND date <> -1", date+"");
+        Assignment.deleteAll(Assignment.class, "date < ? AND date <> -1", date + "");
 
 
         Event.deleteAll(Event.class, "deleted = 'true'");
         Assignment.deleteAll(Assignment.class, "deleted = 'true'");
+    }
+
+    public static void DeletePinned() {
+        Event.deleteAll(Event.class, "date = -1");
+        Assignment.deleteAll(Assignment.class, "date = -1");
     }
 
     public static Faculty GetFaculty(String code) {

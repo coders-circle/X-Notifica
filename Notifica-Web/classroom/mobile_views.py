@@ -19,15 +19,18 @@ def GetSetting(key):
     except:
         return None
 
-def GetYesterday(delta=1):
-    yesterday = datetime.fromordinal(date.today().toordinal()) - timedelta(days=delta)
-    return yesterday
+def GetDeltaDay(delta):
+    day = datetime.fromordinal(date.today().toordinal()) - timedelta(days=delta)
+    return day
 
 # delete all passed assignments and events
 def DeletePassed():
-    yesterday = GetYesterday()
+    yesterday = GetDeltaDay(1)
     Assignment.objects.filter(date__lte = yesterday).delete()
     Event.objects.filter(date__lte = yesterday).delete()
+
+    Assignment.objects.filter(date = None, cancelled = True).delete()
+    Event.objects.filter(date = None, cancelled = True).delete()
 
 # set value to a key in the settings table
 def SetSetting(key, value):
@@ -166,13 +169,13 @@ def update(request):
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
             Q(faculty=user.faculty) | Q(faculty = None), 
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
-            modified_at__gt = user.updated_at
+            Q(date = None) | Q(modified_at__gt = user.updated_at)
         )
         events_objects = Event.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
             Q(faculty=user.faculty) | Q(faculty = None), 
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
-            modified_at__gt = user.updated_at
+            Q(date = None) | Q(modified_at__gt = user.updated_at)
         )
 
     # For teacher, routine, assignments and events that reference this teacher are returned
@@ -194,9 +197,9 @@ def update(request):
         teachers_objects.add(el.teacher)
 
     for asgn in assignments_objects:
-        if asgn.modified_at > user.updated_at and not asgn.cancelled:
+        if (asgn.date and asgn.modified_at > user.updated_at) and not asgn.cancelled:
             acnt += 1
-        assignment = {"date":datetime_to_seconds(asgn.date), "summary":asgn.summary, "subject_code":asgn.subject.code,
+        assignment = {"date":datetime_to_seconds(asgn.date) if asgn.date else -1, "summary":asgn.summary, "subject_code":asgn.subject.code,
                             "details":asgn.details, "poster_id":asgn.poster.username, "remote_id":asgn.pk, "deleted":asgn.cancelled}
         if asgn.cancelled:
             assignment["date"] = datetime_to_seconds(GetYesterday())
@@ -208,9 +211,9 @@ def update(request):
         subjects_objects.add(asgn.subject)
 
     for evnt in events_objects:
-        if evnt.modified_at > user.updated_at and not evnt.cancelled:
+        if (evnt.date and evnt.modified_at > user.updated_at) and not evnt.cancelled:
             ecnt += 1
-        event = {"date":datetime_to_seconds(evnt.date), "summary":evnt.summary,
+        event = {"date":datetime_to_seconds(evnt.date) if evnt.date else -1, "summary":evnt.summary,
                             "details":evnt.details, "poster_id":evnt.poster.username, "remote_id":evnt.pk, "deleted":evnt.cancelled}
         if evnt.cancelled:
             event["date"] = datetime_to_seconds(GetYesterday())
@@ -287,7 +290,8 @@ def post(request):
     else:
         summary = indata.get("summary", "")
         details = indata.get("details", "")
-        date = seconds_to_datetime(indata.get("date", 0))
+        indate = indata.get("date", -1)
+        date = seconds_to_datetime(indate) if indate != -1 else None
         batch = indata.get("year", 0)
         groups = indata.get("groups", "")
         faculty_code = indata.get("faculty_code", "")

@@ -15,36 +15,38 @@
                 <div class="row control-group">
                   <h3> Post New Assignment </h3>
                 </div>
-                <div class="form-group col-md-3 floating-label-form-group controls">
-                    <label>Date</label>
-                    <input type="date" name="date" class="form-control" placeholder="date" id="date" required>
-                </div>
-                <div class="form-group col-md-6 col-md-offset-1  subjectselect">
-                  <label  class="lab">Subject: </label>
-                  <select name="subject" id="subjects">
-                    {% for subject in subjectlist %}
-                    <option value="{{subject.code}}">{{subject.name}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div class="form-group col-md-2 groupselect">
-                    <label  class="lab">Group: </label>
-                    <select name="group" id="groups">
-                      {% for value in grouplist %}
-                        <option value="{{value}}">{{value}}</option>
-                      {% endfor %}
-                    </select>
+                <div class="row control-group">
+                    <div class="form-group col-md-3 floating-label-form-group controls">
+                        <label>Date</label>
+                        <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
+                    </div>
+                    <div class="form-group col-md-6 col-md-offset-1  subjectselect">
+                      <label  class="lab">Subject: </label>
+                      <select name="subject" id="subjects">
+                        {% for subject in subjectlist %}
+                        <option value="{{subject.code}}">{{subject.name}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group col-md-2 groupselect">
+                        <label  class="lab">Group: </label>
+                        <select name="group" id="groups">
+                          {% for value in grouplist %}
+                            <option value="{{value}}">{{value}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 <div class="row control-group">
                     <div class="form-group col-xs-12 floating-label-form-group controls">
                         <label>Summary</label>
-                        <input type="text" name="summary" class="form-control" placeholder="summary" id="summary" required>
+                        <input type="text" name="summary" class="form-control" placeholder="Summary" id="summary" required>
                     </div>
                 </div>
                 <div class="row control-group">
                     <div class="form-group col-xs-12 floating-label-form-group controls">
                         <label>Details</label>
-                        <textarea rows="3" name="details" class="form-control" placeholder="detail" id="detail" required></textarea>
+                        <textarea rows="3" name="details" class="form-control" placeholder="Details" id="detail" required></textarea>
                         <p class="help-block text-danger"></p>
                     </div>
                 </div>
@@ -64,9 +66,11 @@
                 <div class="col-md-8">
                   <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
                 </div>
+                {% if assignment.date %}
                 <div class="col-md-4">
                   <p class="list-group-item-heading submission-date"><small>Submission Date: {{assignment.date}}</small></p>
                 </div>
+                {% endif %}
               </div>
 
               <p class="list-group-item-text assignment-summary">

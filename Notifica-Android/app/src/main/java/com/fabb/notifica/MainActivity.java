@@ -137,12 +137,13 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             menu.findItem(R.id.action_update).setVisible(true);
 
         if (hasUpdated) {
-                String res = "";
-                if (assignmentCnt > 0)
-                    res += "\n" + assignmentCnt + " new " + (assignmentCnt > 1 ? "assignments" : "assignment");
-                if (eventCnt > 0)
-                    res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "notices" : "notice");
-                Toast.makeText(this, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
+//                String res = "";
+//                if (assignmentCnt > 0)
+//                    res += "\n" + assignmentCnt + " new " + (assignmentCnt > 1 ? "assignments" : "assignment");
+//                if (eventCnt > 0)
+//                    res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "notices" : "notice");
+//                Toast.makeText(this, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Up-To-Date", Toast.LENGTH_LONG).show();
 
 //            new_assignment_cnt = assignmentCnt;
 //            new_event_cnt = eventCnt;

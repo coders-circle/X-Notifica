@@ -140,9 +140,12 @@ public class InfoAdder extends ActionBarActivity {
         if (groups.equals("All"))
             groups = "";
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(mDateEdit.getYear(), mDateEdit.getMonth(), mDateEdit.getDayOfMonth());
-        long date = cal.getTimeInMillis()/1000;
+        long date = -1;
+        if (((CheckBox)findViewById(R.id.event_check_date)).isChecked()) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(mDateEdit.getYear(), mDateEdit.getMonth(), mDateEdit.getDayOfMonth());
+            date = cal.getTimeInMillis() / 1000;
+        }
 
         JSONObject json = new JSONObject();
 
@@ -193,8 +196,10 @@ public class InfoAdder extends ActionBarActivity {
                     fb_message += "Subject: " + subject.name + "\n\n";
                 fb_message += summary + "\n\n" + details + "\n\n";
 
-                DateFormat sdf = DateFormat.getDateInstance();
-                fb_message += "Submission Date: " + sdf.format(cal.getTime());
+                if (date != -1) {
+                    DateFormat sdf = DateFormat.getDateInstance();
+                    fb_message += "Submission Date: " + sdf.format(date * 1000);
+                }
 
                 fb_message += "\n\nPosted from: Notifica (http://notifica.herokuapp.com/)";
 
@@ -278,7 +283,7 @@ public class InfoAdder extends ActionBarActivity {
                     mActivity.finish();
                 return;
             }
-            Toast.makeText(mActivity, "Failed\n"+ mReturn.optString("failure_message"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "Failed\nCheck your internet connection", Toast.LENGTH_SHORT).show();
         }
     }
 }
