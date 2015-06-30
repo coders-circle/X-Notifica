@@ -1,12 +1,80 @@
 {% extends 'classroom/base.html' %}
-{% load static %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block head %}
+<link href = "{% static 'css/authority.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{%block navbarIconBars%}
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+{%endblock%}
+
+{% block navbar %}
+<div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="hidden"><a href="#page-top"></a></li>
+        <li class="active"><a data-toggle="pill" href="#students">Students</a></li>
+        <li><a data-toggle="pill" href="#teachers">Teachers</a></li>
+        <li><a data-toggle="pill" href="#routines">Routines</a></li>
+        <li class="dropdown ">
+            <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <i class="fa fa-user fa-fw"></i>{%if firstname%}{{firstname}}{%else%} {%endif%}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
+              <li><a href="/logout">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
 
 {% block body %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-AUTHORITY
+<div class="tab-content">
+  {% include "classroom/authority/students.html" %}
+  {% include "classroom/authority/teachers.html" %}
+  {% include "classroom/authority/routines.html" %}
+</div>
+
+Teachers:
+<ul>
+{% for teacher in teachers %}
+<li>{{ teacher.name }}</li>
+{% endfor %}
+</ul>
+
+Subjects:
+<ul>
+{% for subject in subjects %}
+<li>{{ subject.name }}</li>
+{% endfor %}
+</ul>
+
+{% if batch %}
+    Students:
+    <ul>
+    {% for student in students %}
+    <li>{{ student.name }}</li>
+    {% endfor %}
+    </ul>
+
+    Routines:
+    <ul>
+    {% for routine in routines %}
+    <li>
+        {{routine.groups}} <br>
+        {% for element in routine.elements %}
+            {{ element.subject.name }} (Day: {{element.day}}), 
+        {% endfor %}
+    </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'js/authority.js' %}"></script>
 {% endblock %}

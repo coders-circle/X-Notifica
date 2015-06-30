@@ -7,6 +7,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.logout_user, name='logout'),
     url(r'^student/$', views.student, name='student'),
     url(r'^authority/$', views.authority, name='authority'),
+    url(r'^authority/(?P<batch>\d+)/$', views.authority, name='authority'),
     url(r'^teacher/$', views.teacher, name='teacher'),
     url(r'^password/$', views.change_password, name='password'),
 )

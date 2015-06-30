@@ -167,7 +167,7 @@ def teacher(request):
     context = {}
     return render(request, 'classroom/teacher.html', context)
 
-def authority(request):
+def authority(request, batch=None):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
 
@@ -176,7 +176,24 @@ def authority(request):
     except:
         return redirect('classroom:index')
 
-    context = {'user':user}
+    faculty = user.faculty
+    subjects = Subject.objects.filter(faculty=faculty)
+    teachers = Teacher.objects.filter(faculty=faculty)
+
+    if batch:
+        students = Student.objects.filter(faculty=faculty, batch=batch)
+        routine_objects = Routine.objects.filter(faculty=faculty, batch=batch)
+        routines = []
+        for routine in routine_objects:
+            r = {}
+            r["groups"] = routine.groups
+            r["elements"] = RoutineElement.objects.filter(routine=routine).order_by("start_time")
+            routines.append(r)
+    else:
+        students = None
+        routines = None
+
+    context = {'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines}
     return render(request, 'classroom/authority.html', context)
 
 
