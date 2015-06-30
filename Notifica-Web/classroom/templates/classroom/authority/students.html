@@ -1,6 +1,16 @@
 <div id="students" class="tab-pane">
     <div class="container">
         <div class="row">
+            <h3>Students</h3>
+            {% if batch %}
+            <ul>
+            {% for student in students %}
+            <li>{{ student.name }}</li>
+            {% endfor %}
+            </ul>
+            {%else%}
+            <p>Select a batch to get started</p>
+            {%endif%}
         </div>
     </div>
 </div>

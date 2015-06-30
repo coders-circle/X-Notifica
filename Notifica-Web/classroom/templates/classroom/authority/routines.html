@@ -1,0 +1,21 @@
+<div id="routines" class="tab-pane">
+    <div class="container">
+        <div class="row">
+            <h3>Routines</h3>
+            {% if batch %}
+                <ul>
+                {% for routine in routines %}
+                <li>
+                    {{routine.groups}} <br>
+                    {% for element in routine.elements %}
+                        {{ element.subject.name }} (Day: {{element.day}}),
+                    {% endfor %}
+                </li>
+                {% endfor %}
+                </ul>
+                {%else%}
+                <p>Select a batch to get started</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
