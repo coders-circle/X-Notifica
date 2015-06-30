@@ -172,10 +172,10 @@ public class InfoAdder extends ActionBarActivity {
                 json.put("message_type", "Post Assignment");
                 posting_message = "Posting Assignment";
 
-                fb_message = "New Assignment\n\n";
+                fb_message = "Assignment\n\n";
             }
             else {
-                fb_message = "New Notice\n\n";
+                fb_message = "Notice\n\n";
                 posting_message = "Posting Notice";
             }
 
@@ -195,6 +195,8 @@ public class InfoAdder extends ActionBarActivity {
 
                 DateFormat sdf = DateFormat.getDateInstance();
                 fb_message += "Submission Date: " + sdf.format(cal.getTime());
+
+                fb_message += "\n\nPosted from: Notifica (http://notifica.herokuapp.com/)";
 
                 // Post the message using graph api
                 Bundle params = new Bundle();
@@ -220,12 +222,6 @@ public class InfoAdder extends ActionBarActivity {
             e.printStackTrace();
         }
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
-//    }
 
     public static class PostTask extends AsyncTask<Void, Void, Void> {
         private final Activity mActivity;

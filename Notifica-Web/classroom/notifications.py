@@ -23,9 +23,7 @@ def Notify(title, event):
 
     message = { "message": event.summary, "title": title }
     data = {"data": message, "registration_ids":ids}
-    print(data)
 
     key = "key=AIzaSyCOMeSxYMQq4lh9UvMxhCQHI2Bq9tzujjU"
     headers = {'Content-type':'application/json', 'Authorization':key}
     r = requests.post(url, data = json.dumps(data), headers = headers)
-    print(r.status_code)

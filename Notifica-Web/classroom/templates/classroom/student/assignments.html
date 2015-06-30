@@ -60,7 +60,6 @@
       <div class="row">
         <div class="list-group assignmentlist">
           {% for assignment in assignments %}
-            <a href="#" class="list-group-item ">
               <div class="row">
                 <div class="col-md-8">
                   <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
@@ -76,7 +75,6 @@
                 {% autoescape off %}
               <p class="list-group-item-text assignment-detail"><pre>{{assignment.details}}</pre></p>
               {% endautoescape %}
-            </a>
           {% endfor %}
         </div>
       </div>

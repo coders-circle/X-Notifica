@@ -59,7 +59,6 @@
       <div class="row">
         <div class="list-group noticelist">
           {% for notice in events %}
-            <a href="#" class="list-group-item">
               <div class="row">
                 <div class="col-md-9">
                   <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
@@ -69,7 +68,6 @@
                 </div>
               </div>
               <p class="list-group-item-text notice-detail">{{notice.details}}</p>
-            </a>
           {% endfor %}
         </div>
       </div>
