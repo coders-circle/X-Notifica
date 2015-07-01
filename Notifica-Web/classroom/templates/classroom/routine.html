@@ -3,7 +3,7 @@
 
 {% block body %}
     <div class="container" style="padding-top:150px; padding-bottom:100px;">
-        
+       
         Routine:
         <form method="post">
             {% csrf_token %}
@@ -24,6 +24,5 @@
                 {% if routine_id %} Save changes {% else %} Save new {% endif %}
             </button>
         </form>
-
     </div>
 {% endblock %}

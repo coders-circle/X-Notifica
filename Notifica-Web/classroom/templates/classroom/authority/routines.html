@@ -1,5 +1,21 @@
 <div id="routines" class="tab-pane">
     <div class="container">
+     <div class="row text-right" style="margin-bottom:20px;">
+            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value;">
+                {%if batch == null %}
+                <option value="#" selected="selected">Select a batch</option>
+                {%endif%}
+
+                {%for a_batch in batches %}
+                {% if batch|stringformat:"s" == a_batch|stringformat:"s" %}
+                <option value="{% url 'classroom:authority' a_batch %}" selected="selected">{{a_batch}}</option>
+                {%else%}
+                <option value="{% url 'classroom:authority' a_batch %}">{{a_batch}}</option>
+                {% endif %}
+                {%endfor%}
+            </select>
+        </div>
+     
         <div class="row">
             <h3>Routines</h3>
             {% if batch %}
@@ -11,11 +27,15 @@
                         {{ element.subject.name }} (Day: {{element.day}}),
                     {% endfor %}
                 </li>
+                <a href="{% url 'classroom:routine' routine.pk %}">Edit Routine</a>
                 {% endfor %}
                 </ul>
-                {%else%}
+                
+            {%else%}
                 <p>Select a batch to get started</p>
             {% endif %}
+
+            <a href="{% url 'classroom:routine' %}">Add New Routine</a>
         </div>
     </div>
 </div>

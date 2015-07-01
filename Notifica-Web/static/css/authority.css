@@ -7,6 +7,35 @@
   min-height: 300px;
 }
 
+.batchSelector{
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-left:8px;
+    padding-right:4px;
+    font-size:1.2em;
+    background: #fff;
+    margin-top:16px;
+    margin-left:6px;
+    min-width: 200px;
+}
+
+.departmentSelector{
+    margin-top:20px;
+    padding-left:16px;
+}
+
+.departmentSelector > select{
+    padding-top:6px;
+    padding-bottom:6px;
+    padding-left:8px;
+    padding-right:4px;
+    font-size:1.2em;
+    background: transparent;
+    margin-top:16px;
+    margin-left:10px;
+    min-width: 200px;
+}
+
 .nav button{
   background:#fff;
   text-transform: uppercase;
@@ -27,4 +56,8 @@ h3 {
 
 .tab-content{
   background: #eaf1f1;
+}
+
+.floating-label-form-group {
+    border-bottom: 1px solid #ccc;
 }

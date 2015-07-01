@@ -1,12 +1,38 @@
 <div id="subjects" class="tab-pane">
     <div class="container">
-        <div class="row">
-            <h3>Subjects</h3>
-            <ul>
-            {% for subject in subjects %}
-            <li>{{ subject.name }}</li>
-            {% endfor %}
-            </ul>
+        <div class="row" style="margin-top:30px;">
+            <div class="col-md-6">
+                <h3>Subjects</h3>
+                <ul>
+                {% for subject in subjects %}
+                <li>{{ subject.name }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3>Add Subject</h3>
+                <form method="post" name="form_addSubject" id="addSubjectForm">
+                    {% csrf_token %}
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="name" id="name">
+                        </div>
+                    </div>
+                    <div class="row control-group departmentSelector">
+                        <label>Department:</label>
+                        <select name="faculty" id="faculty" >
+                            <option value="current">{{user.faculty.name}}</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12 " style="margin-top:20px;">
+                            <button name="add_subject" type="submit" class="btn btn-success btn-lg">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

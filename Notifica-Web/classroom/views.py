@@ -168,6 +168,69 @@ def teacher(request):
     context = {}
     return render(request, 'classroom/teacher.html', context)
 
+
+def add_student(user, request):
+    if not request.user.is_authenticated():
+        return {}
+    context = {"name":request.POST.get("name"), "roll":request.POST.get("roll"),
+               "group":request.POST.get("group"), "batch":request.POST.get("batch")}
+
+    student = Student()
+    student.name = context["name"]
+    student.roll = context["roll"]
+    student.group = context["group"]
+    student.batch = context["batch"]
+    student.faculty = user.faculty
+
+    username = student.batch[-3:] + user.faculty.code.lower() + student.roll
+    student.user = User.objects.create_user(username, '', username)
+    student.user.save()
+
+    student.save()
+    return context
+
+
+def add_teacher(user, request):
+    if not request.user.is_authenticated():
+        return {}
+    context = {"name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
+
+    teacher = Teacher()
+    teacher.name = context["name"]
+    teacher.faculty = user.faculty
+
+    names = teacher.name.split(' ')
+    username = ""
+    for name in names:
+        username += name[0].lower()
+    username += "_notifica"
+    teacher.user = User.objects.create_user(username, '', username)
+    teacher.user.save()
+
+    teacher.save()
+    return context
+
+
+def GetUniqueSubjectCode(prefix, num=0):
+    code = prefix + str(num)
+    if Subject.objects.filter(code=code).count() > 0:
+        return GetUniqueSubjectCode(prefix, num+1)
+    return code
+ 
+def add_subject(user, request):
+    if not request.user.is_authenticated():
+        return {}
+    context = {"name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
+
+    subject = Subject()
+    subject.name = context["name"]
+    subject.faculty = user.faculty
+    subject.code = GetUniqueSubjectCode(subject.faculty.code, Subject.objects.count())
+    subject.save()
+    return context
+
+ 
+
 def authority(request, batch=None):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
@@ -176,6 +239,18 @@ def authority(request, batch=None):
         user = Authority.objects.get(user=request.user)
     except:
         return redirect('classroom:index')
+
+    context = {"group":"A"}
+    if request.method == "POST":
+        if "add_student" in request.POST:
+            context.update(add_student(user, request))
+        elif "add_subject" in request.POST:
+            context.update(add_subject(user, request))
+        elif "add_teacher" in request.POST:
+            context.update(add_teacher(user, request))
+
+    if context.get("batch", batch) != batch:
+        return redirect('classroom:authority', context.get("batch", batch))
 
     faculty = user.faculty
     subjects = Subject.objects.filter(faculty=faculty)
@@ -189,6 +264,7 @@ def authority(request, batch=None):
             r = {}
             r["groups"] = routine.groups
             r["elements"] = RoutineElement.objects.filter(routine=routine).order_by("start_time")
+            r["pk"] = routine.pk
             routines.append(r)
     else:
         students = None
@@ -196,8 +272,8 @@ def authority(request, batch=None):
 
     batches_list = Student.objects.filter(faculty=faculty).values_list("batch", flat=True).distinct()
 
-    context = {'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines, 
-                "batches":batches_list}
+    context.update({'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines, 
+                "batches":batches_list})
     return render(request, 'classroom/authority.html', context)
 
 
@@ -211,10 +287,8 @@ def routine(request, routine_id=None):
         return redirect('classroom:index')
     faculty = user.faculty
 
-
-    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=6*6, 
+    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=6*6  if not routine_id else 3, 
                                                 fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
-    
     if routine_id:
         routine = Routine.objects.get(pk=routine_id)
         routineform = RoutineForm(request.POST or None, instance=routine)
