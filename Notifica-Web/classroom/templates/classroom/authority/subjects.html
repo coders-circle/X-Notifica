@@ -1,12 +1,67 @@
 <div id="subjects" class="tab-pane">
     <div class="container">
+        <div class="row text-right" style="margin-bottom:20px;">
+            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value;">
+                {%if batch == null %}
+                <option value="#" selected="selected">Select a batch</option>
+                {%endif%}
+
+                {%for a_batch in batches %}
+                {% if batch|stringformat:"s" == a_batch|stringformat:"s" %}
+                <option value="/authority/{{a_batch}}" selected="selected">{{a_batch}}</option>
+                {%else%}
+                <option value="/authority/{{a_batch}}">{{a_batch}}</option>
+                {% endif %}
+                {%endfor%}
+            </select>
+        </div>
         <div class="row">
-            <h3>Subjects</h3>
-            <ul>
-            {% for subject in subjects %}
-            <li>{{ subject.name }}</li>
-            {% endfor %}
-            </ul>
+            <div class="col-md-6">
+                <h3>Subjects</h3>
+                <ul>
+                {% for subject in subjects %}
+                <li>{{ subject.name }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3>Add Subject</h3>
+                <form method="post" name="form_addSubject" id="addSubjectForm">
+                    {% csrf_token %}
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="name" id="name">
+                        </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Batch</label>
+                            {%if batch == null %}
+                            <input type="number" name="batch" class="form-control" placeholder="batch" id="batch">
+                            {% else %}
+                            <input type="number" name="batch" class="form-control" placeholder="batch" id="batch" value="{{batch}}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row control-group departmentSelector">
+                        <label>Department:</label>
+                        <select >
+                            {%if departmentName %}
+                            <option value="current">{{departmentName}}</option>
+                            {%else%}
+                            <option value="current">Current</option>
+                            {%endif%}
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12 " style="margin-top:20px;">
+                            <button name="add_student" type="submit" class="btn btn-success btn-lg">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

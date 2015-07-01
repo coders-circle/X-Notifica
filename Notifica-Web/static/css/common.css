@@ -142,7 +142,13 @@ h6 {
     font-size: 1.5em;
     background: 0 0;
     box-shadow: none!important;
-    resize: none;
+    resize:vertical;
+}
+
+.floating-label-form-group textarea{
+    resize:vertical;
+    max-height:500px;
+    min-height:200px;
 }
 
 .floating-label-form-group label {

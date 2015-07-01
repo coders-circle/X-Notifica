@@ -1,13 +1,42 @@
 <div id="teachers" class="tab-pane">
     <div class="container">
-        <div class="row">
-            <h3>Teachers</h3>
-            <ul>
-            {% for teacher in teachers %}
-            <li>{{ teacher.name }}</li>
-            {% endfor %}
-            </ul>
-
+        <div class="row" style="margin-top:30px;">
+            <div class="col-md-6">
+                <h3>Teachers</h3>
+                <ul>
+                {% for teacher in teachers %}
+                <li>{{ teacher.name }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3>Add Teacher</h3>
+                <form method="post" name="form_addTeacher" id="addTeacherForm">
+                    {% csrf_token %}
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="name" id="name">
+                        </div>
+                    </div>
+                    <div class="row control-group departmentSelector">
+                        <label>Department:</label>
+                        <select >
+                            {%if departmentName %}
+                            <option value="current">{{departmentName}}</option>
+                            {%else%}
+                            <option value="current">Current</option>
+                            {%endif%}
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-xs-12" style="margin-top:20px;">
+                            <button name="add_student" type="submit" class="btn btn-success btn-lg">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
