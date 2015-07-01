@@ -8,6 +8,7 @@ from datetime import datetime
 from django.db.models import Q
 from .models import *
 from .mobile_views import DeletePassed
+from .forms import *
 
 def redirect_user(user):
     try:
@@ -181,7 +182,7 @@ def authority(request, batch=None):
     teachers = Teacher.objects.filter(faculty=faculty)
 
     if batch:
-        students = Student.objects.filter(faculty=faculty, batch=batch)
+        students = Student.objects.filter(faculty=faculty, batch=batch).order_by("roll")
         routine_objects = Routine.objects.filter(faculty=faculty, batch=batch)
         routines = []
         for routine in routine_objects:
@@ -193,7 +194,12 @@ def authority(request, batch=None):
         students = None
         routines = None
 
-    context = {'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines}
+    batches_list = Student.objects.filter(faculty=faculty).values_list("batch", flat=True).distinct()
+
+    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=6*6, fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
+    context = {'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines, 
+                "routineform": RoutineForm(), "elementsform": RoutineElementsForm(instance=Routine()),
+                "batches":batches_list}
     return render(request, 'classroom/authority.html', context)
 
 
