@@ -286,7 +286,7 @@ def routine(request, routine_id=None):
         return redirect('classroom:index')
     faculty = user.faculty
 
-    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=50  if not routine_id else 5, 
+    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=50,
                                                 fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
     if routine_id:
         routine = Routine.objects.get(pk=routine_id)
@@ -306,8 +306,10 @@ def routine(request, routine_id=None):
             elementsform.save()
             if not routine_id:
                 return redirect('classroom:routine', routine.pk)
+    
+    elementscnt = RoutineElement.objects.filter(routine=routine).count()
 
-    context = {"routine_id":routine_id, "routineform": routineform, "elementsform": RoutineElementsForm(instance=routine)}
+    context = {"routine_id":routine_id, "routineform": routineform, "elementsform": RoutineElementsForm(instance=routine), "elementsMax":elementscnt+5}
     return render(request, 'classroom/routine.html', context)
 
     

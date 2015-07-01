@@ -15,8 +15,8 @@
             <table>
             {{ elementsform.management_form }}
             {% for form in elementsform.forms %}
-                {% if forloop.counter0 > 5 %}
-                    <tr class="collapsed-row" style="visibility:collapse;">
+                {% if forloop.counter0 > elementsMax %}
+                    <tr class="collapsed-row" style="display:none;">
                     <td>
                 {% else %}
                     <tr>
@@ -48,7 +48,7 @@
             document.getElementById("add_row").style.visibility = "hidden";
 
         var element = elements[0];
-        element.style.visibility = "visible";
+        element.style.display = "block";
         element.className = "non-collapsed-row";
 
         element.getElementsByTagName('td')[0].style.paddingTop = "20px";
