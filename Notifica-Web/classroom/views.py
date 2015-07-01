@@ -196,13 +196,48 @@ def authority(request, batch=None):
 
     batches_list = Student.objects.filter(faculty=faculty).values_list("batch", flat=True).distinct()
 
-    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=6*6, fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
     context = {'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines, 
-                "routineform": RoutineForm(), "elementsform": RoutineElementsForm(instance=Routine()),
                 "batches":batches_list}
     return render(request, 'classroom/authority.html', context)
 
 
+def routine(request, routine_id=None):
+    if not request.user.is_authenticated():
+        return redirect('classroom:index')
+
+    try:
+        user = Authority.objects.get(user=request.user)
+    except:
+        return redirect('classroom:index')
+    faculty = user.faculty
+
+
+    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=6*6, 
+                                                fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
+    
+    if routine_id:
+        routine = Routine.objects.get(pk=routine_id)
+        routineform = RoutineForm(request.POST or None, instance=routine)
+    else:
+        routine = Routine()
+        routineform = RoutineForm(request.POST or None)
+        routineform.faculty = faculty
+
+    if routineform.is_valid():
+        routine = routineform.save(commit=False)
+        routine.faculty = faculty
+        routine.save()
+
+        elementsform = RoutineElementsForm(request.POST or None, instance=routine)
+        if elementsform.is_valid():
+            elementsform.save()
+            if not routine_id:
+                return redirect('classroom:routine', routine.pk)
+
+    context = {"routine_id":routine_id, "routineform": routineform, "elementsform": RoutineElementsForm(instance=routine)}
+    return render(request, 'classroom/routine.html', context)
+
+    
 def logout_user(request):
     logout(request)
     return redirect('classroom:index')

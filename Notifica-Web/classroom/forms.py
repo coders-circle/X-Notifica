@@ -5,5 +5,5 @@ from .models import *
 class RoutineForm(ModelForm):
     class Meta:
         model = Routine
-        fields = ['batch', 'faculty', 'groups']
+        fields = ['batch', 'groups']
 

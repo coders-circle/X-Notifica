@@ -68,7 +68,6 @@ class Subject(models.Model):
 class Teacher(models.Model):
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
-    subjects = models.ManyToManyField(Subject)
     user = models.OneToOneField(User)
     
     updated_at = models.DateTimeField(default=DefaultDateTime)      # when was the user last updated?
@@ -81,7 +80,7 @@ class Teacher(models.Model):
 class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
-    groups = models.CharField(max_length=10, default='AB')
+    groups = models.CharField(max_length=10, default='A')
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
