@@ -35,24 +35,24 @@
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="name" id="name" required>
+                            <input type="text" name="name" class="form-control" placeholder="Name" id="name" required>
                         </div>
                     </div>
                     <div class="row control-group">
-                        <div class="form-group col-xs-6 floating-label-form-group controls">
+                        <div class="form-group col-xs-5 floating-label-form-group controls">
                             <label>Roll</label>
-                            <input type="number" name="roll" class="form-control" placeholder="roll" id="roll" 
+                            <input type="number" name="roll" class="form-control" placeholder="Roll No." id="roll"
                                     {% if roll %} value="{{roll|add:'1'}}" {% endif %} required>
                         </div>
-                        <div class="form-group col-xs-6 floating-label-form-group controls">
+                        <div class="form-group col-xs-offset-2 col-xs-5 floating-label-form-group controls">
                             <label>Group</label>
-                            <input type="text" name="group" class="form-control" placeholder="group" id="group" value="{{group}}" required>
+                            <input type="text" name="group" class="form-control" placeholder="Group" id="group" value="{{group}}" required>
                         </div>
                     </div>
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Batch</label>
-                            <input type="number" name="batch" class="form-control" placeholder="batch" id="batch" value="{{batch}}" required>
+                            <input type="number" name="batch" class="form-control" placeholder="Batch" id="batch" value="{{batch}}" required>
                         </div>
                     </div>
                     <div class="row">
