@@ -12,17 +12,46 @@
             </table>
             <br>
             Elements:
+            <table>
             {{ elementsform.management_form }}
             {% for form in elementsform.forms %}
-            <table>
-                {{ form }}
-                <br>
-            </table>
+                {% if forloop.counter0 > 5 %}
+                    <tr class="collapsed-row" style="visibility:collapse;">
+                    <td>
+                {% else %}
+                    <tr>
+                    <td style="padding-top:20px;">
+                {% endif %}
+                
+                <table>
+                    {{ form }}
+                </table>
+                </td></tr>
             {% endfor%}
-            
+            <tr><td>
+                <button type="button" onclick="AddRow()" id="add_row" class="btn btn-lg">Add another element</button>
+            </td><td>
             <button type="submit" class="btn btn-success btn-lg">
                 {% if routine_id %} Save changes {% else %} Save new {% endif %}
             </button>
+            </td></tr>
+            </table>
         </form>
     </div>
+{% endblock %}
+
+{% block head %}
+<script>
+    function AddRow() {
+        var elements = document.getElementsByClassName("collapsed-row");
+        if (elements.length == 1)
+            document.getElementById("add_row").style.visibility = "hidden";
+
+        var element = elements[0];
+        element.style.visibility = "visible";
+        element.className = "non-collapsed-row";
+
+        element.getElementsByTagName('td')[0].style.paddingTop = "20px";
+    }
+</script>
 {% endblock %}

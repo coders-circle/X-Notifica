@@ -11,18 +11,19 @@
             </div>
             <div class="col-md-6">
                 <h3>Add Teacher</h3>
+                {% if teacher_error %} <p class="text-danger">{{ teacher_error }}</p> {% endif %}
                 <form method="post" name="form_addTeacher" id="addTeacherForm">
                     {% csrf_token %}
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Name" id="name">
+                            <input type="text" name="name" class="form-control" placeholder="Name" id="name" {% if teacher_error %}value="{{teacher_name}}"{% endif %}>
                         </div>
                     </div>
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Username</label>
-                            <input type="text" name="username" class="form-control" placeholder="Username" id="username">
+                            <input type="text" name="username" class="form-control" placeholder="Username" id="username" {% if teacher_error %}value="{{username}}"{% endif %}>
                         </div>
                     </div>
                     <div class="row control-group">
