@@ -215,7 +215,7 @@ def GetUniqueSubjectCode(prefix, num=0):
     if Subject.objects.filter(code=code).count() > 0:
         return GetUniqueSubjectCode(prefix, num+1)
     return code
- 
+
 def add_subject(user, request):
     if not request.user.is_authenticated():
         return {}
@@ -228,7 +228,7 @@ def add_subject(user, request):
     subject.save()
     return context
 
- 
+
 
 def authority(request, batch=None):
     if not request.user.is_authenticated():
@@ -271,7 +271,7 @@ def authority(request, batch=None):
 
     batches_list = Student.objects.filter(faculty=faculty).values_list("batch", flat=True).distinct()
 
-    context.update({'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines, 
+    context.update({'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines,
                 "batches":batches_list})
     return render(request, 'classroom/authority.html', context)
 
@@ -310,7 +310,7 @@ def routine(request, routine_id=None):
     context = {"routine_id":routine_id, "routineform": routineform, "elementsform": RoutineElementsForm(instance=routine)}
     return render(request, 'classroom/routine.html', context)
 
-    
+
 def logout_user(request):
     logout(request)
     return redirect('classroom:index')

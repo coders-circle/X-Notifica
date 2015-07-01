@@ -3,7 +3,7 @@
 
 {% block body %}
     <div class="container" style="padding-top:150px; padding-bottom:100px;">
-       
+
         Routine:
         <form method="post">
             {% csrf_token %}
@@ -16,13 +16,12 @@
             {{ elementsform.management_form }}
             {% for form in elementsform.forms %}
                 {% if forloop.counter0 > 5 %}
-                    <tr class="collapsed-row" style="visibility:collapse;">
+                    <tr class="collapsed-row" style="display:none;">
                     <td>
                 {% else %}
                     <tr>
                     <td style="padding-top:20px;">
                 {% endif %}
-                
                 <table>
                     {{ form }}
                 </table>
@@ -45,10 +44,10 @@
     function AddRow() {
         var elements = document.getElementsByClassName("collapsed-row");
         if (elements.length == 1)
-            document.getElementById("add_row").style.visibility = "hidden";
+            document.getElementById("add_row").style.display = "none";
 
         var element = elements[0];
-        element.style.visibility = "visible";
+        element.style.display = "block";
         element.className = "non-collapsed-row";
 
         element.getElementsByTagName('td')[0].style.paddingTop = "20px";
