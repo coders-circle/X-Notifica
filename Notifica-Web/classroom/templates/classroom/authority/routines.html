@@ -1,7 +1,7 @@
-<div id="routines" class="tab-pane">
+<div id="routines" class="tab-pane fade">
     <div class="container">
      <div class="row text-right" style="margin-bottom:20px;">
-            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value;">
+            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value + '#routines';">
                 {%if batch == null %}
                 <option value="#" selected="selected">Select a batch</option>
                 {%endif%}
@@ -15,7 +15,7 @@
                 {%endfor%}
             </select>
         </div>
-     
+
         <div class="row">
             <h3>Routines</h3>
             {% if batch %}
@@ -30,7 +30,7 @@
                 <a href="{% url 'classroom:routine' routine.pk %}">Edit Routine</a>
                 {% endfor %}
                 </ul>
-                
+
             {%else%}
                 <p>Select a batch to get started</p>
             {% endif %}

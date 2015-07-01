@@ -1,7 +1,7 @@
-<div id="students" class="tab-pane active">
+<div id="students" class="tab-pane active fade">
     <div class="container">
         <div class="row text-right" style="margin-bottom:20px;">
-            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value;">
+            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value + '#students';">
                 {%if batch == null %}
                 <option value="#" selected="selected">Select a batch</option>
                 {%endif%}
