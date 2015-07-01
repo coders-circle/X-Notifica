@@ -172,11 +172,11 @@ def teacher(request):
 def add_student(user, request):
     if not request.user.is_authenticated():
         return {}
-    context = {"name":request.POST.get("name"), "roll":request.POST.get("roll"),
+    context = {"student_name":request.POST.get("name"), "roll":request.POST.get("roll"),
                "group":request.POST.get("group"), "batch":request.POST.get("batch")}
 
     student = Student()
-    student.name = context["name"]
+    student.name = context["student_name"]
     student.roll = context["roll"]
     student.group = context["group"]
     student.batch = context["batch"]
@@ -193,21 +193,20 @@ def add_student(user, request):
 def add_teacher(user, request):
     if not request.user.is_authenticated():
         return {}
-    context = {"name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
 
-    teacher = Teacher()
-    teacher.name = context["name"]
-    teacher.faculty = user.faculty
+    context = {"teacher_name":request.POST.get("name"), "faculty":request.POST.get("faculty"), "username":request.POST.get("username"),
+                "password":request.POST.get("password")}
+    try:
+        teacher = Teacher()
+        teacher.name = context["teacher_name"]
+        teacher.faculty = user.faculty
 
-    names = teacher.name.split(' ')
-    username = ""
-    for name in names:
-        username += name[0].lower()
-    username += "_notifica"
-    teacher.user = User.objects.create_user(username, '', username)
-    teacher.user.save()
+        teacher.user = User.objects.create_user(context["username"], '', context["password"])
+        teacher.user.save()
 
-    teacher.save()
+        teacher.save()
+    except:
+        context["teacher_error"] = "Error adding teacher. Make everything is valid below."
     return context
 
 
@@ -220,10 +219,10 @@ def GetUniqueSubjectCode(prefix, num=0):
 def add_subject(user, request):
     if not request.user.is_authenticated():
         return {}
-    context = {"name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
+    context = {"subject_name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
 
     subject = Subject()
-    subject.name = context["name"]
+    subject.name = context["subject_name"]
     subject.faculty = user.faculty
     subject.code = GetUniqueSubjectCode(subject.faculty.code, Subject.objects.count())
     subject.save()
@@ -287,7 +286,7 @@ def routine(request, routine_id=None):
         return redirect('classroom:index')
     faculty = user.faculty
 
-    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=6*6  if not routine_id else 3, 
+    RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=50  if not routine_id else 5, 
                                                 fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
     if routine_id:
         routine = Routine.objects.get(pk=routine_id)
