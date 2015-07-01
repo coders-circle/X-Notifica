@@ -15,13 +15,22 @@
             <table>
             {{ elementsform.management_form }}
             {% for form in elementsform.forms %}
+<<<<<<< HEAD
                 {% if forloop.counter0 > 5 %}
                     <tr class="collapsed-row" style="display:none;">
                     <td>
+=======
+                {% if forloop.counter0 > elementsMax %}
+                    <tr class="collapsed-row" style="display:none;">
+>>>>>>> d73a2aaeabf91465ee7bbe87fb2c001e17531238
                 {% else %}
                     <tr>
-                    <td style="padding-top:20px;">
                 {% endif %}
+<<<<<<< HEAD
+=======
+                <td style="padding-top:20px;">
+                
+>>>>>>> d73a2aaeabf91465ee7bbe87fb2c001e17531238
                 <table>
                     {{ form }}
                 </table>
@@ -49,8 +58,6 @@
         var element = elements[0];
         element.style.display = "block";
         element.className = "non-collapsed-row";
-
-        element.getElementsByTagName('td')[0].style.paddingTop = "20px";
     }
 </script>
 {% endblock %}
