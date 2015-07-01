@@ -17,11 +17,10 @@
             {% for form in elementsform.forms %}
                 {% if forloop.counter0 > elementsMax %}
                     <tr class="collapsed-row" style="display:none;">
-                    <td>
                 {% else %}
                     <tr>
-                    <td style="padding-top:20px;">
                 {% endif %}
+                <td style="padding-top:20px;">
                 
                 <table>
                     {{ form }}
@@ -50,8 +49,6 @@
         var element = elements[0];
         element.style.display = "block";
         element.className = "non-collapsed-row";
-
-        element.getElementsByTagName('td')[0].style.paddingTop = "20px";
     }
 </script>
 {% endblock %}
