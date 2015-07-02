@@ -2,17 +2,17 @@
 {% load staticfiles %}
 
 {% block body %}
-    <div class="container" style="padding-top:150px; padding-bottom:100px;">
-
-        Routine:
+    <link href = "{% static 'css/routine.css' %}" type="text/css" rel="stylesheet">
+    <div class="container" style="margin-top:100px;">
+        <h3>Routine:</h3>
         <form method="post">
             {% csrf_token %}
             <table>
                 {{routineform}}
             </table>
             <br>
-            Elements:
-            <table>
+            <h4>Elements:</h4>
+            <table class="outertable">
             {{ elementsform.management_form }}
             {% for form in elementsform.forms %}
                 {% if forloop.counter0 > elementsMax %}
@@ -20,20 +20,26 @@
                 {% else %}
                     <tr>
                 {% endif %}
-                <td style="padding-top:20px;">
+                <td>
                 <table>
                     {{ form }}
                 </table>
                 </td></tr>
             {% endfor%}
-            <tr><td>
-                <button type="button" onclick="AddRow()" id="add_row" class="btn btn-lg">Add another element</button>
-            </td><td>
-            <button type="submit" class="btn btn-success btn-lg">
-                {% if routine_id %} Save changes {% else %} Save new {% endif %}
-            </button>
-            </td></tr>
-            </table>
+            <tr style="width:100%;">
+                <td style="width:42%;">
+                            <button type="button" onclick="AddRow()" id="add_row" class="btn btn-info btn-lg"><i class="fa fa-plus"></i> Add Element</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                {% if routine_id %}<i class="fa fa-floppy-o"></i> Save Changes {% else %}<i class="fa fa-floppy-o"></i> Save Routine {% endif %}
+                            </button>
+                            <a href="/authority" class="btn btn-info btn-lg">
+                                <i class="fa fa-arrow-left"></i> Go Back
+                            </a>
+                </td>
+            </tr>
+        </table>
         </form>
     </div>
 {% endblock %}

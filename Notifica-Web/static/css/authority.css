@@ -61,3 +61,36 @@ h3 {
 .floating-label-form-group {
     border-bottom: 1px solid #ccc;
 }
+
+.list-group-item{
+  background: #eaf1f1;
+}
+
+.col-md-2{
+  padding:0px;
+  margin:0px;
+}
+
+.list-group{
+  padding:0px;
+  margin:0;
+}
+
+a.list-group-item{
+  padding:24px 10px;
+  margin:0;
+  margin-right: 10px;
+  border:0;
+  min-height:140px;
+}
+
+a.list-group-item:hover{
+  background: #fff;
+  color:#445;
+}
+.groupText{
+    color:#18bc9c;
+}
+.routineTableTitle .btn-success{
+    font-size: 1em;
+}

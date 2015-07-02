@@ -1,0 +1,46 @@
+body{
+    background: #eee;
+}
+
+table, td, th {
+    border: none;
+    margin:3px;
+    padding:5px;
+}
+
+
+.outertable table{
+    background: #fafafa;
+    color:#445;
+    box-shadow: 6px 6px 10px #ccc;
+}
+
+select,input{
+    background: transparent;
+    padding:6px;
+    padding-left:10px;
+    padding-right:10px;
+    background: 0 0;
+    box-shadow: none!important;
+    border:1px solid;
+}
+
+option{
+    color:#000;
+}
+
+tr{
+    margin-left:15px;
+    margin-right: 15px;
+    padding:5px;
+    padding-left:20px;
+    padding-right:20px;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+ * {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+tr{float:left}​

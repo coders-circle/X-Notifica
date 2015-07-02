@@ -1,6 +1,14 @@
 <div id="routines" class="tab-pane fade">
     <div class="container">
-     <div class="row text-right" style="margin-bottom:20px;">
+
+     <div class="row" style="margin-bottom:20px;">
+        <div class="col-md-5">
+            <h2>Routines</h2>
+        </div>
+        <div class="col-md-5">
+            <a class="btn btn-lg btn-success" href="{% url 'classroom:routine' %}"><i class="fa fa-plus"></i> Add a new Routine</a>
+        </div>
+        <div class="col-md-2">
             <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value + '#routines';">
                 {%if batch == null %}
                 <option value="#" selected="selected">Select a batch</option>
@@ -15,27 +23,42 @@
                 {%endfor%}
             </select>
         </div>
+    </div>
 
         <div class="row">
-            <h3>Routines</h3>
             {% if batch %}
-                <ul>
                 {% for routine in routines %}
-                <li>
-                    {{routine.groups}} <br>
-                    {% for element in routine.elements %}
-                        {{ element.subject.name }} (Day: {{element.day}}),
-                    {% endfor %}
-                </li>
-                <a href="{% url 'classroom:routine' routine.pk %}">Edit Routine</a>
+                <div class="row routineTableTitle">
+                    <div class="col-md-10"><h3 class="groupText">Group: {{routine.groups}} </h3></div><div class="col-md-2"> <a class="btn btn-sm btn-success" href="{% url 'classroom:routine' routine.pk %}"><i class="fa fa-pencil-square-o"></i> Edit Routine</a></div>
+                </div>
+                    <div class="row">
+                        {% for a_day in workingweek %}
+                                <div class="col-md-2 nottoday">
+                                    <h3> {{ a_day }} </h3>
+                                    {% for element in routine.elements %}
+                                        {% if element.day == forloop.parentloop.counter0  %}
+                                            <div class="list-group">
+                                                <a class="list-group-item">
+                                                    <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
+                                                    <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                                                    <p class="list-group-item-text"><small>{{element.start_time}} to {{element.end_time}}</small></p>
+                                                    {% if element.class_type == 0 %}
+                                                        <p class ="list-group-item-text"><small>(Lecture)</small></p>
+                                                    {% else %}
+                                                        <p class ="list-group-item-text"><small>(Practical)</small></p>
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                        {% endfor %}
+                    </div>
                 {% endfor %}
-                </ul>
 
             {%else%}
                 <p>Select a batch to get started</p>
             {% endif %}
-
-            <a href="{% url 'classroom:routine' %}">Add New Routine</a>
         </div>
     </div>
 </div>

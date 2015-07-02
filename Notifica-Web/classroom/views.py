@@ -270,9 +270,10 @@ def authority(request, batch=None):
         routines = None
 
     batches_list = Student.objects.filter(faculty=faculty).values_list("batch", flat=True).distinct()
+    workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
     context.update({'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines,
-                "batches":batches_list})
+                "batches":batches_list, "workingweek":workingweek})
     return render(request, 'classroom/authority.html', context)
 
 
@@ -306,10 +307,10 @@ def routine(request, routine_id=None):
             elementsform.save()
             if not routine_id:
                 return redirect('classroom:routine', routine.pk)
-    
+
     elementscnt = RoutineElement.objects.filter(routine=routine).count()
 
-    context = {"routine_id":routine_id, "routineform": routineform, "elementsform": RoutineElementsForm(instance=routine), "elementsMax":elementscnt+5}
+    context = {"routine_id":routine_id, "routineform": routineform, "elementsform": RoutineElementsForm(instance=routine), "elementsMax":elementscnt}
     return render(request, 'classroom/routine.html', context)
 
 
