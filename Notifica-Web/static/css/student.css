@@ -43,18 +43,25 @@ h3 {
 }
 
 a.list-group-item{
-  padding:24px 10px;
+  padding-top:28px;
   margin:0;
-  margin-right: 10px;
-  border:0;
-  min-height:140px;
+  margin-right:10px;
+  margin-left:10px;
   box-shadow: 3px 3px 10px #ccc;
+  background: #f7f7f7;
+  border-radius: 0!important;
+  border:0px solid #f7f7f7;
+  border-top: 2px solid #18bc9c;
+  margin-bottom: 10px!important;
+  transition: all .3s ease-in-out;
+}
+p{
+    margin-bottom:10px;
 }
 
 a.list-group-item:hover{
   background: #fff;
   color:#445;
-
 }
 
 .usersettings > li{
@@ -65,8 +72,6 @@ a.list-group-item:hover{
 .today .list-group-item{
   background:#18bc9c;
   color:#fff;
-  border:none;
-  border-radius:0;
 }
 
 .assignmentlist .list-group-item,
@@ -84,13 +89,6 @@ a.list-group-item:hover{
 
 .notice-detail{
   padding-top:20px;
-}
-
-
-
-.nottoday .list-group-item{
-  border:none;
-  border-radius:0;
 }
 
 .today > h3{
@@ -133,4 +131,65 @@ a.list-group-item:hover{
 #addnotice,
 #addassignment{
   padding-bottom:40px;
+}
+
+.fh-l:before {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-family: "Trebuchet MS" Arial;
+    font-size: 0.78em;
+    font-weight: bold;
+    content: 'L';
+}
+
+.fh-p:before {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    font-family: "Trebuchet MS" Arial;
+    font-size: 0.78em;
+    font-weight: bold;
+    content: 'P';
+}
+
+.gap1{
+    height:100px;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-top:16px;
+}
+.gap2{
+    height:200px;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-top:16px;
+}
+.gap3{
+    height:300px;
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-top:16px;
+}
+
+.duration1{
+    min-height: 100px!important;
+}
+
+.duration2{
+    min-height: 200px!important;
+    padding-top:70px!important;
+}
+
+.duration3{
+    min-height: 300px!important;
+    padding-top:110px!important;
+}
+
+
+.period-time{
+    position: absolute;
+    top: 5px;
+    left: 16px;
+    font-size: 0.78em;
 }

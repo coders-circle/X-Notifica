@@ -17,17 +17,6 @@ hr.star-primary {
     text-align: center;
 }
 
-hr.star-light:after,
-hr.star-primary:after {
-    content: "\f005";
-    display: inline-block;
-    position: relative;
-    top: -.8em;
-    padding: 0 .25em;
-    font-family: FontAwesome;
-    font-size: 2em;
-}
-
 .img-centered {
     margin: 0 auto;
 }
@@ -54,7 +43,7 @@ header .intro-text .name {
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 2em;
     font-weight: 700;
-    text-shadow:5px 5px 5px #135f4f;
+    text-shadow:5px 5px 2px #08a080;
 }
 
 header .intro-text .skills {

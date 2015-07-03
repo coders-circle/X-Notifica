@@ -1,3 +1,6 @@
+{% load customtags %}
+
+
 <div id="routine" class="tab-pane fade in active">
     <div class="container">
         <div class="row">
@@ -16,28 +19,47 @@
                 {%endif%}
                         <h3> {{ a_day }} </h3>
                         {% for sn, element in routine.items %}
+                            {% with routine|next:forloop.counter0 as nextelem %}
+                            {% with routine|prev:forloop.counter0 as prevelem %}
+
                             {% if element.day == forloop.parentloop.counter0 %}
+                            {% if element.day != prevelem.day or element.start_time != prevelem.start_time %}
                                 <div class="list-group">
-                                    <a class="list-group-item">
+                                    {%if element.gap != 0%}
+                                    <div class='gap{{element.gap}}'></div>
+                                    {%endif%}
+                                    <a class="list-group-item duration{{element.duration}}">
+                                        {% if element.class_type == 0 %}
+                                            <span class="fh-l"></span>
+                                        {% else %}
+                                            <span class="fh-p"></span>
+                                        {% endif %}
+                                        <p class="list-group-item-text period-time">{{element.start_time}} to {{element.end_time}}</p>
                                         <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
-                                        <p class="list-group-item-text"><small>{{element.start_time}} to {{element.end_time}}</small></p>
-                                        {% if element.class_type == 0 %}
-                                            <p class ="list-group-item-text"><small>(Lecture)</small></p>
-                                        {% else %}
-                                            <p class ="list-group-item-text"><small>(Practical)</small></p>
-                                            {% if assignment_mark %}
-                                                <div class="text-right" style="color:#882222">
-                                                <i class="fa fa-exclamation-circle text-right"></i>
-                                                </div>
-                                            {% endif %}
+
+                                        {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
+                                        <p class="list-group-item-text"style="color:#833;"><small>Alternate:</small></p>
+                                        <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
+                                        <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
+                                        {% endif %}
+
+                                        {% if assignment_mark %}
+                                            <div class="text-right" style="color:#882222">
+                                            <i class="fa fa-exclamation-circle text-right"></i>
+                                            </div>
                                         {% endif %}
                                     </a>
                                 </div>
                             {% endif %}
+                            {%endif%}
+
+                            {%endwith%}
+                            {%endwith%}
                         {% endfor %}
                     </div>
             {% endfor %}
+
         </div>
     </div>
 </div>
