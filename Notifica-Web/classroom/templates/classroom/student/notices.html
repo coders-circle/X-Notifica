@@ -9,9 +9,10 @@
 
       {% if user.privilege == 1 %}
       <div class="row">
-        <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
-        <div class="span4 collapse-group">
-            <form class=" form collapse col-lg-8 col-lg-offset-2" method="post" name="newnotice" id="addnotice" >
+
+        <div class="col-lg-offset-2 col-lg-8 collapse-group">
+            <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
+            <form class=" form collapse" method="post" name="newnotice" id="addnotice" >
                 {% csrf_token %}
                 <div class="row control-group">
                   <h3> Post New Notice </h3>
@@ -59,7 +60,7 @@
         <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group noticelist">
           {% for notice in events %}
-          <a class="list-group-item" style="margin-bottom:20px;">
+          <a class="list-group-item notice-list-item" style="margin-bottom:20px;">
               <div class="row">
                 <div class="col-md-10">
                   <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>

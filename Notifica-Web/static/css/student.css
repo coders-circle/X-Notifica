@@ -110,7 +110,6 @@ a.list-group-item:hover{
     border-bottom: 1px solid #ccc;
 }
 
-
 .form-group label{
     margin-right: 20px;
 }
@@ -207,4 +206,13 @@ a.list-group-item:hover{
 .form > *{
     margin-left:10px;
     margin-right:10px;
+}
+
+.assignment-list-item,
+.notice-list-item{
+    margin-left: 0px!important;
+    margin-right: 0px!important;
+}
+.assignment-summary{
+    margin-bottom: 20px;
 }
