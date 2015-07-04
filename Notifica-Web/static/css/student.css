@@ -44,6 +44,7 @@ h3 {
 
 a.list-group-item{
   padding-top:28px;
+  min-height: 100px;
   margin:0;
   margin-right:10px;
   margin-left:10px;
@@ -76,7 +77,9 @@ a.list-group-item:hover{
 
 .assignmentlist .list-group-item,
 .noticelist .list-group-item{
-  padding-left:30px;
+  padding-left:50px;
+  padding-right:50px;
+  padding-bottom:50px;
 }
 .submission-date{
   color:#900!important;
@@ -133,43 +136,39 @@ a.list-group-item:hover{
   padding-bottom:40px;
 }
 
-.fh-l:before {
+.badge{
     position: absolute;
     right: 10px;
     top: 5px;
     font-family: "Trebuchet MS" Arial;
     font-size: 0.78em;
-    font-weight: bold;
-    content: 'L';
 }
 
-.fh-p:before {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    font-family: "Trebuchet MS" Arial;
-    font-size: 0.78em;
-    font-weight: bold;
-    content: 'P';
+.gap50, .gap100, .gap150{
+    padding-top:12px;
+    padding-left:20px;
+    font-size:0.9em;
+    margin:0;
+    margin-right:10px;
+    margin-left:10px;
+    box-shadow: 3px 3px 10px #ccc;
+    background: #f7f7f7;
+    border-radius: 0!important;
+    border:0px solid #f7f7f7;
+    margin-bottom: 10px!important;
+    transition: all .3s ease-in-out;
+
 }
 
-.gap1{
-    height:100px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-top:16px;
+.gap50{
+
+    height:50px;
 }
-.gap2{
-    height:200px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-top:16px;
+.gap100{
+    height:80px;
 }
-.gap3{
-    height:300px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-top:16px;
+.gap150{
+    height:110px;
 }
 
 .duration1{

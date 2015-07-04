@@ -61,16 +61,17 @@
      {% endif %}
 
     <div class="row">
+        <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group assignmentlist">
           {% for assignment in assignments %}
           <a class="list-group-item" style="margin-bottom:20px;">
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-8">
                   <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
                 </div>
                 {% if assignment.date %}
-                <div class="col-md-3">
-                  <p class="list-group-item-heading submission-date"><small>Submission Date: {{assignment.date}}</small></p>
+                <div class="col-md-4 text-right">
+                  <p class="list-group-item-heading submission-date"><small>Time left: {{assignment.date|timeuntil}}</small></p>
                 </div>
                 {% endif %}
               </div>
@@ -82,6 +83,7 @@
                 {% endautoescape %}
             </a>
           {% endfor %}
+        </div>
         </div>
       </div>
     </div>
