@@ -110,15 +110,19 @@ a.list-group-item:hover{
     border-bottom: 1px solid #ccc;
 }
 
+
+.form-group label{
+    margin-right: 20px;
+}
 .form-group select{
-  padding-top:10px;
-  padding-bottom:10px;
+  padding-top:4px;
+  padding-bottom:4px;
   padding-left:8px;
-  padding-right:4px;
+  padding-right:0px;
   font-size:1.2em;
   background: transparent;
-  margin-top:16px;
-  margin-left:6px;
+  margin-top:30px;
+  margin-left:0px;
 }
 
 
@@ -145,7 +149,7 @@ a.list-group-item:hover{
 }
 
 .gap50, .gap100, .gap150{
-    padding-top:12px;
+    padding-top:16px;
     padding-left:20px;
     font-size:0.9em;
     margin:0;
@@ -154,24 +158,19 @@ a.list-group-item:hover{
     box-shadow: 3px 3px 10px #ccc;
     background: #f7f7f7;
     border-radius: 0!important;
-    border:0px solid #f7f7f7;
-    margin-bottom: 10px!important;
+    margin-top:20px;
+    margin-bottom: 20px!important;
     transition: all .3s ease-in-out;
 
 }
-
-.gap50, .gap100, .gap150{
-    background: #eee;
-}
-
 .gap50{
     height:50px;
 }
 .gap100{
-    height:80px;
+    height:50px;
 }
 .gap150{
-    height:110px;
+    height:50px;
 }
 
 .duration1{
@@ -194,4 +193,18 @@ a.list-group-item:hover{
     top: 5px;
     left: 16px;
     font-size: 0.78em;
+}
+
+.form{
+    padding-top:50px;
+    padding-left:18px;
+    padding-right:18px;
+    background: #fafafa;
+    margin-bottom:50px;
+    box-shadow: 3px 3px 10px #ccc;
+}
+
+.form > *{
+    margin-left:10px;
+    margin-right:10px;
 }
