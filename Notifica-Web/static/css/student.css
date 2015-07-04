@@ -140,8 +140,8 @@ a.list-group-item:hover{
     position: absolute;
     right: 10px;
     top: 5px;
-    font-family: "Trebuchet MS" Arial;
-    font-size: 0.78em;
+    background: #18bc9c;
+    font-size: 0.6em;
 }
 
 .gap50, .gap100, .gap150{
@@ -160,8 +160,11 @@ a.list-group-item:hover{
 
 }
 
-.gap50{
+.gap50, .gap100, .gap150{
+    background: #eee;
+}
 
+.gap50{
     height:50px;
 }
 .gap100{
