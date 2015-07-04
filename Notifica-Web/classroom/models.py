@@ -56,7 +56,7 @@ class Student(models.Model):
 
 
 class Subject(models.Model):
-    code = models.CharField(max_length=7, unique=True)
+    code = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
     modified_at = models.DateTimeField(auto_now=True)
@@ -81,6 +81,7 @@ class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
     groups = models.CharField(max_length=10, default='A')
+    remarks = models.CharField(max_length=100, default="", blank=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

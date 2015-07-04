@@ -81,7 +81,7 @@
                   <em>{{assignment.summary}}</em>
                 </p>
                 {% autoescape off %}
-                <p class="list-group-item-text assignment-detail"><div style="white-space: pre-wrap;">{{assignment.details}}</div></p>
+                <p class="list-group-item-text assignment-detail"><div style="white-space: pre-wrap;">{{assignment.details|urlize}}</div></p>
                 {% endautoescape %}
             </a>
           {% endfor %}

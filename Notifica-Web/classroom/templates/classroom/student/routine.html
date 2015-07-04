@@ -19,8 +19,8 @@
                 {%endif%}
                         <h3> {{ a_day }} </h3>
                         {% for sn, element in routine.items %}
-                            {% with routine|next:forloop.counter0 as nextelem %}
-                            {% with routine|prev:forloop.counter0 as prevelem %}
+                            {% with element.nextelem as nextelem %}
+                            {% with element.prevelem as prevelem %}
 
                             {% if element.day == forloop.parentloop.counter0 %}
                             {% if element.day != prevelem.day or element.start_time != prevelem.start_time %}
