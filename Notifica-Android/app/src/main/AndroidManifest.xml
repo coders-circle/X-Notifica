@@ -25,7 +25,7 @@
             android:value="notifica_sugar.db" />
         <meta-data
             android:name="VERSION"
-            android:value="2" />
+            android:value="4" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -94,6 +94,10 @@
             android:name=".AboutActivity"
             android:label="About" >
         </activity>
+        <activity
+        android:name=".AttendanceActivity"
+        android:label="Attendance" >
+    </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

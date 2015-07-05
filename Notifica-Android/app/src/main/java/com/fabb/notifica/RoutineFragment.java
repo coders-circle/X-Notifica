@@ -1,5 +1,6 @@
 package com.fabb.notifica;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -107,7 +109,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
 
             String user_type = preferences.getString("user-type","");
-            boolean isteacher = user_type != null && user_type.equals("Teacher");
+            final boolean isteacher = user_type != null && user_type.equals("Teacher");
 
             ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
             Bundle args = getArguments();
@@ -119,56 +121,56 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             c.set(Calendar.MILLISECOND, 0);
 
             int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
-            List<RoutineElement> rtn = routine.get(day);
-            ArrayList<InfoListAdapter.InfoListItem> infos = new ArrayList<>();
+
+            final List<RoutineElement> rtn = routine.get(day);
+            final ArrayList<RoutineAdapter.Item> infos = new ArrayList<>();
             RoutineElement lastElement = null;
-            InfoListAdapter.InfoListItem lastInfo = null;
+            RoutineAdapter.Item lastInfo = null;
 
             for (final RoutineElement r : rtn) {
                 if (lastElement != null) {
                     if (lastElement.startTime == r.startTime && lastElement.endTime == r.endTime && lastElement.type == r.type) {
                         if (isteacher && lastElement.year == r.year && lastElement.faculty.code.equals(r.faculty.code)) {
-                            lastInfo.teachers = lastInfo.teachers.substring(0, lastInfo.teachers.indexOf("Group:"));
+                            lastInfo.group = "";
                             continue;
                         }
                     }
                     if (lastElement.endTime < r.startTime) {
-                        InfoListAdapter.InfoListItem info = new InfoListAdapter.InfoListItem();
-                        info.teachers = "Break";
+                        RoutineAdapter.Item info = new RoutineAdapter.Item();
+                        info.isBreak = true;
                         infos.add(info);
                     }
                 }
-                String subject = "";
-                String teacher = "";
+
                 String time;
-                if (r.subject != null) {
-                    subject = r.subject.name;
-                    if (r.type == 0)
-                        subject += " (Lecture)";
-                    else if (r.type == 1)
-                        subject += " (Practical)";
-                }
-                if (isteacher) {
-                    teacher = r.year + "-" + r.faculty.code + " Group: " + r.groups;
-                }
-                else if (r.teacher != null) {
-                    teacher = r.teacher.name;
-                }
                 String sTime = String.format("%02d", r.startTime/60) + ":" + String.format("%02d", r.startTime%60);
                 String eTime = String.format("%02d", r.endTime/60) + ":" + String.format("%02d", r.endTime%60);
                 time = sTime + " - " + eTime;
-                InfoListAdapter.InfoListItem info = new InfoListAdapter.InfoListItem();
-                info.subjects = subject;
-                info.teachers = teacher;
-                info.times = time;
+
+                RoutineAdapter.Item info = new RoutineAdapter.Item();
+                info.subject = r.subject;
+                info.teacher = r.teacher;
+                info.faculty = r.faculty;
+                info.group = r.groups;
+                info.batch = r.year;
+                info.time = time;
                 infos.add(info);
 
                 lastInfo = info;
                 lastElement = r;
             }
             lv.addFooterView(new View(getActivity()));
-            InfoListAdapter adapter = new InfoListAdapter(getActivity(), infos);
+            RoutineAdapter adapter = new RoutineAdapter(getActivity(), infos);
             lv.setAdapter(adapter);
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (isteacher) {
+                        AttendanceActivity.info = infos.get(position);
+                        startActivity(new Intent(getActivity(), AttendanceActivity.class));
+                    }
+                }
+            });
             return rootView;
         }
 

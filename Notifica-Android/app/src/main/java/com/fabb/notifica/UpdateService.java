@@ -68,6 +68,7 @@ public class UpdateService {
         JSONArray events = json.optJSONArray("events");
         JSONArray teachers = json.optJSONArray("teachers");
         JSONArray subjects = json.optJSONArray("subjects");
+        JSONArray students = json.optJSONArray("students");
 
         JSONArray faculties = json.optJSONArray("faculties");
 
@@ -144,6 +145,26 @@ public class UpdateService {
                     }
                     newElement.save();
                 }
+            }
+        }
+
+        if (isTeacher && students != null && students.length()>0) {
+            Student.deleteAll(Student.class);
+            for (int i=0; i<students.length(); ++i) {
+                JSONObject student = students.optJSONObject(i);
+                if (student == null)
+                    continue;
+                Student newStudent = Database.GetStudent(student.optString("user_id"));
+                if (newStudent == null)
+                    newStudent = new Student();
+                newStudent.userId = student.optString("user_id");
+                newStudent.name = student.optString("name");
+                newStudent.roll = student.optInt("roll");
+                newStudent.batch = student.optInt("year");
+                newStudent.faculty = Database.GetFaculty(student.optString("faculty_code"));
+                newStudent.privilege = student.optInt("privilege");
+                newStudent.groups = student.optString("group");
+                newStudent.save();
             }
         }
 
