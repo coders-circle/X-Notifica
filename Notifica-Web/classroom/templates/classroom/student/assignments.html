@@ -8,33 +8,35 @@
       </div>
       {% if user.privilege == 1 %}
       <div class="row">
-        <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment"><i class="fa fa-plus"></i></a></p>
-        <div class="span4 collapse-group">
-            <form class="collapse col-lg-10 col-lg-offset-1" method="post" name="newassignment" id="addassignment">
+        <div class="col-lg-offset-2 col-lg-8 collapse-group">
+            <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment"><i class="fa fa-plus"></i></a></p>
+            <form class="form collapse" method="post" name="newassignment" id="addassignment">
                 {% csrf_token %}
                 <div class="row control-group">
                   <h3> Post New Assignment </h3>
                 </div>
                 <div class="row control-group">
-                    <div class="form-group col-md-3 floating-label-form-group controls">
+                    <div class="col-md-7 form-group  floating-label-form-group controls">
                         <label>Date</label>
                         <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
                     </div>
-                    <div class="form-group col-md-6 col-md-offset-1  subjectselect">
-                      <label  class="lab">Subject: </label>
-                      <select name="subject" id="subjects">
-                        {% for subject in subjectlist %}
-                        <option value="{{subject.code}}">{{subject.name}}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                    <div class="form-group col-md-2 groupselect">
+                    <div class="form-group col-md-offset-1 col-md-4 groupselect">
                         <label  class="lab">Group: </label>
                         <select name="group" id="groups">
                           {% for value in grouplist %}
                             <option value="{{value}}">{{value}}</option>
                           {% endfor %}
                         </select>
+                    </div>
+                </div>
+                <div class="row control-group">
+                    <div class="form-group col-md-8">
+                      <label  class="lab">Subject: </label>
+                      <select name="subject" id="subjects">
+                        {% for subject in subjectlist %}
+                        <option value="{{subject.code}}">{{subject.name}}</option>
+                        {% endfor %}
+                      </select>
                     </div>
                 </div>
                 <div class="row control-group">
@@ -61,27 +63,32 @@
      {% endif %}
 
     <div class="row">
+        <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group assignmentlist">
           {% for assignment in assignments %}
-          <a class="list-group-item" style="margin-bottom:20px;">
+          <a class="list-group-item assignment-list-item" style="margin-bottom:20px;">
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-6">
                   <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
                 </div>
                 {% if assignment.date %}
-                <div class="col-md-3">
-                  <p class="list-group-item-heading submission-date"><small>Submission Date: {{assignment.date}}</small></p>
+                <div class="col-md-6 text-right">
+                  <p class="list-group-item-heading submission-date"><small>Time left: {{assignment.date|timeuntil}}</small></p>
                 </div>
                 {% endif %}
               </div>
-              <p class="list-group-item-text assignment-summary">
+                <p class="list-group-item-text assignment-summary">
                   <em>{{assignment.summary}}</em>
                 </p>
-                {% autoescape off %}
-                <p class="list-group-item-text assignment-detail"><div style="white-space: pre-wrap;">{{assignment.details}}</div></p>
-                {% endautoescape %}
+                <div class="collapse-group">
+                    {% autoescape off %}
+                    <p class="collapse list-group-item-text assignment-detail" style="white-space: pre-wrap;" id="detail{{forloop.counter}}">{{assignment.details|urlize}}</p>
+                    {% endautoescape %}
+                    <button class="btn showdetails btn-sm" style="background:transparent;font-size:1em;position:absolute;bottom:10px;right:5px;" data-toggle="collapse" data-target="#detail{{forloop.counter}}"><i class="fa fa-expand"></i></button>
+                </div>
             </a>
           {% endfor %}
+        </div>
         </div>
       </div>
     </div>

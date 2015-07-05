@@ -150,33 +150,29 @@ def student(request):
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
 
-    last_end_time = {}
-    last_start_time = {}
+    last_element = {}
 
     initial_time = None
 
     for loopcount, elem in enumerate(elements_objects):
-        if (initial_time == None or initial_time > elem.start_time):
+        if initial_time == None or hm_to_int(initial_time) > hm_to_int(elem.start_time):
              initial_time = elem.start_time
-        if elem.day in last_start_time and last_start_time[elem.day] == elem.start_time:
-            elem.with_prev = True
-        else:
-            elem.with_prev = False
 
-        if elem.day in last_end_time:
-            elem.gap = (hm_to_int(elem.start_time) - hm_to_int(last_end_time[elem.day]))/50
+        if elem.day in last_element:
+            elem.gap = hm_to_int(elem.start_time) - hm_to_int(last_element[elem.day].end_time)
+            elem.prevelem = last_element[elem.day]
+            last_element[elem.day].nextelem = elem
         else:
-            elem.gap = (hm_to_int(elem.start_time) - hm_to_int(initial_time))/50
+            elem.gap = hm_to_int(elem.start_time) - hm_to_int(initial_time)
 
-        last_end_time[elem.day] = elem.end_time
-        last_start_time[elem.day] = elem.start_time
-        elem.duration = (hm_to_int(elem.end_time) - hm_to_int(elem.start_time))/50
+        last_element[elem.day] = elem
+        elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
 
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
-                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0], 'lastname':names[1],
+                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
                     'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/student.html', context)
 

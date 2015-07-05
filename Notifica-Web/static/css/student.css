@@ -44,6 +44,7 @@ h3 {
 
 a.list-group-item{
   padding-top:28px;
+  min-height: 100px;
   margin:0;
   margin-right:10px;
   margin-left:10px;
@@ -76,7 +77,9 @@ a.list-group-item:hover{
 
 .assignmentlist .list-group-item,
 .noticelist .list-group-item{
-  padding-left:30px;
+  padding-left:50px;
+  padding-right:50px;
+  padding-bottom:50px;
 }
 .submission-date{
   color:#900!important;
@@ -107,15 +110,18 @@ a.list-group-item:hover{
     border-bottom: 1px solid #ccc;
 }
 
+.form-group label{
+    margin-right: 20px;
+}
 .form-group select{
-  padding-top:10px;
-  padding-bottom:10px;
+  padding-top:4px;
+  padding-bottom:4px;
   padding-left:8px;
-  padding-right:4px;
+  padding-right:0px;
   font-size:1.2em;
   background: transparent;
-  margin-top:16px;
-  margin-left:6px;
+  margin-top:30px;
+  margin-left:0px;
 }
 
 
@@ -133,44 +139,49 @@ a.list-group-item:hover{
   padding-bottom:40px;
 }
 
-.fh-l:before {
+.badge{
     position: absolute;
     right: 10px;
     top: 5px;
-    font-family: "Trebuchet MS" Arial;
-    font-size: 0.78em;
-    font-weight: bold;
-    content: 'L';
+    background: #18bc9c;
+    font-size: 0.6em;
 }
 
-.fh-p:before {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    font-family: "Trebuchet MS" Arial;
-    font-size: 0.78em;
-    font-weight: bold;
-    content: 'P';
+.gap50, .gap100, .gap150, .gap200, .gap250, .gap300{
+    padding-top:16px;
+    padding-left:20px;
+    font-size:0.9em;
+    margin:0;
+    margin-right:10px;
+    margin-left:10px;
+    box-shadow: 3px 3px 10px #ccc;
+    background: #f7f7f7;
+    border-radius: 0!important;
+    margin-top:20px;
+    margin-bottom: 20px!important;
+    transition: all .3s ease-in-out;
+
+}
+.gap50{
+    height:50px;
+}
+.gap100{
+    height:50px;
+}
+.gap150{
+    height:50px;
+}
+.gap200{
+    height:50px;
+}
+.gap250{
+    height:50px;
+}
+.gap300{
+    height:50px;
 }
 
-.gap1{
-    height:100px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-top:16px;
-}
-.gap2{
-    height:200px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-top:16px;
-}
-.gap3{
-    height:300px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-top:16px;
-}
+
 
 .duration1{
     min-height: 100px!important;
@@ -192,4 +203,27 @@ a.list-group-item:hover{
     top: 5px;
     left: 16px;
     font-size: 0.78em;
+}
+
+.form{
+    padding-top:50px;
+    padding-left:18px;
+    padding-right:18px;
+    background: #fafafa;
+    margin-bottom:50px;
+    box-shadow: 3px 3px 10px #ccc;
+}
+
+.form > *{
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.assignment-list-item,
+.notice-list-item{
+    margin-left: 0px!important;
+    margin-right: 0px!important;
+}
+.assignment-summary{
+    margin-bottom: 20px;
 }

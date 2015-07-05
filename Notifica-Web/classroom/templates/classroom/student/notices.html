@@ -9,9 +9,10 @@
 
       {% if user.privilege == 1 %}
       <div class="row">
-        <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
-        <div class="span4 collapse-group">
-            <form class="collapse col-lg-10 col-lg-offset-1" method="post" name="newnotice" id="addnotice" >
+
+        <div class="col-lg-offset-2 col-lg-8 collapse-group">
+            <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
+            <form class=" form collapse" method="post" name="newnotice" id="addnotice" >
                 {% csrf_token %}
                 <div class="row control-group">
                   <h3> Post New Notice </h3>
@@ -21,8 +22,7 @@
                         <label>Date</label>
                         <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
                     </div>
-                    <div class="col-md-2"></div>
-                    <div class="form-group col-md-2 groupselect">
+                    <div class="form-group col-md-offset-1 col-md-3 groupselect">
                         <label>Group</label>
                         <select name="group" id="groups">
                           {% for value in grouplist %}
@@ -57,9 +57,10 @@
 
 
       <div class="row">
+        <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group noticelist">
           {% for notice in events %}
-          <a class="list-group-item" style="margin-bottom:20px;">
+          <a class="list-group-item notice-list-item" style="margin-bottom:20px;">
               <div class="row">
                 <div class="col-md-10">
                   <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
@@ -70,9 +71,10 @@
                 </div>
                 {% endif %}
               </div>
-              <p class="list-group-item-text notice-detail">{{notice.details}}</p>
+              <p class="list-group-item-text notice-detail">{{notice.details|urlize}}</p>
           </a>
           {% endfor %}
+        </div>
         </div>
       </div>
     </div>
