@@ -63,7 +63,7 @@ public class RoutineAdapter extends BaseAdapter {
             teacher.setText("Break");
         else {
             if (info.subject != null)
-                subject.setText(info.subject.name);
+                subject.setText(info.subject.name + ((info.type==0)?" (Lecture)":" (Practical)"));
             else
                 subject.setText("");
 

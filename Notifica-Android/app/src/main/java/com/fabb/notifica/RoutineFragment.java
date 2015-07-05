@@ -153,6 +153,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 info.faculty = r.faculty;
                 info.group = r.groups;
                 info.batch = r.year;
+                info.type = r.type;
                 info.time = time;
                 infos.add(info);
 
