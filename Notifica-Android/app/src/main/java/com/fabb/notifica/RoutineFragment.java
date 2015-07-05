@@ -46,6 +46,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
         mViewPager = (ViewPager) getActivity().findViewById(R.id.routine_fragment);
         // Set up the ViewPager with the sections adapter.
+
         mViewPager.setAdapter(mDaysCollection);
 
 
@@ -165,7 +166,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 lastInfo = info;
                 lastElement = r;
             }
-
+            lv.addFooterView(new View(getActivity()));
             InfoListAdapter adapter = new InfoListAdapter(getActivity(), infos);
             lv.setAdapter(adapter);
             return rootView;
