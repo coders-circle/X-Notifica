@@ -147,7 +147,7 @@ a.list-group-item:hover{
     font-size: 0.6em;
 }
 
-.gap50, .gap100, .gap150{
+.gap50, .gap100, .gap150, .gap200, .gap250, .gap300{
     padding-top:16px;
     padding-left:20px;
     font-size:0.9em;
@@ -171,6 +171,17 @@ a.list-group-item:hover{
 .gap150{
     height:50px;
 }
+.gap200{
+    height:50px;
+}
+.gap250{
+    height:50px;
+}
+.gap300{
+    height:50px;
+}
+
+
 
 .duration1{
     min-height: 100px!important;
