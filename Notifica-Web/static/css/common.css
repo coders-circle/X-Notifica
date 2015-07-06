@@ -8,7 +8,7 @@ a:focus,
 a:active,
 a.active {
     outline: 0;
-    color: #18bc9c;
+    color: #000;
 }
 
 h1,
@@ -23,8 +23,7 @@ h6 {
 }
 
 
-
-@media(min-width:768px) {
+ @media(min-width:768px) {
     .navbar-fixed-top {
         padding: 25px 0;
         -webkit-transition: padding .3s;
@@ -47,37 +46,44 @@ h6 {
     .navbar-fixed-top.navbar-shrink .navbar-brand {
         font-size: 1.5em;
     }
+
+    .navbar-fixed-top.navbar-shrink .navbar-logo{
+        width:22px;
+        float:left;
+        margin-right: 5px;
+        margin-top:14px;
+    }
+
 }
 
 .navbar-default .navbar-brand {
     color: #fff;
+    text-shadow:5px 5px 6px #087;
 }
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-    color: #18bc9c;
+
+.navbar-default .navbar-brand:focus{
+    color:#fff;
+}
+.navbar-default .navbar-brand:hover{
+    color: #fff;
+    text-shadow: 5px 5px 6px #087, 0 0 2px rgba(255,255,255,1) , 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 20px #18bc9c , 0 0 25px #18bc9c , 0 0 30px #18bc9c , 0 0 35px #18bc9c ;
+}
+
+
+.navbar-logo{
+    width:29px;
+    float:left;
+    margin-right: 8px;
+    margin-top:11px;
+    transition: all .3s;
+
 }
 
 .navbar {
     text-transform: uppercase;
-    background-color: #2c3e50;
+    background-color: #00A686;
     font-family: "Trebuchet MS",Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     font-weight: 700;
-}
-
-.navbar a:focus {
-    outline: 0;
-}
-
-.navbar .navbar-nav {
-    letter-spacing: 1px;
-}
-
-.navbar .navbar-nav li a:focus {
-    outline: 0;
-}
-
-.nav li{
-  background:#fff;
 }
 
 .navbar-default,
@@ -85,13 +91,12 @@ h6 {
     border: 0;
 }
 
-
-
 .btn-outline {
     margin-top: 15px;
-    border: solid 2px #466;
+    border: none;
     font-size: 20px;
-    color: #fff;
+    color: #007d65!important;
+    background: #fff;
     transition: all .3s ease-in-out;
 }
 
@@ -99,9 +104,8 @@ h6 {
 .btn-outline:focus,
 .btn-outline:active,
 .btn-outline.active {
-    border: solid 2px #fff;
-    color: #18bc9c;
-    background: #fff;
+
+    color: #18bc9c!important;
 }
 
 .btn-info{
@@ -152,7 +156,6 @@ h6 {
     font-size: 1.5em;
     background: 0 0;
     box-shadow: none!important;
-    resize:vertical;
 }
 
 .floating-label-form-group textarea{
@@ -207,8 +210,10 @@ footer h3 {
 
 footer .footer-above {
     padding-top: 50px;
-    background-color: #2c3e50;
+    background-color: #00A686;
 }
+
+
 
 footer .footer-col {
     margin-bottom: 50px;
@@ -216,7 +221,7 @@ footer .footer-col {
 
 footer .footer-below {
     padding: 25px 0;
-    background-color: #233140;
+    background-color: #007d65;
 }
 
 .btn-social {
@@ -228,10 +233,41 @@ footer .footer-below {
     text-align: center;
     font-size: 20px;
     line-height: 45px;
+    background:#00A686;
+    color:#fff!important;
+}
+.btn-social:hover{
+    background:#3ac7ab;
+    color:#fff!important;
 }
 
 .btn:focus,
 .btn:active,
 .btn.active {
     outline: 0;
+}
+
+
+
+
+.navbar-default .navbar-nav > li,
+.navbar-default .navbar-nav > li > a{
+    color: #fff;
+    background: #007d65;
+}
+.navbar-default .navbar-nav > li > a:focus{
+    color:inherit;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav >.active a:hover{
+    background: #3ac7ab;
+    color:#fff;
+}
+
+.navbar-default .navbar-nav > li > a:active,
+.navbar-default .navbar-nav > .active a,
+.navbar-default .navbar-nav > .active a:focus{
+    background: #18bc9c;
+    color:#fff;
 }

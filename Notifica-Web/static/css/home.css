@@ -6,30 +6,25 @@ p.small {
     font-size: 16px;
 }
 
-
-hr.star-light,
-hr.star-primary {
-    margin: 25px auto 30px;
-    padding: 0;
-    max-width: 250px;
-    border: 0;
-    border-top: solid 5px;
-    text-align: center;
-}
-
 .img-centered {
     margin: 0 auto;
+}
+
+#todo, #about, #login{
+    min-height: 640px;
 }
 
 header {
     text-align: center;
     color: #fff;
-    background: #18bc9c;
+    background: #00A686;
+
 }
 
+
 header .container {
-    padding-top: 100px;
     padding-bottom: 50px;
+
 }
 
 header img {
@@ -43,7 +38,7 @@ header .intro-text .name {
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 2em;
     font-weight: 700;
-    text-shadow:5px 5px 2px #08a080;
+    text-shadow:5px 5px 6px #087;
 }
 
 header .intro-text .skills {
@@ -55,13 +50,12 @@ header .intro-text .skills {
     display: block;
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 2em;
-    font-weight: 700;
+    font-size: 1.24em;
+    color:#007d65;
 }
 
-.todo-text {
-    font-size: 1.25em;
-    font-weight: 300;
+.todo-title,.login-title{
+    color:#007d65;
 }
 
 .todo-list li{
@@ -95,30 +89,5 @@ section h2 {
 
 section.success {
     color: #fff;
-    background: #18bc9c;
-}
-
-section.success a,
-section.success a:hover,
-section.success a:focus,
-section.success a:active,
-section.success a.active {
-    outline: 0;
-    color: #2c3e50;
-}
-
-@media(max-width:767px) {
-    section {
-        padding: 75px 0;
-    }
-
-    section.first {
-        padding-top: 75px;
-    }
-}
-
-@media(min-width:767px) {
-    #portfolio .portfolio-item {
-        margin: 0 0 30px;
-    }
+    background: #00A686;
 }

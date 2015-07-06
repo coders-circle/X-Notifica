@@ -9,9 +9,9 @@
 
       {% if user.privilege == 1 %}
       <div class="row">
-
+          <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice">+</a></p>
         <div class="col-lg-offset-2 col-lg-8 collapse-group">
-            <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addnotice"><i class="fa fa-plus"></i></a></p>
+
             <form class=" form collapse" method="post" name="newnotice" id="addnotice" >
                 {% csrf_token %}
                 <div class="row control-group">
@@ -60,19 +60,25 @@
         <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group noticelist">
           {% for notice in events %}
-          <a class="list-group-item notice-list-item" style="margin-bottom:20px;">
-              <div class="row">
-                <div class="col-md-10">
-                  <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
-                </div>
-                {% if assignment.date %}
-                <div class="col-md-2">
-                  <p class="list-group-item-text notice-date"><small>Date: {{notice.date}}</small></p>
-                </div>
+          <div class="list-group-item notice-list-item" style="margin-bottom:20px;">
+                {% if user.privilege == 1 %}
+                    <a class="btn btn-delete"><i class="fa fa-trash-o"></i></a>
                 {% endif %}
-              </div>
-              <p class="list-group-item-text notice-detail">{{notice.details|urlize}}</p>
-          </a>
+
+                <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
+
+                {% if notice.date %}
+                  <span class="notice-date">Date: {{notice.date}}</span>
+                {%else%}
+                    <i class="fa fa-thumb-tack pin-icon"></i>
+                {% endif %}
+                <div class="collapse-group">
+                    {% autoescape off %}
+                    <p class="collapse list-group-item-text assignment-detail" style="white-space: pre-wrap;" id="notice-detail{{forloop.counter}}">{{notice.details|urlize}}</p>
+                    {% endautoescape %}
+                    <button class="btn btn-details btn-sm" style="background:transparent;font-size:1em;position:absolute;bottom:10px;right:5px;" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}"><i class="fa fa-expand"></i></button>
+                </div>
+          </div>
           {% endfor %}
         </div>
         </div>

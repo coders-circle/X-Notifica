@@ -26,9 +26,9 @@
                             {% if element.day != prevelem.day or element.start_time != prevelem.start_time %}
                                 <div class="list-group">
                                     {%if element.gap != 0%}
-                                    <div class='gap{{element.gap}}'>{{element.gap}} min break</div>
+                                    <div class='gap'>{{element.gap}} min break</div>
                                     {%endif%}
-                                    <a class="list-group-item">
+                                    <div class="list-group-item routine-element">
                                         {% if element.class_type == 0 %}
                                             <span class="badge badge-l">L</span>
                                         {% else %}
@@ -49,7 +49,7 @@
                                             <i class="fa fa-exclamation-circle text-right"></i>
                                             </div>
                                         {% endif %}
-                                    </a>
+                                    </div>
                                 </div>
                             {% endif %}
                             {%endif%}

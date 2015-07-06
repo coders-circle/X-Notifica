@@ -7,17 +7,50 @@
   min-height: 400px;
 }
 
+
+.nav button:hover{
+    background: #3ac7ab;
+    color:#fff;
+}
 .nav button{
-  background:#fff;
+    color: #fff;
+    background: #007d65;
   text-transform: uppercase;
   font-family:"Trebuchet MS" Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
   padding:15px;
+  padding-bottom:15px;
   margin:0;
   border:none;
   border-radius: 0;
 }
+
+.usersettings, .usersettings > li, .usersettings > li > a{
+    background: #fff!important;
+    color:#007d65!important;
+}
+.usersettings > li{
+    padding:0px;
+    margin:0px;
+}
+.usersettings > li > a{
+    padding-left:30px;
+    padding-right:30px;
+    padding-bottom:10px;
+    margin:0px;
+}
+
+
+.usersettings > li > a:hover{
+    color:#3ac7ab!important;
+}
+
+.usersettings > li:active,.usersettings > li > a:active{
+    background:#007d65!important;
+    color:#fff!important;
+}
+
 
 h3 {
     padding:20px 10px;
@@ -26,9 +59,6 @@ h3 {
 }
 
 .tab-content{
-  background: #eaf1f1;
-}
-.list-group-item{
   background: #eaf1f1;
 }
 
@@ -42,7 +72,7 @@ h3 {
   margin:0;
 }
 
-a.list-group-item{
+.list-group-item {
   padding-top:28px;
   min-height: 100px;
   margin:0;
@@ -60,7 +90,7 @@ p{
     margin-bottom:10px;
 }
 
-a.list-group-item:hover{
+.list-group-item:hover{
   background: #fff;
   color:#445;
 }
@@ -75,15 +105,36 @@ a.list-group-item:hover{
   color:#fff;
 }
 
+.today .list-group-item:hover{
+  background:#3ac7ab;
+  color:#fff;
+}
+
+h2{
+    color:#007d65;
+}
+
 .assignmentlist .list-group-item,
 .noticelist .list-group-item{
   padding-left:50px;
   padding-right:50px;
   padding-bottom:50px;
 }
-.submission-date{
-  color:#900!important;
+.submission-date,.notice-date{
+  color:#b8383b!important;
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:0.78em;
 }
+.pin-icon{
+  color:#008080!important;
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:1.2em;
+}
+
 
 .assignment-summary{
   padding-top:8px;
@@ -99,11 +150,21 @@ a.list-group-item:hover{
 }
 
 .addbtn{
-  font-size:2em;
+    width:60px;
+    height:60px;
+    font-size:3em;
+    color:#fff;
+    background: #18bc9c;
+    border-radius: 30px;
+    padding:0px;
+    box-shadow: 3px 3px 10px #ccc;
+    margin-right:10px;
+    margin-bottom:10px;
 }
 
 .addbtn:hover{
-  color:#33dfce;
+  background-color:#10aa82;
+  color:#fff;
 }
 
 .floating-label-form-group {
@@ -143,11 +204,15 @@ a.list-group-item:hover{
     position: absolute;
     right: 10px;
     top: 5px;
-    background: #18bc9c;
+    background: #3ac7ab;
     font-size: 0.6em;
+    width:14px;
+    border-radius:7px;
+    padding:3px;
+    margin-0px;
 }
 
-.gap50, .gap100, .gap150, .gap200, .gap250, .gap300{
+.gap{
     padding-top:16px;
     padding-left:20px;
     font-size:0.9em;
@@ -160,43 +225,8 @@ a.list-group-item:hover{
     margin-top:20px;
     margin-bottom: 20px!important;
     transition: all .3s ease-in-out;
-
-}
-.gap50{
     height:50px;
 }
-.gap100{
-    height:50px;
-}
-.gap150{
-    height:50px;
-}
-.gap200{
-    height:50px;
-}
-.gap250{
-    height:50px;
-}
-.gap300{
-    height:50px;
-}
-
-
-
-.duration1{
-    min-height: 100px!important;
-}
-
-.duration2{
-    min-height: 200px!important;
-    padding-top:70px!important;
-}
-
-.duration3{
-    min-height: 300px!important;
-    padding-top:110px!important;
-}
-
 
 .period-time{
     position: absolute;
@@ -217,6 +247,12 @@ a.list-group-item:hover{
 .form > *{
     margin-left:10px;
     margin-right:10px;
+}
+
+.btn-delete{
+    position:absolute;
+    right:40px;
+    bottom:10px;
 }
 
 .assignment-list-item,
