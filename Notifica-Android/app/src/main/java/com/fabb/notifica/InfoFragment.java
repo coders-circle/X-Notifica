@@ -21,9 +21,9 @@ import java.util.List;
 
 public class InfoFragment  extends Fragment implements UpdateListener {
 
-    protected RoutineListAdapter listAdapter;
+    protected InfoListAdapter listAdapter;
     protected ExpandableListView expListView;
-    protected List<RoutineListAdapter.Item> listItems;
+    protected List<InfoListAdapter.Item> listItems;
     protected boolean privileged = false;
 
     protected String info_name = "Event";
@@ -59,7 +59,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
 
         expListView = (ExpandableListView) getActivity().findViewById(R.id.assignment_list);
         prepareListData();
-        listAdapter = new RoutineListAdapter(getActivity(), listItems);
+        listAdapter = new InfoListAdapter(getActivity(), listItems);
         expListView.setAdapter(listAdapter);
     }
 
@@ -92,7 +92,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
             return;
         try {
             prepareListData();
-            listAdapter = new RoutineListAdapter(getActivity(), listItems);
+            listAdapter = new InfoListAdapter(getActivity(), listItems);
             expListView.setAdapter(listAdapter);
             expListView.invalidate();
             registerForContextMenu(expListView);

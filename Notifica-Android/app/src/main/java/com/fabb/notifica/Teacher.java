@@ -7,6 +7,6 @@ public class Teacher extends SugarRecord<Teacher> {
     public String userId;
     public String contact;
 
-    Faculty faculty;
+    public Faculty faculty;
 }
 

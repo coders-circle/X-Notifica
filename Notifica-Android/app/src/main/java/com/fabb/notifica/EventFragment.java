@@ -30,7 +30,7 @@ public class EventFragment extends InfoFragment {
              if (as.deleted)
                  extra += "\nDeleted";
 
-             listItems.add(new RoutineListAdapter.Item(as.summary, as.details, extra));
+             listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra));
              mIds.add(as.remoteId);
         }
     }

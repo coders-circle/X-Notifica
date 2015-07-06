@@ -11,6 +11,7 @@ public class Database {
         Subject.deleteAll(Subject.class);
         Teacher.deleteAll(Teacher.class);
         Faculty.deleteAll(Faculty.class);
+        Student.deleteAll(Student.class);
     }
 
     public static void DeleteExpired() {
@@ -38,6 +39,11 @@ public class Database {
 
     public static Teacher GetTeacher(String user_id) {
         List<Teacher> list = Teacher.find(Teacher.class, "user_id = ?", user_id);
+        return (list.size() > 0) ? list.get(0) : null;
+    }
+
+    public static Student GetStudent(String user_id) {
+        List<Student> list = Student.find(Student.class, "user_id = ?", user_id);
         return (list.size() > 0) ? list.get(0) : null;
     }
 

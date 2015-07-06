@@ -85,6 +85,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         setSupportActionBar(toolbar);
+        toolbar.hideOverflowMenu();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -233,14 +234,14 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivityForResult(new Intent(this, SettingsActivity.class), 0);
-            return true;
-        }
-        else if (id == R.id.action_update) {
+        //if (id == R.id.action_settings) {
+        //    startActivityForResult(new Intent(this, SettingsActivity.class), 0);
+        //    return true;
+        //}
+         if (id == R.id.action_update) {
             item.setVisible(false);
             new UpdateService.UpdateTask(this).execute();
-            return true;
+           return true;
         }
 
         return super.onOptionsItemSelected(item);

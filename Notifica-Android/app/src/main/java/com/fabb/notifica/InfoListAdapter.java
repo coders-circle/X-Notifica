@@ -1,60 +1,99 @@
 package com.fabb.notifica;
 
-
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class InfoListAdapter extends BaseAdapter {
-    public static class InfoListItem {
-        public String subjects;
-        public String teachers;
-        public String times;
-    }
-    Context context;
-    ArrayList<InfoListItem> array;
-    public InfoListAdapter(Activity context, ArrayList<InfoListItem> array){
-        this.array = array;
-        this.context = context;
+public class InfoListAdapter extends BaseExpandableListAdapter {
+
+    public static class Item {
+        String summary, details, extra;
+        public Item(String summary, String details, String extra) {
+            this.summary = summary;
+            this.details = details;
+            this.extra = extra;
+        }
     }
 
-    @Override
-    public int getCount() {
-        return array.size();
-    }
+    private Context mContext;
+    private List<Item> mListItems;
 
-    @Override
-    public Object getItem(int position) {
-        return array.get(position);
+    public InfoListAdapter(Context context, List<Item> listItems) {
+        this.mContext = context;
+        this.mListItems = listItems;
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public Object getChild(int groupPosition, int childPosition) {
+        return mListItems.get(groupPosition).details;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView==null)
-        {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_row, parent, false);
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+        final String childText = (String) getChild(groupPosition, childPosition);
+
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.info_item, parent, false);
         }
 
-        TextView subject = (TextView) convertView.findViewById(R.id.subject_name);
-        TextView teacher = (TextView) convertView.findViewById(R.id.teacher_name);
-        TextView time = (TextView) convertView.findViewById(R.id.time);
-
-        InfoListItem info = array.get(position);
-        subject.setText(info.subjects);
-        teacher.setText(info.teachers);
-        time.setText(info.times);
+        TextView txtListChild = (TextView) convertView.findViewById(R.id.details_view);
+        txtListChild.setText(childText);
         return convertView;
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return 1;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return mListItems.get(groupPosition);
+    }
+
+    @Override
+    public int getGroupCount() {
+        return mListItems.size();
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        Item item = (Item) getGroup(groupPosition);
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.info_group, parent, false);
+        }
+
+        String headerTitle = item.summary + "\n" + item.extra;
+        TextView lblListHeader = (TextView) convertView.findViewById(R.id.summary_view);
+        lblListHeader.setText(headerTitle);
+        return convertView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return true;
     }
 }

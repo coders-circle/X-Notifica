@@ -151,6 +151,7 @@ def update(request):
 
     teachers_objects = set()
     subjects_objects = set()
+    students_objects = set()
     
     routine = {}
     elements = []
@@ -181,6 +182,11 @@ def update(request):
     # For teacher, routine, assignments and events that reference this teacher are returned
     elif user_type == "Teacher":
         elements_objects = RoutineElement.objects.filter(teacher=user, routine__modified_at__gt = user.updated_at)
+        if elements_objects.count() > 0:
+            element_objects = RoutineElement.objects.filter(teacher=user)
+            for el in element_objects:
+                students_objects.update(list(Student.objects.filter(batch=el.routine.batch, faculty=el.routine.faculty)))
+
         assignments_objects = Assignment.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
         events_objects = Event.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
     else:
@@ -228,17 +234,23 @@ def update(request):
     
     subjects = []
     teachers = []
+    students = []
 
     for sb in subjects_objects:
         subjects.append({"name":sb.name, "code":sb.code, "faculty_code":sb.faculty.code})
     for th in teachers_objects:
         teachers.append({"user_id":th.user.username, "name":th.name, "faculty_code":th.faculty.code})
+    for st in students_objects:
+        students.append({"user_id":st.user.username, "name":st.name, "roll":st.roll, "year":st.batch, "faculty_code":st.faculty.code,
+                        "group":st.group, "privilege":st.privilege})
+    
 
     outdata["routine"] = routine
     outdata["assignments"] = assignments
     outdata["events"] = events
     outdata["subjects"] = subjects
     outdata["teachers"] = teachers
+    outdata["students"] = students
     outdata["faculties"] = faculties
     outdata["new_assignments_count"] = acnt
     outdata["new_events_count"] = ecnt
