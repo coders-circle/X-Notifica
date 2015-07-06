@@ -123,19 +123,20 @@ h2 {
 
 .submission-date,
 .notice-date {
-    color: #b8383b!important;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 0.78em;
+    color: #777777!important;
+    font-size: 0.65em;
 }
 
-.pin-icon {
+.topcorner {
     color: #008080!important;
     position: absolute;
     top: 10px;
-    right: 15px;
+    right: 10px;
     font-size: 1.2em;
+    background: transparent;
+}
+.topcorner button {
+    background: transparent;
 }
 
 .assignment-summary {
@@ -143,7 +144,7 @@ h2 {
     padding-bottom: 5px;
 }
 
-.notice-detail {
+.notice-detail, .assignment-detail {
     padding-top: 20px;
 }
 
@@ -211,7 +212,7 @@ h2 {
 }
 
 .badge-p {
-    background-color: #77f;
+    background-color: #f77;
 }
 
 .badge-l {
@@ -220,13 +221,16 @@ h2 {
 
 .nottoday .badge-p,
 .nottoday .badge-l {
-    background-color: #aaa;
+    background-color: #ddd;
 }
 
 .today h3 {
     color: #18bc9c;
 }
 
+.nottoday {
+    color: #666666;
+}
 
 .today .gap {
     background: #fff;
