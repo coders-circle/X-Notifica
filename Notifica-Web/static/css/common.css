@@ -25,19 +25,20 @@ h6 {
 
  @media(min-width:768px) {
     .navbar-fixed-top {
-        padding: 25px 0;
+        padding: 10px 0;
         -webkit-transition: padding .3s;
         -moz-transition: padding .3s;
         transition: padding .3s;
     }
 
     .navbar-fixed-top .navbar-brand {
-        font-size: 2em;
+        font-size: 1.5em;
         -webkit-transition: all .3s;
         -moz-transition: all .3s;
         transition: all .3s;
     }
 
+    /*
     .navbar-fixed-top.navbar-shrink {
         padding: 10px 0;
         height: 70px;
@@ -48,11 +49,13 @@ h6 {
     }
 
     .navbar-fixed-top.navbar-shrink .navbar-logo{
-        width:22px;
+        width:30px;
         float:left;
         margin-right: 5px;
-        margin-top:14px;
+        margin-top:10px;
+
     }
+    */
 
 }
 
@@ -65,18 +68,19 @@ h6 {
     color:#fff;
 }
 .navbar-default .navbar-brand:hover{
-    color: #fff;
-    text-shadow: 5px 5px 6px #087, 0 0 2px rgba(255,255,255,1) , 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 20px #18bc9c , 0 0 25px #18bc9c , 0 0 30px #18bc9c , 0 0 35px #18bc9c ;
+    color: #efe;
+    /*
+     text-shadow: 5px 5px 6px #087, 0 0 2px rgba(255,255,255,1) , 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 20px #18bc9c , 0 0 25px #18bc9c , 0 0 30px #18bc9c , 0 0 35px #18bc9c ;
+     */
 }
 
 
 .navbar-logo{
-    width:29px;
+    width:50px;
     float:left;
-    margin-right: 8px;
-    margin-top:11px;
+    margin: 0px;
+    padding: 5px;
     transition: all .3s;
-
 }
 
 .navbar {

@@ -1,9 +1,7 @@
 {% load staticfiles %}
 
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,16 +9,17 @@
     {% if pageTitle %}
     <title> {{pageTitle}} </title>
     {%else%}
-    <title> Notifica </title>
+    <title>Notifica</title>
     {%endif%}
-    <link href = "{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
-    <link href = "{% static 'css/common.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/common.css' %}" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    {% block head %} {% endblock %}
+    {% block head %}
+    {% endblock %}
 </head>
 <body id="page-top">
     {%if navbarDisabled == false %}
@@ -29,12 +28,14 @@
             <div class="navbar-header page-scroll">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#notifica-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
-                    {%block navbarIconBars %}{%endblock%}
+                    {%block navbarIconBars %}
+                    {%endblock%}
                 </button>
                 <img class="navbar-logo img-responsive" src="{% static 'imgs/notifica-logo.png' %}" alt="">
                 <a class="navbar-brand" href="#page-top">Notifica</a>
             </div>
-            {% block navbar %}{% endblock %}
+            {% block navbar %}
+            {% endblock %}
         </div>
     </nav>
     {%endif%}
@@ -43,16 +44,17 @@
     {% endblock %}
 
     <footer class="text-center">
-       <div class="footer-above">
-           <div class="container">
-               <div class="row">
-                   <div class="footer-col col-md-4">
-                       <h3>Available for</h3>
-                       <p>Institute of Engineering<br>Central Campus</p>
-                   </div>
-                   <div class="footer-col col-md-4">
-                       <h3>Download the App</h3>
-                       <ul class="list-inline">
+        <div class="footer-above">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col col-md-4">
+                        <h3>Available for</h3>
+                        <p>Institute of Engineering
+                            <br>Central Campus</p>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>Download the App</h3>
+                        <ul class="list-inline">
                             <li>
                                 <a href="https://drive.google.com/file/d/0B4m35FfIXswwVHV5V2JlRUZMQzQ/view?usp=sharing" class="btn-social btn-outline"><i class="fa fa-android"></i></a>
                             </li>
@@ -63,27 +65,27 @@
                                 <a href="#" class="btn-social btn-outline"><i class="fa fa-windows"></i></a>
                             </li>
                         </ul>
-                   </div>
-                   <div class="footer-col col-md-4">
-                       <h3>About Notifica</h3>
-                       <p>Notifica is a free to use, open source routine app developed by FABs team.</p>
-                   </div>
-               </div>
-           </div>
-       </div>
-       <div class="footer-below">
-           <div class="container">
-               <div class="row">
-                   <div class="col-lg-12">
-                       Copyright &copy; FABs team
-                   </div>
-               </div>
-           </div>
-       </div>
+                    </div>
+                    <div class="footer-col col-md-4">
+                        <h3>About Notifica</h3>
+                        <p>Notifica is a free to use, open source routine app developed by FABs team.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-below">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        Copyright &copy; FABs team
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="{% static 'js/common.js'%}"></script>
-    {% block footer %} {% endblock %}
+    {% block footer %}
+    {% endblock %}
 </body>
-
 </html>
