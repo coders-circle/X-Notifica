@@ -149,21 +149,22 @@ h2{
   color:#18bc9c;
 }
 
-.addbtn {
+.btn-add {
     width:50px;
     height:50px;
-    font-size:2em;
+    margin-right:10px;
+    margin-bottom:10px;
+    padding:0px;
     color:#fff;
     background: #18bc9c;
     border-radius: 25px;
-    margin-right:10px;
-    margin-bottom:10px;
+    font-size:2em;
     box-shadow: 3px 3px 10px #ccc;
 }
 
-.addbtn:hover{
-  background-color:#10aa82;
+.btn-add:hover{
   color:#fff;
+  background-color:#10aa82;
 }
 
 .floating-label-form-group {

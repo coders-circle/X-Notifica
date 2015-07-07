@@ -1,46 +1,62 @@
+/*
+Standard CSS Structure for this Site
+------------------------------------
+position:   absolute/relative
+float:      left/right/center
+
+width:
+height:
+
+magrin:
+padding:
+
+color:
+background:
+
+font-family:
+font-size:
+...
+
+border:
+box-shadow:
+...
+
+transition:
+transform:
+
+...
+*/
+
 body {
     overflow-x: hidden;
 }
 
-a,
-a:hover,
-a:focus,
-a:active,
-a.active {
-    outline: 0;
+a, a:hover, a:focus, a:active, a.active {
     color: #000;
+    outline: 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    text-transform: uppercase;
-    font-family: "Trebuchet MS", Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Trebuchet MS", Montserrat,"Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
+    text-transform: uppercase;
 }
 
-
- @media(min-width:768px) {
+/* for large screen */
+@media(min-width:768px) {
     .navbar-fixed-top {
         padding: 25px 0;
-        -webkit-transition: padding .3s;
-        -moz-transition: padding .3s;
         transition: padding .3s;
     }
 
     .navbar-fixed-top .navbar-brand {
         font-size: 2em;
-        -webkit-transition: all .3s;
-        -moz-transition: all .3s;
         transition: all .3s;
     }
 
     .navbar-fixed-top.navbar-shrink {
-        padding: 10px 0;
         height: 70px;
+        padding: 10px 0;
     }
 
     .navbar-fixed-top.navbar-shrink .navbar-brand {
@@ -48,12 +64,11 @@ h6 {
     }
 
     .navbar-fixed-top.navbar-shrink .navbar-logo{
-        width:22px;
         float:left;
-        margin-right: 5px;
+        width:22px;
         margin-top:14px;
+        margin-right: 5px;
     }
-
 }
 
 .navbar-default .navbar-brand {
@@ -64,26 +79,29 @@ h6 {
 .navbar-default .navbar-brand:focus{
     color:#fff;
 }
+
 .navbar-default .navbar-brand:hover{
     color: #fff;
-    text-shadow: 5px 5px 6px #087, 0 0 2px rgba(255,255,255,1) , 0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1) , 0 0 20px #18bc9c , 0 0 25px #18bc9c , 0 0 30px #18bc9c , 0 0 35px #18bc9c ;
+    /* Neon glow effect */
+    text-shadow: 5px 5px 6px #087, 0 0 2px rgba(255,255,255,1),
+            0 0 5px rgba(255,255,255,1) , 0 0 10px rgba(255,255,255,1),
+            0 0 20px #18bc9c ,0 0 25px #18bc9c ,0 0 30px #18bc9c, 0 0 35px #18bc9c;
 }
-
 
 .navbar-logo{
     width:29px;
-    float:left;
-    margin-right: 8px;
     margin-top:11px;
+    margin-right: 8px;
     transition: all .3s;
+    float:left;
 
 }
 
 .navbar {
-    text-transform: uppercase;
     background-color: #00A686;
-    font-family: "Trebuchet MS",Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Trebuchet MS", Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
+    text-transform: uppercase;
 }
 
 .navbar-default,
@@ -93,10 +111,10 @@ h6 {
 
 .btn-outline {
     margin-top: 15px;
-    border: none;
-    font-size: 20px;
     color: #007d65!important;
     background: #fff;
+    font-size: 20px;
+    border: none;
     transition: all .3s ease-in-out;
 }
 
@@ -104,38 +122,36 @@ h6 {
 .btn-outline:focus,
 .btn-outline:active,
 .btn-outline.active {
-
     color: #18bc9c!important;
 }
 
-.btn-info{
-  border-radius: 3px;
-  margin-top: 15px;
-  padding-left:30px;
-  padding-right:30px;
-  font-size: 20px;
-  transition: all .3s ease-in-out;
+.btn-info {
+    margin-top: 15px;
+    padding-left:30px;
+    padding-right:30px;
+    font-size: 20px;
+    border-radius: 3px;
+    transition: all .3s ease-in-out;
 }
 
-
-.btn-success{
-  border-radius: 3px;
-  margin-top: 15px;
-  padding-left:30px;
-  padding-right:30px;
-  border: solid 2px #18bc9c;
-  font-size: 20px;
-  color: #fff;
-  background: #18bc9c;
-  transition: all .3s ease-in-out;
+.btn-success {
+    margin-top: 15px;
+    padding-left:30px;
+    padding-right:30px;
+    color: #fff;
+    background: #18bc9c;
+    font-size: 20px;
+    border: solid 2px #18bc9c;
+    border-radius: 3px;
+    transition: all .3s ease-in-out;
 }
 
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active,
 .btn-success.active{
-  border: solid 2px #10aa89;
-  background: #109a79;
+    background: #109a79;
+    border: solid 2px #10aa89;
 }
 
 .floating-label-form-group {
@@ -147,38 +163,38 @@ h6 {
 
 .floating-label-form-group input,
 .floating-label-form-group textarea {
-    z-index: 1;
     position: relative;
     padding-right: 0;
     padding-left: 0;
+    background: 0 0;
+    font-size: 1.5em;
     border: 0;
     border-radius: 0;
-    font-size: 1.5em;
-    background: 0 0;
     box-shadow: none!important;
+    z-index: 1;
 }
 
 .floating-label-form-group textarea{
-    resize:vertical;
-    max-height:500px;
+    max-height:600px;
     min-height:200px;
+    resize:vertical;
 }
 
 .floating-label-form-group label {
-    display: block;
-    z-index: 0;
     position: relative;
     top: 2em;
     margin: 0;
     font-size: .85em;
-    line-height: 1.764705882em;
-    vertical-align: middle;
-    vertical-align: baseline;
-    opacity: 0;
     -webkit-transition: top .3s ease,opacity .3s ease;
     -moz-transition: top .3s ease,opacity .3s ease;
     -ms-transition: top .3s ease,opacity .3s ease;
     transition: top .3s ease,opacity .3s ease;
+    opacity: 0;
+    line-height: 1.764705882em;
+    display: block;
+    z-index: 0;
+    vertical-align: middle;
+    vertical-align: baseline;
 }
 
 .floating-label-form-group::not(:first-child) {
@@ -213,8 +229,6 @@ footer .footer-above {
     background-color: #00A686;
 }
 
-
-
 footer .footer-col {
     margin-bottom: 50px;
 }
@@ -225,17 +239,18 @@ footer .footer-below {
 }
 
 .btn-social {
-    display: inline-block;
     width: 50px;
     height: 50px;
+    color:#fff!important;
+    background:#00A686;
+    font-size: 20px;
     border: 2px solid #fff;
     border-radius: 100%;
-    text-align: center;
-    font-size: 20px;
     line-height: 45px;
-    background:#00A686;
-    color:#fff!important;
+    text-align: center;
+    display: inline-block;
 }
+
 .btn-social:hover{
     background:#3ac7ab;
     color:#fff!important;
@@ -246,9 +261,6 @@ footer .footer-below {
 .btn.active {
     outline: 0;
 }
-
-
-
 
 .navbar-default .navbar-nav > li,
 .navbar-default .navbar-nav > li > a{
@@ -261,13 +273,13 @@ footer .footer-below {
 
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav >.active a:hover{
-    background: #3ac7ab;
     color:#fff;
+    background: #3ac7ab;
 }
 
 .navbar-default .navbar-nav > li > a:active,
 .navbar-default .navbar-nav > .active a,
 .navbar-default .navbar-nav > .active a:focus{
-    background: #18bc9c;
     color:#fff;
+    background: #18bc9c;
 }

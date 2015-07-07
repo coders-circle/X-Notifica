@@ -1,15 +1,9 @@
 {% extends 'classroom/base.html' %}
-
 {% load staticfiles %}
 
 {% block head %}
-
 <link href = "{% static 'css/home.css' %}" type="text/css" rel="stylesheet">
-
 {% endblock %}
-
-
-
 
 {%block navbarIconBars%}
 <span class="icon-bar"></span>
@@ -18,21 +12,20 @@
 {%endblock%}
 {% block navbar %}
 <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
-<ul class="nav navbar-nav navbar-right">
-    <li class="hidden">
-        <a href="#page-top"></a>
-    </li>
-    <li class="page-scroll">
-        <a href="#todo"><i class="fa fa-list-alt"></i> To-do list</a>
-    </li>
-    <li class="page-scroll">
-        <a href="#about"><i class="fa fa-info-circle"></i> About</a>
-    </li>
-    <li class="page-scroll">
-        <a href="#login"><i class="fa fa-sign-in"></i> Sign in</a>
-    </li>
-
-</ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="hidden">
+            <a href="#page-top"></a>
+        </li>
+        <li class="page-scroll">
+            <a href="#todo"><i class="fa fa-list-alt"></i> To-do list</a>
+        </li>
+        <li class="page-scroll">
+            <a href="#about"><i class="fa fa-info-circle"></i> About</a>
+        </li>
+        <li class="page-scroll">
+            <a href="#login"><i class="fa fa-sign-in"></i> Sign in</a>
+        </li>
+    </ul>
 </div>
 {% endblock %}
 
@@ -106,7 +99,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="login-title">Login</h2>
+                    <h2 class="login-title">Sign in</h2>
                     <hr>
                 </div>
             </div>
@@ -136,7 +129,7 @@
                         <br>
                         <div class="row">
                             <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-success btn-lg">Login</button>
+                                <button type="submit" class="btn btn-success btn-lg"><i class="fa fa-sign-in"></i> Sign in</button>
                             </div>
                         </div>
                     </form>
