@@ -1,6 +1,25 @@
+/****************************
+    common for all tabs
+*****************************/
+
+h2 {
+    color: #007d65;
+}
+
+h3 {
+    padding: 20px 10px;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+p {
+    margin-bottom: 10px;
+}
+
 .tab-content {
     padding-top: 100px;
     padding-bottom: 50px;
+    background: #eaf1f1;
 }
 
 .tab-pane .container {
@@ -26,60 +45,9 @@
     border-radius: 0;
 }
 
-.usersettings,
-.usersettings > li,
-.usersettings > li > a {
-    background: #fff!important;
-    color: #007d65!important;
-}
-
-.usersettings > li {
+.list-group {
     padding: 0px;
     margin: 0px;
-}
-
-.usersettings > li > a {
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 10px;
-    margin: 0px;
-}
-
-.usersettings > li > a:hover {
-    color: #3ac7ab!important;
-}
-
-.usersettings > li:active,
-.usersettings > li > a:active {
-    background: #007d65!important;
-    color: #fff!important;
-}
-
-h2 {
-    color: #007d65;
-}
-
-h3 {
-    padding: 20px 10px;
-    margin: 0;
-    font-size: 1.2em;
-}
-
-.tab-content {
-    background: #eaf1f1;
-}
-
-
-.gap {
-    margin: 2px;
-    margin-bottom: 10px!important;
-    padding-top: 16px;
-    padding-left: 20px;
-    font-size: 0.9em;
-    transition: all .3s ease-in-out;
-    background: #f7f7f7;
-    border-radius: 0!important;
-    min-height: 55px;
 }
 
 .list-group-item {
@@ -90,51 +58,52 @@ h3 {
     transition: all .3s ease-in-out;
 }
 
-.today .list-group-item {
-    border-top: 2px solid #18bc9c;
-}
-
-.nottoday .list-group-item {
-    border-top: 2px solid #ddd;
-    background: #f7f7f7;
-}
-
 .list-group-item:hover {
     background: #fff;
     color: #445;
 }
 
-.usersettings > li {
-    padding: 2px;
-    padding-top: 10px;
+.floating-label-form-group {
+    border-bottom: 1px solid #ccc;
 }
+
+.form-group label {
+    margin-right: 20px;
+    margin-bottom: 0px;
+}
+
+.form-group select {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 0px;
+    font-size: 1.2em;
+    background: transparent;
+    margin-top: 6px;
+    margin-left: 0px;
+}
+
+.select-group{
+    margin-top: 20px;
+}
+
+
+/**************
+    Routine
+***************/
 
 .thinner {
     margin:8px;
     padding:0px;
 }
 
-.assignmentlist .list-group-item,
-.noticelist .list-group-item {
-    margin-top:20px;
-    padding:30px 50px 30px 50px;
+.today .list-group-item {
+    border-top: 2px solid #18bc9c;
 }
 
-.assignment-date,
-.notice-date {
-    color: #777777!important;
-    font-size: 0.8em;
-}
-
-.topcorner {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    color: #008080!important;
-}
-
-.collapse-group {
-    padding-top:15px;
+.nottoday .list-group-item {
+    background: #f7f7f7;
+    border-top: 2px solid #ddd;
 }
 
 .badge {
@@ -175,78 +144,163 @@ h3 {
     border-top: 2px solid #ddd;
 }
 
+.gap {
+    margin: 2px;
+    margin-bottom: 10px!important;
+    padding-top: 16px;
+    padding-left: 20px;
+    font-size: 0.9em;
+    transition: all .3s ease-in-out;
+    background: #f7f7f7;
+    border-radius: 0!important;
+    min-height: 55px;
+}
+
+
 .period-time {
     font-size: 0.78em;
 }
 
 
-.floating-label-form-group {
-    border-bottom: 1px solid #ccc;
+/**************************
+    Assignment & Notice
+***************************/
+
+.assignmentlist .list-group-item,
+.noticelist .list-group-item {
+    margin-top:20px;
+    padding:30px 50px 30px 50px;
 }
 
-.form-group label {
-    margin-right: 20px;
+.assignment-date,
+.notice-date {
+    color: #777777!important;
+    font-size: 0.8em;
 }
 
-.form-group select {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-right: 0px;
-    font-size: 1.2em;
-    background: transparent;
-    margin-top: 30px;
-    margin-left: 0px;
+.topcorner {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: #008080!important;
 }
 
-.noborder {
-    border: none;
+.collapse-group {
+    padding-top:15px;
 }
 
+.btn-add {
+    width:50px;
+    height:50px;
+    margin-top:0px;
+    margin-right:10px;
+    margin-bottom:10px;
+    padding:0px;
+    padding-top:5px;
+    color:#fff;
+    background: #18bc9c;
+    border-radius: 25px;
+    font-size:2.0em;
+    box-shadow: 3px 3px 7px #ccc;
+}
+
+.btn-add:hover{
+  color:#fff;
+  background-color:#10aa82;
+}
+
+.list-group-item-assignment,
+.list-group-item-notice{
+    padding:30px 50px 30px 50px;
+    box-shadow: 3px 3px 7px #ccc;
+}
+
+.notice-detail{
+    padding-left:5px;
+}
+
+.notice-title{
+    padding-bottom:10px;
+}
+
+.list-action-btn-group{
+    position: absolute;
+    bottom:15px;
+    right:15px;
+}
 
 .form {
-    padding-top: 50px;
-    padding-left: 18px;
-    padding-right: 18px;
-    background: #fafafa;
+    margin:0;
+    padding:0;
+    padding-left:40px;
+    padding-right:40px;
+    background: #fff;
+    box-shadow: 3px 3px 7px #ccc;
+    transition: all .3s ease-in-out;
+}
+
+.in.form{
+    margin-bottom:20px;
+}
+
+.form > div > h3 {
+    margin-top: 30px;
+}
+.form > div > .btn {
     margin-bottom: 50px;
-    box-shadow: 3px 3px 10px #ccc;
 }
 
-.form > * {
-    margin-left: 10px;
-    margin-right: 10px;
+/***********************
+    Change Password
+************************/
+.usersettings,
+.usersettings > li,
+.usersettings > li > a {
+    background: #fff!important;
+    color: #007d65!important;
 }
 
-.btn-delete {
-    position: absolute;
-    right: 40px;
-    bottom: 10px;
-}
-
-.addbtn {
-    width: 60px;
-    height: 60px;
-    font-size: 3em;
-    color: #fff;
-    background: #18bc9c;
-    border-radius: 30px;
+.usersettings > li {
     padding: 0px;
-    box-shadow: 3px 3px 10px #ccc;
-    margin-right: 10px;
-    margin-bottom: 10px;
+    margin: 0px;
 }
 
-.addbtn:hover {
-    background-color: #10aa82;
-    color: #fff;
+.usersettings > li > a {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 10px;
+    margin: 0px;
+}
+
+.usersettings > li > a:hover {
+    color: #3ac7ab!important;
+}
+
+.usersettings > li:active,
+.usersettings > li > a:active {
+    background: #007d65!important;
+    color: #fff!important;
+}
+
+.usersettings > li {
+    padding: 2px;
+    padding-top: 10px;
+}
+
+.form-changepass{
+    padding:60px;
+    padding-top: 40px;
+    padding-bottom:10px;
+}
+
+.form-changepass > div > .btn{
+    margin-top:30px;
 }
 
 .btn-success {
     margin-left: -14px;
     margin-top: 30px;
 }
-
 
 #addnotice,
 #addassignment {

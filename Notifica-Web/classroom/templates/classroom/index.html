@@ -1,5 +1,4 @@
 {% extends 'classroom/base.html' %}
-
 {% load staticfiles %}
 
 {% block head %}
@@ -27,7 +26,6 @@
         <li class="page-scroll">
             <a href="#login"><i class="fa fa-sign-in"></i> Sign in</a>
         </li>
-
     </ul>
 </div>
 {% endblock %}
@@ -92,21 +90,19 @@
                 </a>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- Login Section -->
-<section id="login">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2 class="login-title">Login</h2>
-                <hr>
+    </section>
+    <!-- Login Section -->
+    <section id="login">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="login-title">Sign in</h2>
+                    <hr>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-
+            <div class="col-lg-6 col-lg-offset-3">
                 <form action="#login" method="post" name="login" id="loginForm">
                     {% csrf_token %}
                     <div class="row control-group">
@@ -124,11 +120,11 @@
                             <p class="text-danger">Invalid Password</p>
                             {% endif %}
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="form-group col-xs-12">
-                            <button type="submit" class="btn btn-success btn-lg">Login</button>
+                        <br>
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <button type="submit" class="btn btn-success btn-lg btn-sign-in"><i class="fa fa-sign-in"></i> Sign in</button>
+                            </div>
                         </div>
                     </div>
                 </form>

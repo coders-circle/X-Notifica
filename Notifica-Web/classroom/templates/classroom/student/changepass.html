@@ -11,7 +11,7 @@
               {% if password_changed %}
               <p class="text-success">Your password has been changed successfully.</p>
               {% endif %}
-              <form method="post" name="login" id="loginForm">
+              <form class="form form-changepass" method="post" name="changepass" id="form-changepass">
                   {% csrf_token %}
                   <div class="row control-group">
                       <div class="form-group col-xs-12 floating-label-form-group controls">
@@ -40,9 +40,9 @@
                   </div>
                   <br>
                   <div class="row">
-                      <div class="form-group col-xs-12">
-                          <button name="change_password" type="submit" class="btn btn-success btn-lg">Change Password</button>
-                      </div>
+
+                          <button name="change_password" type="submit" class="btn btn-success btn-lg"><i class="fa fa-edit"></i> Change Password</button>
+
                   </div>
               </form>
           </div>
