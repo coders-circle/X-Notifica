@@ -51,11 +51,7 @@ p {
 }
 
 .list-group-item {
-    padding-top: 28px;
-    min-height: 100px;
-    margin: 0;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin: 2px;
     margin-bottom: 10px!important;
     border-radius: 0!important;
     border: 0px solid #f7f7f7;
@@ -96,11 +92,10 @@ p {
     Routine
 ***************/
 
-.col-md-2 {
-    padding: 0px;
-    margin: 0px;
+.thinner {
+    margin:8px;
+    padding:0px;
 }
-
 
 .today .list-group-item {
     border-top: 2px solid #18bc9c;
@@ -112,15 +107,11 @@ p {
 }
 
 .badge {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    background: #3ac7ab;
     font-size: 0.6em;
     width: 14px;
     border-radius: 7px;
     padding: 3px;
-    margin:0px;
+    margin: 0px;
 }
 
 .badge-p {
@@ -145,7 +136,7 @@ p {
 }
 
 .today .gap {
-    background: #fff;
+    background: #fafaff;
     border-top: 2px solid #13aacc;
 }
 
@@ -154,23 +145,19 @@ p {
 }
 
 .gap {
+    margin: 2px;
+    margin-bottom: 10px!important;
     padding-top: 16px;
     padding-left: 20px;
     font-size: 0.9em;
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px!important;
     transition: all .3s ease-in-out;
     background: #f7f7f7;
     border-radius: 0!important;
-    min-height: 50px;
+    min-height: 55px;
 }
 
+
 .period-time {
-    position: absolute;
-    top: 5px;
-    left: 16px;
     font-size: 0.78em;
 }
 
@@ -179,19 +166,27 @@ p {
     Assignment & Notice
 ***************************/
 
-.submission-date,
-.notice-date {
-    position: absolute;
-    right:25px;
-    top:15px;
-    color: #777!important;
-    font-size: 0.67em;
+.assignmentlist .list-group-item,
+.noticelist .list-group-item {
+    margin-top:20px;
+    padding:30px 50px 30px 50px;
 }
 
-.icon-pin{
+.assignment-date,
+.notice-date {
+    color: #777777!important;
+    font-size: 0.8em;
+}
+
+.topcorner {
     position: absolute;
-    right:25px;
-    top:15px;
+    right: 5px;
+    top: 5px;
+    color: #008080!important;
+}
+
+.collapse-group {
+    padding-top:15px;
 }
 
 .btn-add {
@@ -216,17 +211,8 @@ p {
 
 .list-group-item-assignment,
 .list-group-item-notice{
-    margin:0px;
-    padding-left: 40px;
-    padding-right:40px;
-    padding-bottom:50px;
+    padding:30px 50px 30px 50px;
     box-shadow: 3px 3px 7px #ccc;
-}
-
-.assignment-summary {
-    margin-bottom:0px;
-    padding-top: 8px;
-    padding-bottom: 16px;
 }
 
 .notice-detail{
@@ -310,3 +296,14 @@ p {
 .form-changepass > div > .btn{
     margin-top:30px;
 }
+
+.btn-success {
+    margin-left: -14px;
+    margin-top: 30px;
+}
+
+#addnotice,
+#addassignment {
+    padding-bottom: 40px;
+}
+

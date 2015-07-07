@@ -7,10 +7,10 @@
       </div>
     </div>
 
-      {% if user.privilege == 1 %}
-      <div class="row">
-          <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-notice"><i class="fa fa-plus"></i></a></p>
-        <div class="col-lg-offset-2 col-lg-8 collapse-group">
+    {% if user.privilege == 1 %}
+    <div class="row">
+      <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-notice"><i class="fa fa-plus"></i></a></p>
+      <div class="col-lg-offset-2 col-lg-8 collapse-group">
         <form class=" form collapse" method="post" name="newnotice" id="form-notice">
           {% csrf_token %}
           <div class="row control-group">
@@ -44,34 +44,32 @@
             </div>
           </div>
           <div class="row">
-              <button name="post_notice" type="submit" class="btn btn-success btn-lg">Post</button>
+            <button name="post_notice" type="submit" class="btn btn-success btn-lg">Post</button>
           </div>
         </form>
       </div>
     </div>
     {% endif %}
+
     <div class="row">
       <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group list-group-notice">
           {% for notice in events %}
           <div class="list-group-item list-group-item-notice">
+
+            <div class="topcorner">
               {% if notice.date %}
-              <span class="notice-date">{{notice.date}}</span>
-              {%else%}
-
-                <i class="fa fa-thumb-tack icon-pin"></i>
-
+              <span class="notice-date">{{notice.date}}</span> {%else%}
+              <i class="fa fa-thumb-tack icon-pin"></i> {% endif %} {% if user.privilege == 1 %}
+              <a class="btn btn-sm btn-delete">
+                <i class="fa fa-trash-o"></i>
+              </a>
               {% endif %}
-              <div class="list-action-btn-group">
-                  {% if user.privilege == 1 %}
-                  <a class="btn btn-sm btn-delete">
-                    <i class="fa fa-trash-o"></i>
-                  </a>
-                  {% endif %}
-                  <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}">
-                    <i class="fa fa-expand"></i>
-                  </a>
-              </div>
+              <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}">
+                <i class="fa fa-expand"></i>
+              </a>
+            </div>
+
             <h4 class="list-group-item-heading notice-title">{{notice.summary}}</h4>
             <div class="collapse-group">
               {% autoescape off %}
@@ -85,5 +83,6 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
