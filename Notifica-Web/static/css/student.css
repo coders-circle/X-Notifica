@@ -55,6 +55,10 @@
     color: #fff!important;
 }
 
+h2 {
+    color: #007d65;
+}
+
 h3 {
     padding: 20px 10px;
     margin: 0;
@@ -65,22 +69,21 @@ h3 {
     background: #eaf1f1;
 }
 
-.col-md-2 {
-    padding: 0px;
-    margin: 0px;
-}
 
-.list-group {
-    padding: 0px;
-    margin: 0;
+.gap {
+    margin: 2px;
+    margin-bottom: 10px!important;
+    padding-top: 16px;
+    padding-left: 20px;
+    font-size: 0.9em;
+    transition: all .3s ease-in-out;
+    background: #f7f7f7;
+    border-radius: 0!important;
+    min-height: 55px;
 }
 
 .list-group-item {
-    padding-top: 28px;
-    min-height: 100px;
-    margin: 0;
-    margin-right: 10px;
-    margin-left: 10px;
+    margin: 2px;
     margin-bottom: 10px!important;
     border-radius: 0!important;
     border: 0px solid #f7f7f7;
@@ -92,12 +95,8 @@ h3 {
 }
 
 .nottoday .list-group-item {
-    background: #f7f7f7;
     border-top: 2px solid #ddd;
-}
-
-p {
-    margin-bottom: 10px;
+    background: #f7f7f7;
 }
 
 .list-group-item:hover {
@@ -110,105 +109,40 @@ p {
     padding-top: 10px;
 }
 
-h2 {
-    color: #007d65;
+.thinner {
+    margin:8px;
+    padding:0px;
 }
 
 .assignmentlist .list-group-item,
 .noticelist .list-group-item {
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-bottom: 50px;
+    margin-top:20px;
+    padding:30px 50px 30px 50px;
 }
 
-.submission-date,
+.assignment-date,
 .notice-date {
     color: #777777!important;
-    font-size: 0.65em;
+    font-size: 0.8em;
 }
 
 .topcorner {
-    color: #008080!important;
     position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.2em;
-    background: transparent;
-}
-.topcorner button {
-    background: transparent;
+    right: 5px;
+    top: 5px;
+    color: #008080!important;
 }
 
-.assignment-summary {
-    padding-top: 8px;
-    padding-bottom: 5px;
-}
-
-.notice-detail, .assignment-detail {
-    padding-top: 20px;
-}
-
-.addbtn {
-    width: 60px;
-    height: 60px;
-    font-size: 3em;
-    color: #fff;
-    background: #18bc9c;
-    border-radius: 30px;
-    padding: 0px;
-    box-shadow: 3px 3px 10px #ccc;
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-
-.addbtn:hover {
-    background-color: #10aa82;
-    color: #fff;
-}
-
-.floating-label-form-group {
-    border-bottom: 1px solid #ccc;
-}
-
-.form-group label {
-    margin-right: 20px;
-}
-
-.form-group select {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-right: 0px;
-    font-size: 1.2em;
-    background: transparent;
-    margin-top: 30px;
-    margin-left: 0px;
-}
-
-.noborder {
-    border: none;
-}
-
-.btn-success {
-    margin-left: -14px;
-    margin-top: 30px;
-}
-
-#addnotice,
-#addassignment {
-    padding-bottom: 40px;
+.collapse-group {
+    padding-top:15px;
 }
 
 .badge {
-    position: absolute;
-    right: 10px;
-    top: 5px;
-    background: #3ac7ab;
     font-size: 0.6em;
     width: 14px;
     border-radius: 7px;
     padding: 3px;
-    margin-0px;
+    margin: 0px;
 }
 
 .badge-p {
@@ -233,7 +167,7 @@ h2 {
 }
 
 .today .gap {
-    background: #fff;
+    background: #fafaff;
     border-top: 2px solid #13aacc;
 }
 
@@ -241,26 +175,34 @@ h2 {
     border-top: 2px solid #ddd;
 }
 
-.gap {
-    padding-top: 16px;
-    padding-left: 20px;
-    font-size: 0.9em;
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px!important;
-    transition: all .3s ease-in-out;
-    background: #f7f7f7;
-    border-radius: 0!important;
-    min-height: 50px;
-}
-
 .period-time {
-    position: absolute;
-    top: 5px;
-    left: 16px;
     font-size: 0.78em;
 }
+
+
+.floating-label-form-group {
+    border-bottom: 1px solid #ccc;
+}
+
+.form-group label {
+    margin-right: 20px;
+}
+
+.form-group select {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 0px;
+    font-size: 1.2em;
+    background: transparent;
+    margin-top: 30px;
+    margin-left: 0px;
+}
+
+.noborder {
+    border: none;
+}
+
 
 .form {
     padding-top: 50px;
@@ -282,12 +224,32 @@ h2 {
     bottom: 10px;
 }
 
-.assignment-list-item,
-.notice-list-item {
-    margin-left: 0px!important;
-    margin-right: 0px!important;
+.addbtn {
+    width: 60px;
+    height: 60px;
+    font-size: 3em;
+    color: #fff;
+    background: #18bc9c;
+    border-radius: 30px;
+    padding: 0px;
+    box-shadow: 3px 3px 10px #ccc;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
 
-.assignment-summary {
-    margin-bottom: 20px;
+.addbtn:hover {
+    background-color: #10aa82;
+    color: #fff;
 }
+
+.btn-success {
+    margin-left: -14px;
+    margin-top: 30px;
+}
+
+
+#addnotice,
+#addassignment {
+    padding-bottom: 40px;
+}
+

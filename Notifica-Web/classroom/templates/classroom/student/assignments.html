@@ -66,11 +66,11 @@
       <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group assignmentlist">
           {% for assignment in assignments %}
-          <div class="list-group-item assignment-list-item">
+          <div class="list-group-item">
 
             <div class="topcorner">
               {% if assignment.date %}
-              <span class="submission-date"> {{assignment.date|timeuntil}}</span>
+              <span class="assignment-date"> {{assignment.date|timeuntil}}</span>
               {%else%}
               <a class="btn btn-sm">
                 <i class="fa fa-thumb-tack pin-icon"></i>
@@ -88,15 +88,15 @@
               </a>
             </div>
 
-            <h4 class="list-group-item-heading assignment-title">{{assignment.subject}}</h4>
+            <h4 class="list-group-item-heading">{{assignment.subject}}</h4>
 
-            <p class="list-group-item-text assignment-summary">
+            <p class="list-group-item-text">
               <small>{{assignment.summary}}</small>
             </p>
 
             <div class="collapse-group">
               {% autoescape off %}
-              <p class="collapse list-group-item-text assignment-detail" id="detail{{forloop.counter}}">
+              <p class="collapse list-group-item-text" id="detail{{forloop.counter}}">
                 {{assignment.details|urlize}}
               </p>
               {% endautoescape %}

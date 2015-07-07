@@ -2,12 +2,14 @@
 
 <div id="routine" class="tab-pane fade in active">
     <div class="container">
+        <!--
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2>Routine</h2>
                 <hr>
             </div>
         </div>
+        --!>
         <div class="row">
             {% now 'w' as today %}
             {% for a_day in workingweek %}
@@ -46,16 +48,19 @@
                                     {%endif%}
 
                                         {% if element.class_type == 0 %}
-                                            <span class="badge badge-l">L</span>
+                                            <span class="badge badge-l top-corner">L</span>
                                         {% else %}
-                                            <span class="badge badge-p">P</span>
+                                            <span class="badge badge-p top-corner">P</span>
                                         {% endif %}
-                                        <p class="list-group-item-text period-time">{{element.start_time}} to {{element.end_time}}</p>
+
+                                        <p class="list-group-item-text period-time">
+                                            {{element.start_time}} to {{element.end_time}}
+                                        </p>
 
                                         <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
                                         {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
-                                        <hr/>
+                                        <hr class="thinner"/>
                                         <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
                                         {% endif %}
