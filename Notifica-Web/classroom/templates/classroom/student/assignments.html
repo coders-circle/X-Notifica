@@ -8,9 +8,9 @@
         </div>
         {% if user.privilege == 1 %}
             <div class="row">
-                <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment">+</a> </p>
+                <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-assignment"><i class="fa fa-plus"></i></a></p>
                 <div class="col-lg-offset-2 col-lg-8 collapse-group">
-                    <form class="form collapse" method="post" name="newassignment" id="addassignment">
+                    <form class="form collapse form-assignment" method="post" name="newassignment" id="form-assignment">
                         {% csrf_token %}
                         <div class="row control-group">
                             <h3> Post New Assignment </h3>
@@ -20,7 +20,7 @@
                                 <label>Date</label>
                                 <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
                             </div>
-                            <div class="form-group col-md-offset-1 col-md-4 groupselect">
+                            <div class="form-group col-md-offset-1 col-md-4 select-group">
                                 <label  class="lab">Group: </label>
                                 <select name="group" id="groups">
                                     {% for value in grouplist %}
@@ -30,7 +30,7 @@
                             </div>
                         </div>
                         <div class="row control-group">
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-8 select-group">
                                 <label  class="lab">Subject: </label>
                                 <select name="subject" id="subjects">
                                 {% for subject in subjectlist %}
@@ -53,9 +53,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-xs-12">
                                 <button name="post_assignment" type="submit" class="btn btn-success btn-lg">Post</button>
-                            </div>
                         </div>
                     </form>
                 </div>
@@ -63,20 +61,17 @@
         {% endif %}
         <div class="row">
             <div class="col-lg-offset-2 col-lg-8">
-                <div class="list-group assignmentlist">
+                <div class="list-group list-group-assignment">
                     {% for assignment in assignments %}
-                    <div class="list-group-item assignment-list-item">
-                        <div class="topcorner">
-                            {% if assignment.date %}
-                            <span class="submission-date"> {{assignment.date|timeuntil}}</span>
-                            {%else%}
-                            <a class="btn btn-sm">
-                                <i class="fa fa-thumb-tack pin-icon"></i>
-                            </a>
-                            {% endif %}
-
-                            {% if user.privilege == 1 %}
-                            <a class="btn btn-small btn-delete">
+                    <div class="list-group-item list-group-item-assignment">
+                        {% if assignment.date %}
+                            <span class="submission-date">{{assignment.date|timeuntil}}</span>
+                        {%else%}
+                            <i class="fa fa-thumb-tack icon-pin"></i>
+                        {% endif %}
+                        {% if user.privilege == 1 %}
+                        <div class="list-action-btn-group">
+                            <a class="btn btn-sm btn-delete">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                             {% endif %}

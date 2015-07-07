@@ -42,11 +42,15 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
 }
 
+p {
+    font-family: "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 /* for large screen */
 @media(min-width:768px) {
     .navbar-fixed-top {
         padding: 25px 0;
-        transition: padding .3s;
+        transition: all .3s ease-in-out;
     }
 
     .navbar-fixed-top .navbar-brand {

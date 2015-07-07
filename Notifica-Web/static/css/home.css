@@ -77,7 +77,6 @@ header .intro-text .skills {
     }
 }
 
-
 section {
     padding: 100px 0;
 }
@@ -90,4 +89,10 @@ section h2 {
 section.success {
     color: #fff;
     background: #00A686;
+}
+
+.btn-sign-in {
+    margin-top:40px;
+    padding-left:20px;
+    padding-right:20px;
 }
