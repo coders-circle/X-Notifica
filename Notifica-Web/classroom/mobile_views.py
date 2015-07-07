@@ -195,7 +195,7 @@ def update(request):
     
     for el in elements_objects:
         element = {"day":el.day, "start_time":hm_to_int(el.start_time), "end_time":hm_to_int(el.end_time),
-                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teacher.user.username}
+                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teacher.user.username, "remote_id":el.pk}
         if user_type == "Teacher":
             element.update({"faculty_code":el.routine.faculty.code, "year":el.routine.batch, "group":el.routine.groups})
         elements.append(element)

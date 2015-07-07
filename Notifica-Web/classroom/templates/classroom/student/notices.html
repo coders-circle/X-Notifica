@@ -62,7 +62,7 @@
           {% for notice in events %}
           <div class="list-group-item notice-list-item" style="margin-bottom:20px;">
                 {% if user.privilege == 1 %}
-                    <a class="btn btn-delete"><i class="fa fa-trash-o"></i></a>
+                    <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
                 {% endif %}
 
                 <p class="list-group-item-heading"><strong>{{notice.summary}}</strong></p>
@@ -85,3 +85,13 @@
       </div>
     </div>
 </div>
+<div id="result"></div>
+
+<script>
+    function DeleteNotice(pk) {
+        $.post("{% url 'classroom:delete' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+            .done(function(data) {
+                location.reload();
+            })
+    }
+</script>

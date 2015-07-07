@@ -68,7 +68,7 @@
                     {% for assignment in assignments %}
                     <div class="list-group-item assignment-list-item">
                         {% if user.privilege == 1 %}
-                            <a class="btn btn-delete"><i class="fa fa-trash-o"></i></a>
+                            <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
                         {% endif %}
                         <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
                         {% if assignment.date %}
@@ -92,3 +92,12 @@
          </div>
     </div>
 </div>
+
+<script>
+    function DeleteAssignment(pk) {
+        $.post("{% url 'classroom:delete' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+            .done(function(data) {
+                location.reload();
+            });
+    }
+</script>
