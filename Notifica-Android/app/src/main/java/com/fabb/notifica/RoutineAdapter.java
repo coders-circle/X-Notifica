@@ -48,20 +48,27 @@ public class RoutineAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView==null)
-        {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.routine_item, parent, false);
+        Item info = array.get(position);
+        if (convertView==null) {
+            if (info.isBreak) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.breaktime, parent, false);
+            }
+            else {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.routine_item, parent, false);
+            }
         }
 
-        TextView subject = (TextView) convertView.findViewById(R.id.subject_name);
+
         TextView teacher = (TextView) convertView.findViewById(R.id.teacher_name);
         TextView time = (TextView) convertView.findViewById(R.id.time);
 
-        Item info = array.get(position);
+
         if (info.isBreak)
             teacher.setText("Break");
         else {
+            TextView subject = (TextView) convertView.findViewById(R.id.subject_name);
             if (info.subject != null)
                 subject.setText(info.subject.name + ((info.type==0)?" (Lecture)":" (Practical)"));
             else
