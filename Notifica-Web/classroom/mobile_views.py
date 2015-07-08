@@ -157,9 +157,12 @@ def update(request):
     elements = []
     assignments = []
     events = []
+    attendances = []
 
     ecnt = 0
     acnt = 0
+
+    last_week = datetime.now().date() - timedelta(days=7)
     
     # For student, routine, assignments and events are filtered with batch, faculty and group
     # Assignments and events may not contain batch, faculty or group fields, so the queries are OR-ed
@@ -179,16 +182,33 @@ def update(request):
             Q(date = None) | Q(modified_at__gt = user.updated_at)
         )
 
+
     # For teacher, routine, assignments and events that reference this teacher are returned
     elif user_type == "Teacher":
         elements_objects = RoutineElement.objects.filter(teacher=user, routine__modified_at__gt = user.updated_at)
         if elements_objects.count() > 0:
             element_objects = RoutineElement.objects.filter(teacher=user)
+            
             for el in element_objects:
                 students_objects.update(list(Student.objects.filter(batch=el.routine.batch, faculty=el.routine.faculty)))
 
+            attendance_objects = Attendance.objects.filter(teacher=user, date__gt=last_week)
+            for at in attendance_objects:
+                attendance = {}
+                attendance["batch"] = at.batch
+                attendance["faculty_code"] = at.faculty.code
+                attendance["groups"] = at.groups
+                attendance["date"] = datetime_to_seconds(at.date)
+                attendance["remote_id"] = at.pk
+                at_elements = []
+                at_elements_objects = AttendanceElement.objects.filter(attendance=at)
+                for ate in at_elements_objects:
+                    at_elements.append({"presence": ate.presence, "student_user_id": ate.student.user.username})
+                attendance["elements"] = at_elements
+                attendances.append(attendance)
         assignments_objects = Assignment.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
         events_objects = Event.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
+    
     else:
         return JsonResponse(error_response)
     
@@ -244,7 +264,6 @@ def update(request):
         students.append({"user_id":st.user.username, "name":st.name, "roll":st.roll, "year":st.batch, "faculty_code":st.faculty.code,
                         "group":st.group, "privilege":st.privilege})
     
-
     outdata["routine"] = routine
     outdata["assignments"] = assignments
     outdata["events"] = events
@@ -254,6 +273,7 @@ def update(request):
     outdata["faculties"] = faculties
     outdata["new_assignments_count"] = acnt
     outdata["new_events_count"] = ecnt
+    outdata["attendances"] = attendances
 
     return JsonResponse(outdata)
 
@@ -406,8 +426,6 @@ def post_attendance(request):
     else:
         attendance = Attendance()
     
-    print(indata)
-
     indate = indata.get("date", -1)
     attendance.date = seconds_to_datetime(indate)
     attendance.faculty =  Faculty.objects.get(code=indata.get("faculty_code", ""))

@@ -1,18 +1,15 @@
 package com.fabb.notifica;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -21,10 +18,9 @@ import java.util.List;
 
 public class AttendanceActivity extends ActionBarActivity {
 
-    public static RoutineAdapter.Item info = null;
-    private RoutineAdapter.Item mInfo;
+    public static Attendance attendance;
     private List<Student> mStudents;
-    private AttendanceAdapter mAdapter;
+    private ListView mListView;
 
     private Attendance mAttendance;
 
@@ -35,51 +31,57 @@ public class AttendanceActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.at_settings_toolbar);
         setSupportActionBar(toolbar);
-        mInfo = info;
-        if (mInfo.group == null)
-            mInfo.group = "";
+        mAttendance = attendance;
 
         TextView headingTextView = (TextView)findViewById(R.id.at_heading);
 
         Calendar cal = Calendar.getInstance();
-        String heading = mInfo.batch + " " + mInfo.faculty.name;
-        if (!mInfo.group.equals(""))
-            heading += " Group: " + mInfo.group;
+        String heading = attendance.batch + " " + mAttendance.faculty.name;
+        if (!mAttendance.groups.equals(""))
+            heading += " Group: " + mAttendance.groups;
 
         DateFormat format1 = DateFormat.getDateInstance();
         heading += "\n" + "Date:  " + format1.format(cal.getTime());
 
         headingTextView.setText(heading);
 
-        ListView attendanceListView = (ListView)findViewById(R.id.attendance_list_view);
 
-        mAttendance = Database.GetAttedance(info.faculty, info.batch, info.group);
-        if (mAttendance == null) {
-            mAttendance = new Attendance();
-            mAttendance.remoteId = -1;
+        mListView = (ListView)findViewById(R.id.attendance_list_view);
 
-            if (!mInfo.group.equals("")) {
+        List<AttendanceElement> elements = AttendanceElement.find(AttendanceElement.class, "attendance = ?", mAttendance.getId()+"");
+        ArrayList<Boolean> states = new ArrayList<>();
+
+        if (elements.size() == 0) {
+            if (!mAttendance.groups.equals("")) {
                 mStudents = Student.find(Student.class, "faculty = ? and batch = ? and groups = ?",
-                        new String[]{mInfo.faculty.getId()+"", mInfo.batch+"", mInfo.group}, null, "roll", null);
+                        new String[]{mAttendance.faculty.getId()+"", mAttendance.batch+"", mAttendance.groups}, null, "roll", null);
             }
             else
                 mStudents = Student.find(Student.class, "faculty = ? and batch = ?",
-                        new String[]{mInfo.faculty.getId()+"", mInfo.batch+""}, null, "roll", null);
-
-            mAdapter = new AttendanceAdapter(this, mStudents);
+                        new String[]{mAttendance.faculty.getId()+"", mAttendance.batch+""}, null, "roll", null);
+            for (int i=0; i<mStudents.size(); ++i)
+                states.add(true);
         }
         else {
-            List<AttendanceElement> elements = AttendanceElement.find(AttendanceElement.class, "attendance = ?", mAttendance.getId()+"");
             mStudents = new ArrayList<>();
-            ArrayList<Boolean> states = new ArrayList<>();
             for (AttendanceElement element: elements) {
                 mStudents.add(element.student);
                 states.add(element.presence);
             }
-            mAdapter = new AttendanceAdapter(this, mStudents, states);
         }
 
-        attendanceListView.setAdapter(mAdapter);
+        List<String> labels = new ArrayList<>();
+        for (Student st: mStudents)
+            labels.add(st.roll + ". " + st.name);
+
+        mListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_checked, labels));
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+        int i=0;
+        for (Boolean state: states) {
+            mListView.setItemChecked(i, state);
+            ++i;
+        }
 
         mAttendance.date = cal.getTimeInMillis() / 1000;
     }
@@ -102,19 +104,16 @@ public class AttendanceActivity extends ActionBarActivity {
     }
 
     public void Save() {
-        mAttendance.batch = mInfo.batch;
-        mAttendance.groups = mInfo.group;
-        mAttendance.faculty = mInfo.faculty;
         mAttendance.isUpdated = false;
-
         mAttendance.save();
 
+        SparseBooleanArray states = mListView.getCheckedItemPositions();
         AttendanceElement.deleteAll(AttendanceElement.class, "attendance=?", mAttendance.getId()+"");
         int i = 0;
         for (Student student: mStudents) {
             AttendanceElement element = new AttendanceElement();
             element.attendance = mAttendance;
-            element.presence = mAdapter.states.get(i);
+            element.presence = states.get(i);
             element.student = student;
             element.save();
             ++i;
@@ -123,64 +122,4 @@ public class AttendanceActivity extends ActionBarActivity {
         new UpdateService.UpdateTask(this).execute();
         finish();
     }
-
-
-//    public static class PostTask extends AsyncTask<Void, Void, Void> {
-//        private final Activity mActivity;
-//        JSONObject mJson;
-//        String result="";
-//        boolean success=false;
-//        JSONObject mReturn;
-//        boolean mShutdown=false;
-//        UpdateService.UpdateResult mUpdateResult = new UpdateService.UpdateResult();
-//
-//        private ProgressDialog mDialog;
-//
-//        PostTask(Activity activity, JSONObject json, boolean shutdown, String postingMessage) {
-//            mActivity = activity;
-//            mJson=json;
-//            mShutdown=shutdown;
-//
-//            mDialog = new ProgressDialog(mActivity);
-//            mDialog.setMessage(postingMessage);
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            mDialog.show();
-//        }
-//
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            try {
-//                success = false;
-//                Network network = new Network();
-//                result = network.PostJson(postUrl, mJson);
-//                mReturn = new JSONObject(result);
-//                if (mReturn.optString("post_result").equals("Success")) {
-//                    UpdateService.Update(mActivity, mUpdateResult);
-//                    success = true;
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(final Void v) {
-//            if (mDialog.isShowing())
-//                mDialog.dismiss();
-//
-//            if (success) {
-//                UpdateService.FinishUpdate(mUpdateResult);
-//                Toast.makeText(mActivity, "Success", Toast.LENGTH_SHORT).show();
-//                if (mShutdown)
-//                    mActivity.finish();
-//                return;
-//            }
-//            Toast.makeText(mActivity, "Failed\nCheck your internet connection", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 }

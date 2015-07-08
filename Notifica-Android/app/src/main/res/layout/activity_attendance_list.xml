@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttendanceActivity"
+    tools:context=".AttendanceListActivity"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/at_settings_toolbar"
+        android:id="@+id/atlist_settings_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
@@ -16,13 +16,25 @@
         app:popupTheme="@style/Theme.AppCompat"/>
 
     <TextView
-        android:id="@+id/at_heading"
+        android:id="@+id/atlist_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="onNewAttendance"
+        android:background="#00796b"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:padding="5dp"
+        android:text="Add new attendance"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/attendance_list_view"/>
+        android:padding="20dp"
+        android:id="@+id/atl_attendance_list_view"/>
 </LinearLayout>

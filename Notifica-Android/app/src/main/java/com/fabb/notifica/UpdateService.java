@@ -119,7 +119,7 @@ public class UpdateService {
         JSONArray teachers = json.optJSONArray("teachers");
         JSONArray subjects = json.optJSONArray("subjects");
         JSONArray students = json.optJSONArray("students");
-
+        JSONArray attendances = json.optJSONArray("attendances");
         JSONArray faculties = json.optJSONArray("faculties");
 
         String user_type = MainActivity.GetPreferences(ctx).getString("user-type", "");
@@ -201,6 +201,7 @@ public class UpdateService {
 
         if (isTeacher && students != null && students.length()>0) {
             Student.deleteAll(Student.class);
+
             for (int i=0; i<students.length(); ++i) {
                 JSONObject student = students.optJSONObject(i);
                 if (student == null)
@@ -216,6 +217,40 @@ public class UpdateService {
                 newStudent.privilege = student.optInt("privilege");
                 newStudent.groups = student.optString("group");
                 newStudent.save();
+            }
+
+            for (int i=0; i<attendances.length(); ++i) {
+                JSONObject attendance = attendances.optJSONObject(i);
+                if (attendance == null)
+                    continue;
+                Attendance newAttendance = Database.GetAttendance(attendance.optLong("remote_id"));
+                if (newAttendance == null)
+                    newAttendance = new Attendance();
+                else if (!newAttendance.isUpdated)
+                    continue;
+
+                newAttendance.isUpdated = true;
+                newAttendance.batch = attendance.optInt("batch");
+                newAttendance.faculty = Database.GetFaculty(attendance.optString("faculty_code"));
+                newAttendance.groups = attendance.optString("groups");
+                newAttendance.date = attendance.optLong("date");
+                newAttendance.remoteId = attendance.optLong("remote_id");
+                newAttendance.save();
+
+                JSONArray elements = attendance.optJSONArray("elements");
+                if (elements != null) {
+                    AttendanceElement.deleteAll(AttendanceElement.class, "attendance = ?", newAttendance.getId()+"");
+                    for (int j = 0; j < elements.length(); ++j) {
+                        JSONObject element = elements.optJSONObject(j);
+                        if (element == null)
+                            continue;
+                        AttendanceElement newElement = new AttendanceElement();
+                        newElement.presence = element.optBoolean("presence");
+                        newElement.student = Database.GetStudent(element.optString("student_user_id"));
+                        newElement.attendance = newAttendance;
+                        newElement.save();
+                    }
+                }
             }
         }
 

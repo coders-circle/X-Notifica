@@ -58,7 +58,8 @@ public class AttendanceAdapter extends BaseAdapter {
         TextView textview = (TextView)convertView.findViewById(R.id.attendance_textview);
 
         Student student = students.get(position);
-        textview.setText(student.roll + ". " + student.name);
+        if (student!=null)
+            textview.setText(student.roll + ". " + student.name);
 
 
         CheckBox checkbox = (CheckBox)convertView.findViewById(R.id.attendance_checkbox);
