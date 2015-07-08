@@ -134,8 +134,10 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
     @Override
     public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
-        if (menu != null)
+        if (menu != null) {
             menu.findItem(R.id.action_update).setVisible(true);
+            menu.findItem(R.id.action_clean_update).setVisible(true);
+        }
 
         if (hasUpdated) {
 //                String res = "";
@@ -228,22 +230,21 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             return true;
         }
 
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-        //    startActivityForResult(new Intent(this, SettingsActivity.class), 0);
-        //    return true;
-        //}
-         if (id == R.id.action_update) {
+        if (id == R.id.action_update) {
             item.setVisible(false);
+            menu.findItem(R.id.action_clean_update).setVisible(false);
             new UpdateService.UpdateTask(this).execute();
-           return true;
+            return true;
         }
-
+        else if (id == R.id.action_clean_update) {
+            item.setVisible(false);
+            menu.findItem(R.id.action_update).setVisible(false);
+            GetPreferences(this).edit().putLong("updated-at", 0).apply();
+            new UpdateService.UpdateTask(this).execute();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

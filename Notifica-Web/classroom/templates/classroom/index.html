@@ -24,7 +24,7 @@
             <a href="#about"><i class="fa fa-info-circle"></i> About</a>
         </li>
         <li class="page-scroll">
-            <a href="#login"><i class="fa fa-sign-in"></i> Sign in</a>
+            <a href="#sign-in"><i class="fa fa-sign-in"></i> Sign in</a>
         </li>
     </ul>
 </div>
@@ -36,7 +36,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <img class="img-responsive" src="{% static 'imgs/notifica-logo.png' %}" alt="">
+                <img class="img-responsive img-main-logo" src="{% static 'imgs/notifica-logo.png' %}" alt="">
                 <div class="intro-text">
                     <span class="name">Notifica</span>
                     <span class="skills">A must have routine app for students</span>
@@ -51,12 +51,12 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2 class='todo-title'>To-do for this Project</h2>
+                <h2 class='title-todo'>To-do for this Project</h2>
                 <hr>
             </div>
         </div>
-        <div class="row todo-text">
-            <ul class="todo-list">
+        <div class="row text-todo">
+            <ul class="list-todo">
                 <li> Web interface for students and teachers </li>
                 <li> Admin pannel </li>
                 <li> Facebook synchronization for CR </li>
@@ -90,20 +90,20 @@
                 </a>
             </div>
         </div>
-    </section>
+    </div>
+</section>
     <!-- Login Section -->
-    <section id="login">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="login-title">Sign in</h2>
-                    <hr>
-                </div>
+<section id="sign-in">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="title-sign-in">Sign in</h2>
+                <hr>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
-                <form action="#login" method="post" name="login" id="loginForm">
+            <div class="col-md-offset-3 col-md-6 col-xs-offset-1 col-xs-10">
+                <form action="#sign-in" method="post" name="sign-in" id="form-sign-in">
                     {% csrf_token %}
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">

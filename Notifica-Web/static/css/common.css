@@ -76,6 +76,13 @@ p {
     */
 }
 
+.img-navbar-logo{
+    margin-top:4px;
+    margin-right:10px;
+    width:37px;
+}
+
+
 .navbar-default .navbar-brand {
     color: #fff;
     text-shadow: 5px 5px 6px #087;
@@ -93,14 +100,6 @@ p {
             0 0 20px #18bc9c ,0 0 25px #18bc9c ,0 0 30px #18bc9c, 0 0 35px #18bc9c;
 }
 
-.navbar-logo{
-    width:35px;
-    margin-top:8px;
-    margin-right: 8px;
-    transition: all .3s;
-    float:left;
-
-}
 
 .navbar {
     background-color: #00A686;
@@ -283,4 +282,8 @@ footer .footer-below {
 .navbar-default .navbar-nav > .active a:focus {
     background: #18bc9c;
     color: #fff;
+}
+
+.footer-above  p{
+    font-size:16px;
 }

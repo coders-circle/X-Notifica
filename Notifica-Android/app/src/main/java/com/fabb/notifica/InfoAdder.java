@@ -114,6 +114,14 @@ public class InfoAdder extends ActionBarActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mGroupsEdit.setAdapter(adapter);
         mGroupsEdit.setSelection(0);
+
+
+        String fb_groupId = preferences.getString("fb-group-id", "");
+        if (fb_groupId==null || fb_groupId.equals(""))
+            findViewById(R.id.checkbox_fb_post).setVisibility(View.INVISIBLE);
+        else
+            findViewById(R.id.checkbox_fb_post).setVisibility(View.VISIBLE);
+
     }
 
     public void onPostClicked(View view) {

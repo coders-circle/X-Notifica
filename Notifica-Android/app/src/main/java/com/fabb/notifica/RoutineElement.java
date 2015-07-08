@@ -10,6 +10,8 @@ public class RoutineElement extends SugarRecord<RoutineElement> {
     public int day;
     public int type;
 
+    public int remoteId;
+
     // for teacher only
     public Faculty faculty;
     public int year;
