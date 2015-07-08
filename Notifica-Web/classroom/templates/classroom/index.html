@@ -3,149 +3,141 @@
 {% load staticfiles %}
 
 {% block head %}
-
-<link href = "{% static 'css/home.css' %}" type="text/css" rel="stylesheet">
-
+<link href="{% static 'css/home.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
-
-
-
 
 {%block navbarIconBars%}
 <span class="icon-bar"></span>
 <span class="icon-bar"></span>
 <span class="icon-bar"></span>
 {%endblock%}
+
 {% block navbar %}
 <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
-<ul class="nav navbar-nav navbar-right">
-    <li class="hidden">
-        <a href="#page-top"></a>
-    </li>
-    <li class="page-scroll">
-        <a href="#todo"><i class="fa fa-list-alt"></i> To-do list</a>
-    </li>
-    <li class="page-scroll">
-        <a href="#about"><i class="fa fa-info-circle"></i> About</a>
-    </li>
-    <li class="page-scroll">
-        <a href="#login"><i class="fa fa-sign-in"></i> Sign in</a>
-    </li>
+    <ul class="nav navbar-nav navbar-right">
+        <li class="hidden">
+            <a href="#page-top"></a>
+        </li>
+        <li class="page-scroll">
+            <a href="#todo"><i class="fa fa-list-alt"></i> To-do list</a>
+        </li>
+        <li class="page-scroll">
+            <a href="#about"><i class="fa fa-info-circle"></i> About</a>
+        </li>
+        <li class="page-scroll">
+            <a href="#login"><i class="fa fa-sign-in"></i> Sign in</a>
+        </li>
 
-</ul>
+    </ul>
 </div>
 {% endblock %}
 
 {% block body %}
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <img class="img-responsive" src="{% static 'imgs/notifica-logo.png' %}" alt="">
-                    <div class="intro-text">
-                        <span class="name">Notifica</span>
-                        <span class="skills">A must have routine app for students</span>
-                    </div>
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <img class="img-responsive" src="{% static 'imgs/notifica-logo.png' %}" alt="">
+                <div class="intro-text">
+                    <span class="name">Notifica</span>
+                    <span class="skills">A must have routine app for students</span>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-
-    <!-- To-do Section -->
-    <section id="todo">
-        <div class="container">
-          <div class="row">
-              <div class="col-lg-12 text-center">
-                  <h2 class='todo-title'>To-do for this Project</h2>
-                  <hr>
-              </div>
-          </div>
-          <div class="row todo-text">
-              <ul class="todo-list">
+<!-- To-do Section -->
+<section id="todo">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class='todo-title'>To-do for this Project</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row todo-text">
+            <ul class="todo-list">
                 <li> Web interface for students and teachers </li>
                 <li> Admin pannel </li>
                 <li> Facebook synchronization for CR </li>
                 <li> Cloud integration for study-material sharing </li>
-              </ul>
-          </div>
+            </ul>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- About Section -->
-    <section class="success" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>About</h2>
-                    <hr>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-lg-offset-2">
-                    <p>Notifica is a free and open-source routine app created by the group FABs. It consists of web interface as well as smartphone app for the users. The app is currently available only on Android platform</p>
-                </div>
-                <div class="col-lg-4">
-                    <p>If you are a student or a teacher looking for a good routine app with a professional looking and easy-to-use UI, Notifica is the perfect solution for you!</p>
-                </div>
-
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                  <hr>
-                    <a href="https://drive.google.com/file/d/0B4m35FfIXswwVHV5V2JlRUZMQzQ/view?usp=sharing" class="btn btn-lg btn-outline">
-                        <i class="fa fa-download"></i> Download the Android app
-                    </a>
-                </div>
+<!-- About Section -->
+<section class="success" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>About</h2>
+                <hr>
             </div>
         </div>
-    </section>
-
-
-    <!-- Login Section -->
-    <section id="login">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="login-title">Login</h2>
-                    <hr>
-                </div>
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-2">
+                <p>Notifica is a free and open-source routine app created by the group FABs. It consists of web interface as well as smartphone app for the users. The app is currently available only on Android platform</p>
             </div>
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
+            <div class="col-lg-4">
+                <p>If you are a student or a teacher looking for a good routine app with a professional looking and easy-to-use UI, Notifica is the perfect solution for you!</p>
+            </div>
 
-                    <form action="#login" method="post" name="login" id="loginForm">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <hr>
+                <a href="https://drive.google.com/file/d/0B4m35FfIXswwVHV5V2JlRUZMQzQ/view?usp=sharing" class="btn btn-lg btn-outline">
+                    <i class="fa fa-download"></i> Download the Android app
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Login Section -->
+<section id="login">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2 class="login-title">Login</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+
+                <form action="#login" method="post" name="login" id="loginForm">
                     {% csrf_token %}
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Username</label>
-                                <input type="text" name="username" class="form-control" placeholder="Username" id="username" required data-validation-required-message="Please enter your Username." value="{{username}}">
-                                {% if wrong_username %}
-                                    <p class="text-danger">Invalid Username</p>
-                                {% endif %}
-                            </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Username</label>
+                            <input type="text" name="username" class="form-control" placeholder="Username" id="username" required data-validation-required-message="Please enter your Username." value="{{username}}"> {% if wrong_username %}
+                            <p class="text-danger">Invalid Username</p>
+                            {% endif %}
                         </div>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="Password" id="password" required data-validation-required-message="Please enter your Password.">
-                                {% if wrong_password %}
-                                    <p class="text-danger">Invalid Password</p>
-                                {% endif %}
-                            </div>
+                    </div>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 floating-label-form-group controls">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Password" id="password" required data-validation-required-message="Please enter your Password."> {% if wrong_password %}
+                            <p class="text-danger">Invalid Password</p>
+                            {% endif %}
                         </div>
-                        <br>
-                        <div class="row">
-                            <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-success btn-lg">Login</button>
-                            </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="form-group col-xs-12">
+                            <button type="submit" class="btn btn-success btn-lg">Login</button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
-
+    </div>
+</section>
 {% endblock %}
+
 {% block footer %}
-    <script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

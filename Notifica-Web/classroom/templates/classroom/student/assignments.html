@@ -1,96 +1,110 @@
 <div id="assignments" class="tab-pane fade">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h2>Assignments</h2>
-                <hr>
-            </div>
-        </div>
-        {% if user.privilege == 1 %}
-        <div class="row">
-            <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment">+</a> </p>
-            <div class="col-lg-offset-2 col-lg-8 collapse-group">
-                <form class="form collapse" method="post" name="newassignment" id="addassignment">
-                    {% csrf_token %}
-                    <div class="row control-group">
-                        <h3> Post New Assignment </h3>
-                    </div>
-                    <div class="row control-group">
-                        <div class="col-md-7 form-group  floating-label-form-group controls">
-                            <label>Date</label>
-                            <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
-                        </div>
-                        <div class="form-group col-md-offset-1 col-md-4 groupselect">
-                            <label  class="lab">Group: </label>
-                            <select name="group" id="groups">
-                              {% for value in grouplist %}
-                                <option value="{{value}}">{{value}}</option>
-                              {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-md-8">
-                          <label  class="lab">Subject: </label>
-                          <select name="subject" id="subjects">
-                            {% for subject in subjectlist %}
-                            <option value="{{subject.code}}">{{subject.name}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label>Summary</label>
-                            <input type="text" name="summary" class="form-control" placeholder="Summary" id="summary" required>
-                        </div>
-                    </div>
-                    <div class="row control-group">
-                        <div class="form-group col-xs-12 floating-label-form-group controls">
-                            <label>Details</label>
-                            <textarea rows="3" name="details" class="form-control" placeholder="Details" id="detail" required></textarea>
-                            <p class="help-block text-danger"></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-xs-12">
-                            <button name="post_assignment" type="submit" class="btn btn-success btn-lg">Post</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="row">
-            <div class="col-lg-offset-2 col-lg-8">
-                <div class="list-group assignmentlist">
-                    {% for assignment in assignments %}
-                    <div class="list-group-item assignment-list-item">
-                        {% if user.privilege == 1 %}
-                            <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-                        {% endif %}
-                        <p class="list-group-item-heading assignment-title"><strong>{{assignment.subject}}</strong></p>
-                        {% if assignment.date %}
-                            <span class="submission-date">Time left: {{assignment.date|timeuntil}}</span>
-                        {%else%}
-                            <i class="fa fa-thumb-tack pin-icon"></i>
-                        {% endif %}
-                        <p class="list-group-item-text assignment-summary">
-                            <em>{{assignment.summary}}</em>
-                        </p>
-                        <div class="collapse-group">
-                            {% autoescape off %}
-                            <p class="collapse list-group-item-text assignment-detail" style="white-space: pre-wrap;" id="detail{{forloop.counter}}">{{assignment.details|urlize}}</p>
-                            {% endautoescape %}
-                            <button class="btn showdetails btn-sm" style="background:transparent;font-size:1em;position:absolute;bottom:10px;right:5px;" data-toggle="collapse" data-target="#detail{{forloop.counter}}"><i class="fa fa-expand"></i></button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-         </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2>Assignments</h2>
+        <hr>
+      </div>
     </div>
+    {% if user.privilege == 1 %}
+    <div class="row">
+      <p class="text-right"><a class="btn addbtn" data-toggle="collapse" data-target="#addassignment">+</a> </p>
+      <div class="col-lg-offset-2 col-lg-8 collapse-group">
+        <form class="form collapse" method="post" name="newassignment" id="addassignment">
+          {% csrf_token %}
+          <div class="row control-group">
+            <h3> Post New Assignment </h3>
+          </div>
+          <div class="row control-group">
+            <div class="col-md-7 form-group  floating-label-form-group controls">
+              <label>Date</label>
+              <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
+            </div>
+            <div class="form-group col-md-offset-1 col-md-4 groupselect">
+              <label class="lab">Group: </label>
+              <select name="group" id="groups">
+                {% for value in grouplist %}
+                <option value="{{value}}">{{value}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="row control-group">
+            <div class="form-group col-md-8">
+              <label class="lab">Subject: </label>
+              <select name="subject" id="subjects">
+                {% for subject in subjectlist %}
+                <option value="{{subject.code}}">{{subject.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="row control-group">
+            <div class="form-group col-xs-12 floating-label-form-group controls">
+              <label>Summary</label>
+              <input type="text" name="summary" class="form-control" placeholder="Summary" id="summary" required>
+            </div>
+          </div>
+          <div class="row control-group">
+            <div class="form-group col-xs-12 floating-label-form-group controls">
+              <label>Details</label>
+              <textarea rows="3" name="details" class="form-control" placeholder="Details" id="detail" required></textarea>
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-xs-12">
+              <button name="post_assignment" type="submit" class="btn btn-success btn-lg">Post</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-lg-offset-2 col-lg-8">
+        <div class="list-group assignmentlist">
+          {% for assignment in assignments %}
+          <div class="list-group-item">
+
+            <div class="topcorner">
+              {% if assignment.date %}
+              <span class="assignment-date"> {{assignment.date|timeuntil}}</span>
+              {%else%}
+              <a class="btn btn-sm">
+                <i class="fa fa-thumb-tack pin-icon"></i>
+              </a>
+              {% endif %}
+
+              {% if user.privilege == 1 %}
+              <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
+              {% endif %}
+              <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}">
+                <i class="fa fa-expand"></i>
+              </a>
+            </div>
+
+            <h4 class="list-group-item-heading">{{assignment.subject}}</h4>
+
+            <p class="list-group-item-text">
+              <small>{{assignment.summary}}</small>
+            </p>
+
+            <div class="collapse-group">
+              {% autoescape off %}
+              <p class="collapse list-group-item-text" id="detail{{forloop.counter}}">
+                {{assignment.details|urlize}}
+              </p>
+              {% endautoescape %}
+            </div>
+
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>

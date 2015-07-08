@@ -1,45 +1,66 @@
 {% load customtags %}
 
-
 <div id="routine" class="tab-pane fade in active">
     <div class="container">
+        <!--
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2>Routine</h2>
                 <hr>
             </div>
         </div>
+        --!>
         <div class="row">
             {% now 'w' as today %}
             {% for a_day in workingweek %}
-                {% if today|add:'0' == forloop.counter0 %}
-                    <div class="col-md-2 today">
-                {%else%}
-                    <div class="col-md-2 nottoday">
-                {%endif%}
-                        <h3> {{ a_day }} </h3>
+                    {% with forloop.counter0 as weekcount %}
+                    <div class="col-md-2" style="padding:5px">
+
+                        {% if today|add:'0' == weekcount %}
+                        <h3 style="text-align:center;color:#18bc9c"> {{ a_day }} </h3>
+                        {% else %}
+                        <h3 style="text-align:center"> {{ a_day }} </h3>
+                        {% endif %}
+
                         {% for sn, element in routine.items %}
                             {% with element.nextelem as nextelem %}
                             {% with element.prevelem as prevelem %}
 
                             {% if element.day == forloop.parentloop.counter0 %}
                             {% if element.day != prevelem.day or element.start_time != prevelem.start_time %}
-                                <div class="list-group">
+
+                                {% if today|add:'0' == weekcount %}
+                                <div class="list-group today">
+                                {% else %}
+                                <div class="list-group nottoday">
+                                {%endif%}
+
+
                                     {%if element.gap != 0%}
-                                    <div class='gap'>{{element.gap}} min break</div>
+                                    <div class="gap">Break {{element.gap}}m</div>
                                     {%endif%}
-                                    <div class="list-group-item routine-element">
+
+
+                                    {% if today|add:'0' == weekcount %}
+                                    <div class="list-group-item routine-element today">
+                                    {% else %}
+                                    <div class="list-group-item routine-element nottoday">
+                                    {%endif%}
+
                                         {% if element.class_type == 0 %}
-                                            <span class="badge badge-l">L</span>
+                                            <span class="badge badge-l top-corner">L</span>
                                         {% else %}
-                                            <span class="badge badge-p">P</span>
+                                            <span class="badge badge-p top-corner">P</span>
                                         {% endif %}
-                                        <p class="list-group-item-text period-time">{{element.start_time}} to {{element.end_time}}</p>
+
+                                        <p class="list-group-item-text period-time">
+                                            {{element.start_time}} to {{element.end_time}}
+                                        </p>
+
                                         <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
-
                                         {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
-                                        <hr/>
+                                        <hr class="thinner"/>
                                         <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
                                         {% endif %}
@@ -58,6 +79,7 @@
                             {%endwith%}
                         {% endfor %}
                     </div>
+                    {% endwith %}
             {% endfor %}
 
         </div>
