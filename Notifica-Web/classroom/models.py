@@ -20,6 +20,12 @@ class Faculty(models.Model):
     def __str__(self):
         return self.name
 
+
+# Users:
+# - Authority
+# - Student
+# - Teacher
+
 class Authority(models.Model):
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
@@ -54,17 +60,7 @@ class Student(models.Model):
     def __str__(self):
         return self.name + " (" + str(self.roll) + ")"
 
-
-class Subject(models.Model):
-    code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=50)
-    faculty = models.ForeignKey(Faculty)
-    modified_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.name
-    
-
+   
 class Teacher(models.Model):
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
@@ -77,6 +73,17 @@ class Teacher(models.Model):
         return self.name
 
 
+# Subject
+class Subject(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=50)
+    faculty = models.ForeignKey(Faculty)
+    modified_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
+ 
+# Routine - made up of several RoutineElements
 class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
@@ -122,6 +129,7 @@ class RoutineElement(models.Model):
         return str(self.routine) + " " + dict(Days).get(self.day) + " " + str(self.start_time)+" - "+str(self.end_time)
 
 
+# Assignment and Notices (Events)
 class Assignment(models.Model):
     summary = models.TextField()
     details = models.TextField()
@@ -161,6 +169,7 @@ class Event(models.Model):
         return self.summary
 
 
+# Settings and registrations
 class Setting(models.Model):
     key = models.CharField(max_length=20, primary_key=True, unique=True)
     value = models.CharField(max_length=100)
@@ -176,5 +185,27 @@ class GcmRegistration(models.Model):
 
     def __str__(self):
         return self.user.username + ": " + self.token
+
+
+# Attendance
+class Attendance(models.Model):
+    routine_element = models.ForeignKey(RoutineElement)
+    date = models.DateField()
+
+    def __str__(self):
+        output = str(self.date) + " - " + str(self.routine_element.routine.batch) + " " + str(self.routine_element.routine.Faculty.name)
+        if self.routine_element.routine.groups and self.routine_element.routine.groups != "":
+            output += " Group: " + self.routine_element.routine.groups
+        return output
+
+class AttendanceElement(models.Model):
+    presence = models.BooleanField()
+    student = models.ForeignKey(Student)
+
+    def __str__(self):
+        if self.presence:
+            return self.student.roll + ". " + self.student.name + " - Present"
+        else:
+            return self.student.roll + ". " + self.student.name + " - Absent"
 
 from .notifications import Notify

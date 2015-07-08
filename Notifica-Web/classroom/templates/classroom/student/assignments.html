@@ -74,11 +74,9 @@
               <a class="btn btn-sm">
                 <i class="fa fa-thumb-tack pin-icon"></i>
               </a>
-              {% endif %} {% if user.privilege == 1 %}
-              <a class="btn btn-small btn-delete">
-                <i class="fa fa-trash-o"></i>
-              </a>
-
+              {% endif %}
+              {% if user.privilege == 1 %}
+              <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
               {% endif %}
               <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}">
                 <i class="fa fa-expand"></i>
@@ -106,3 +104,12 @@
 
   </div>
 </div>
+
+<script>
+    function DeleteAssignment(pk) {
+        $.post("{% url 'classroom:delete' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+            .done(function(data) {
+                location.reload();
+            });
+    }
+</script>

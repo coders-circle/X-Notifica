@@ -12,6 +12,8 @@ urlpatterns = patterns('',
     url(r'^authority/routine/$', views.routine, name='routine'),
     url(r'^authority/routine/(?P<routine_id>\d+)/$', views.routine, name='routine'),
 
+    url(r'^delete/$', views.delete, name='delete'),
+
     url(r'^teacher/$', views.teacher, name='teacher'),
 )
 
