@@ -18,13 +18,11 @@ header {
     text-align: center;
     color: #fff;
     background: #00A686;
-
 }
 
 
 header .container {
     padding-bottom: 50px;
-
 }
 
 header img {
@@ -34,11 +32,11 @@ header img {
 
 header .intro-text .name {
     display: block;
-    text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 2em;
     font-weight: 700;
     text-shadow:5px 5px 6px #087;
+    text-transform: uppercase;
 }
 
 header .intro-text .skills {
@@ -46,7 +44,7 @@ header .intro-text .skills {
     font-weight: 300;
 }
 
-.todo-text{
+.text-todo{
     display: block;
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -54,11 +52,11 @@ header .intro-text .skills {
     color:#007d65;
 }
 
-.todo-title,.login-title{
+.title-todo, .title-login{
     color:#007d65;
 }
 
-.todo-list li{
+.list-todo li{
   margin:20px;
 }
 
@@ -78,7 +76,8 @@ header .intro-text .skills {
 }
 
 section {
-    padding: 100px 0;
+    padding-top:100px;
+    padding-bottom:100px;
 }
 
 section h2 {
@@ -93,6 +92,4 @@ section.success {
 
 .btn-sign-in {
     margin-top:40px;
-    padding-left:20px;
-    padding-right:20px;
 }
