@@ -51,11 +51,13 @@ p {
 }
 
 .list-group-item {
-    margin: 2px;
+    margin: 0px;
     margin-bottom: 10px!important;
+    padding:30px 50px 30px 50px;
     border-radius: 0!important;
     border: 0px solid #f7f7f7;
     transition: all .3s ease-in-out;
+    box-shadow: 3px 3px 7px #ccc;
 }
 
 .list-group-item:hover {
@@ -165,13 +167,6 @@ p {
 /**************************
     Assignment & Notice
 ***************************/
-
-.assignmentlist .list-group-item,
-.noticelist .list-group-item {
-    margin-top:20px;
-    padding:30px 50px 30px 50px;
-}
-
 .assignment-date,
 .notice-date {
     color: #777777!important;
@@ -209,12 +204,6 @@ p {
   background-color:#10aa82;
 }
 
-.list-group-item-assignment,
-.list-group-item-notice{
-    padding:30px 50px 30px 50px;
-    box-shadow: 3px 3px 7px #ccc;
-}
-
 .notice-detail{
     padding-left:5px;
 }
@@ -232,8 +221,8 @@ p {
 .form {
     margin:0;
     padding:0;
-    padding-left:40px;
-    padding-right:40px;
+    padding-left:50px;
+    padding-right:50px;
     background: #fff;
     box-shadow: 3px 3px 7px #ccc;
     transition: all .3s ease-in-out;
@@ -306,4 +295,3 @@ p {
 #addassignment {
     padding-bottom: 40px;
 }
-

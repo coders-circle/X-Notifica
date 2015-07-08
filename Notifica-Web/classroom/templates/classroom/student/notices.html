@@ -68,6 +68,7 @@
 
                 {% if user.privilege == 1 %}
                     <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
+                    <a class="btn btn-share-on-fb"><i class="fa fa-facebook-square"></i></a>
                 {% endif %}
 
               <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}">

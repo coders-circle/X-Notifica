@@ -1,37 +1,34 @@
 <div id="students" class="tab-pane active">
     <div class="container">
-        <div class="row text-right" style="margin-bottom:20px;">
-            <select class="batchSelector" onchange="location=this.options[this.selectedIndex].value + '#students';">
-                {%if batch == null %}
-                <option value="#" selected="selected">Select a batch</option>
-                {%endif%}
-
-                {%for a_batch in batches %}
-                {% if batch|stringformat:"s" == a_batch|stringformat:"s" %}
-                <option value="{% url 'classroom:authority' a_batch %}" selected="selected">{{a_batch}}</option>
-                {%else%}
-                <option value="{% url 'classroom:authority' a_batch %}">{{a_batch}}</option>
-                {% endif %}
-                {%endfor%}
-            </select>
+        <div class="row text-center">
+            <h2 class="page-title title-students"> Students </h2>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <h3>Students</h3>
-                {% if batch %}
-                <ul>
-                {% for student in students %}
-                <li>{{ student.name }}</li>
-                {% endfor %}
-                </ul>
-                {%else%}
-                <p>Select a batch to get list of the students</p>
-                {%endif%}
+            <div class="col-sm-8">
+                <select class="select-batch pull-left" onchange="location=this.options[this.selectedIndex].value + '#students';">
+                    {%if batch == null %}
+                    <option value="#" selected="selected">Select a batch</option>
+                    {%endif%}
+                    {%for a_batch in batches %}
+                        {% if batch|stringformat:"s" == a_batch|stringformat:"s" %}
+                        <option value="{% url 'classroom:authority' a_batch %}" selected="selected">{{a_batch}}</option>
+                        {%else%}
+                        <option value="{% url 'classroom:authority' a_batch %}">{{a_batch}}</option>
+                        {% endif %}
+                    {%endfor%}
+                </select>
             </div>
-            <div class="col-md-6">
-                <h3>Add Student</h3>
-                <form method="post" name="form_addStudent" id="addStudentForm">
+            <div class="col-sm-4">
+                <a class="btn btn-add pull-right" data-toggle="collapse" data-target="#form-add-student"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8 collapse-group">
+                <form class="form collapse form-add-student" method="post" name="add-student" id="form-add-student">
                     {% csrf_token %}
+                    <div class="row control-group">
+                        <h3> Add Student </h3>
+                    </div>
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Name</label>
@@ -39,35 +36,59 @@
                         </div>
                     </div>
                     <div class="row control-group">
-                        <div class="form-group col-xs-5 floating-label-form-group controls">
+                        <div class="form-group col-md-5 floating-label-form-group controls">
                             <label>Roll</label>
                             <input type="number" name="roll" class="form-control" placeholder="Roll No." id="roll"
                                     {% if roll %} value="{{roll|add:'1'}}" {% endif %} required>
                         </div>
-                        <div class="form-group col-xs-offset-2 col-xs-5 floating-label-form-group controls">
+                        <div class="form-group col-md-offset-2 col-md-5 floating-label-form-group controls">
                             <label>Group</label>
                             <input type="text" name="group" class="form-control" placeholder="Group" id="group" value="{{group}}" required>
                         </div>
                     </div>
                     <div class="row control-group">
-                        <div class="form-group col-xs-6 floating-label-form-group controls">
+                        <div class="form-group col-md-5 floating-label-form-group controls">
                             <label>Batch</label>
                             <input type="number" name="batch" class="form-control" placeholder="Batch" id="batch" value="{{batch}}" required>
                         </div>
-                        <div class="form-group col-xs-6">
-                            <div class="checkbox" style="padding:20px; margin-left:30px; font-size:1.5em; font-weight:normal;">
-                             <label style=""><input style="margin-top:10px; transform: scale(1.5);" name="is_representative" type="checkbox">Representative</label>
+                        <div class="form-group col-md-5 col-md-offset-2">
+                            <div class="checkbox chekbox-representative">
+                                <label><input name="is_representative" type="checkbox"> Representative</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-xs-12" style="margin-top:20px;">
-                            <button name="add_student" type="submit" class="btn btn-success btn-lg">Add</button>
-                        </div>
+                        <button name="add_student" type="submit" class="btn btn-success btn-lg"><i class="fa fa-plus"></i> Add</button>
                     </div>
                 </form>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8">
+                <div class="list-group list-group-students">
+                    {% if batch %}
+                    {% for student in students %}
+                        {% if not forloop.counter|divisibleby:2 %}
+                        <div class="row row-list-group-item">
+                        {%endif%}
+                        <div class="col-sm-6">
+                            <div class="list-group-item list-group-item-students">
+                                <p>{{student.roll}}. <strong>{{ student.name }}</strong> </p>
+                            </div>
+                        </div>
+                        {% if forloop.counter|divisibleby:2 or students|length == forloop.counter %}
+                        </div>
+                        {%endif%}
+                        
+                    {% endfor %}
 
+                    {%else%}
+                    <div class="list-group-item list-group-item-empty">
+                        <p>Select a batch to get list of the students</p>
+                    </div>
+                    {%endif%}
+                </div>
+            </div>
         </div>
     </div>
 </div>

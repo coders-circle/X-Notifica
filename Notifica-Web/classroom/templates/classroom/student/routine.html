@@ -1,14 +1,12 @@
 {% load customtags %}
 <div id="routine" class="tab-pane fade in active">
     <div class="container">
-        <!--
         <div class="row">
             <div class="col-lg-12 text-center">
                 <h2>Routine</h2>
                 <hr>
             </div>
         </div>
-        --!>
         <div class="row">
             {% now 'w' as today %}
             {% for a_day in workingweek %}
@@ -33,13 +31,9 @@
                                 {% else %}
                                 <div class="list-group nottoday">
                                 {%endif%}
-
-
                                     {%if element.gap != 0%}
                                     <div class="gap">Break {{element.gap}}m</div>
                                     {%endif%}
-
-
                                     {% if today|add:'0' == weekcount %}
                                     <div class="list-group-item routine-element today">
                                     {% else %}
@@ -51,17 +45,21 @@
                                         {% else %}
                                             <span class="badge badge-p top-corner">P</span>
                                         {% endif %}
-
                                         <p class="list-group-item-text period-time">
                                             {{element.start_time}} to {{element.end_time}}
                                         </p>
-
                                         <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                                        {% if element.remarks %}
+                                        <p class="list-group-item-text"><small>{{element.remarks}}</small></p>
+                                        {% endif %}
                                         {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
                                         <hr class="thinner"/>
                                         <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
                                         <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
+                                        {% if element.remarks %}
+                                        <p class="list-group-item-text"><small>{{nextelem.remarks}}</small></p>
+                                        {% endif %}
                                         {% endif %}
 
                                         {% if assignment_mark %}

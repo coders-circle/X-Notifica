@@ -10,7 +10,7 @@
 
     {% if user.privilege == 1 %}
     <div class="row">
-      <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-assignment"><i class="fa fa-plus"></i></a></p>
+      <a class="btn btn-add pull-right" data-toggle="collapse" data-target="#form-assignment"><i class="fa fa-plus"></i></a>
       <div class="col-lg-offset-2 col-lg-8 collapse-group">
         <form class="form collapse form-assignment" method="post" name="newassignment" id="form-assignment">
           {% csrf_token %}
@@ -77,6 +77,7 @@
               {% endif %}
               {% if user.privilege == 1 %}
               <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
+              <a class="btn btn-share-on-fb"><i class="fa fa-facebook-square"></i></a>
               {% endif %}
               <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}">
                 <i class="fa fa-expand"></i>
