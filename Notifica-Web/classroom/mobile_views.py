@@ -376,3 +376,55 @@ def register(request):
     outdata = {"message_type":"Registration Result", "register_result":"Success"}
 
     return JsonResponse(outdata)
+
+
+
+
+"""
+ Attendance post
+ { "message_type" : "Attendance Post", "user_id":<username>, "password":<password>, ... }
+ { "message_type" : "Attendance Post Result", "post_result":"Success" }
+"""
+
+@csrf_exempt
+def post_attendance(request):   
+    if request.method != "POST":
+        return JsonResponse(error_response)
+ 
+    indata = json.loads(request.body.decode('utf-8'))
+    if (indata.get("message_type","") != "Attendance Post"):
+        return JsonResponse(error_response)
+    
+    user_type, user = json_authenticate(indata)
+    if (user is None or user_type=="Invalid" or user_type=="Student"):
+        return JsonResponse(error_response_auth)
+
+    remote_id = indata.get("remote_id", -1)
+    if remote_id >= 0:
+        attendance = Attendance.objects.get(pk=remote_id)
+        AttendanceElement.objects.filter(attendance=attendance).delete()
+    else:
+        attendance = Attendance()
+    
+    print(indata)
+
+    indate = indata.get("date", -1)
+    attendance.date = seconds_to_datetime(indate)
+    attendance.faculty =  Faculty.objects.get(code=indata.get("faculty_code", ""))
+    attendance.batch = indata.get("batch", -1)
+    attendance.groups = indata.get("groups", "")
+    attendance.teacher = user
+    attendance.save()
+
+    elements = indata.get("elements", -1)
+    for element in elements:
+        newelem = AttendanceElement()
+        newelem.presence = element["presence"]
+        newelem.student = Student.objects.get(user__username=element["student_user_id"])
+        newelem.attendance = attendance
+        newelem.save()
+
+    outdata = {"message_type":"Attendance Post Result", "post_result":"Success", "remote_id":attendance.pk}
+    return JsonResponse(outdata)
+
+ 

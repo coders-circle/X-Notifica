@@ -8,4 +8,7 @@
         android:icon="@drawable/ic_sync"
         android:orderInCategory="105"  app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/action_clean_update" android:title="Clean Update"
+        android:orderInCategory="105" />
+
 </menu>

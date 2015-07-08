@@ -43,7 +43,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_event, menu);
+        inflater.inflate(R.menu.menu_info, menu);
         registerForContextMenu(expListView);
     }
 

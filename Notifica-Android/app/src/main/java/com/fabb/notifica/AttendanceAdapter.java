@@ -26,6 +26,12 @@ public class AttendanceAdapter extends BaseAdapter {
             states.add(false);
     }
 
+    public AttendanceAdapter(Activity context, List<Student> students, ArrayList<Boolean> states){
+        this.students = students;
+        this.context = context;
+        this.states = states;
+    }
+
     @Override
     public int getCount() {
         return students.size();
@@ -56,6 +62,7 @@ public class AttendanceAdapter extends BaseAdapter {
 
 
         CheckBox checkbox = (CheckBox)convertView.findViewById(R.id.attendance_checkbox);
+        checkbox.setChecked(states.get(position));
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

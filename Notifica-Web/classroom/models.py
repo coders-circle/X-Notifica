@@ -87,7 +87,7 @@ class Subject(models.Model):
 class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
-    groups = models.CharField(max_length=10, default='A')
+    groups = models.CharField(max_length=26, default='A')
     remarks = models.CharField(max_length=100, default="", blank=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -136,7 +136,7 @@ class Assignment(models.Model):
     poster = models.ForeignKey(User)
     batch = models.IntegerField(blank=True, null=True, default=None)
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
-    groups = models.CharField(max_length=10, blank=True, null=True, default="")
+    groups = models.CharField(max_length=26, blank=True, null=True, default="")
     subject = models.ForeignKey(Subject)
     date = models.DateField(verbose_name="date of submission", null=True, blank=True)
     cancelled = models.BooleanField(default=False)
@@ -156,7 +156,7 @@ class Event(models.Model):
     poster = models.ForeignKey(User)
     batch = models.IntegerField(blank=True, null=True, default=None)
     faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
-    groups = models.CharField(max_length=10, blank=True, null=True, default="")
+    groups = models.CharField(max_length=26, blank=True, null=True, default="")
     date = models.DateField(verbose_name="date of occurrence", null=True, blank=True)
     cancelled = models.BooleanField(default=False)
     modified_at = models.DateTimeField(auto_now=True)
@@ -189,23 +189,27 @@ class GcmRegistration(models.Model):
 
 # Attendance
 class Attendance(models.Model):
-    routine_element = models.ForeignKey(RoutineElement)
+    faculty = models.ForeignKey(Faculty)
+    batch = models.IntegerField()
+    groups = models.CharField(max_length=26, blank=True, null=True, default="")
+    teacher = models.ForeignKey(Teacher)
     date = models.DateField()
 
     def __str__(self):
-        output = str(self.date) + " - " + str(self.routine_element.routine.batch) + " " + str(self.routine_element.routine.Faculty.name)
-        if self.routine_element.routine.groups and self.routine_element.routine.groups != "":
-            output += " Group: " + self.routine_element.routine.groups
+        output = str(self.date) + " - " + str(self.batch) + " " + str(self.faculty.name)
+        if self.groups and self.groups != "":
+            output += " Group: " + self.groups
         return output
 
 class AttendanceElement(models.Model):
     presence = models.BooleanField()
     student = models.ForeignKey(Student)
+    attendance = models.ForeignKey(Attendance)
 
     def __str__(self):
         if self.presence:
-            return self.student.roll + ". " + self.student.name + " - Present"
+            return str(self.student.roll) + ". " + self.student.name + " - Present"
         else:
-            return self.student.roll + ". " + self.student.name + " - Absent"
+            return str(self.student.roll) + ". " + self.student.name + " - Absent"
 
 from .notifications import Notify
