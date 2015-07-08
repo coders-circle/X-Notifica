@@ -27,6 +27,11 @@ public class Database {
 
         Event.deleteAll(Event.class, "deleted = 'true'");
         Assignment.deleteAll(Assignment.class, "deleted = 'true'");
+
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -7);
+        date = cal.getTimeInMillis()/1000;
+        Attendance.deleteAll(Attendance.class, "date < ?", date + "");
     }
 
     public static void DeletePinned() {
@@ -64,10 +69,13 @@ public class Database {
         return (list.size() > 0) ? list.get(0) : null;
     }
 
-    public static Attendance GetAttedance(Faculty faculty, int batch, String groups) {
-        List<Attendance> list = Attendance.find(Attendance.class, "faculty = ? and batch = ? and groups = ?",
-                faculty.getId()+"", batch+"", groups);
+    public static Attendance GetAttendance(long remote_id) {
+        List<Attendance> list = Attendance.find(Attendance.class, "remote_id = ?", remote_id+"");
         return (list.size() > 0) ? list.get(0) : null;
+    }
+    public static List<Attendance> GetAttendances(Faculty faculty, int batch, String groups) {
+        return Attendance.find(Attendance.class, "faculty = ? and batch = ? and groups = ?",
+                faculty.getId()+"", batch+"", groups);
     }
 }
 
