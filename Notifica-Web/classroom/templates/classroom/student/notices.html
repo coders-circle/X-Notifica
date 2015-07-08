@@ -55,16 +55,21 @@
       <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group list-group-notice">
           {% for notice in events %}
-          <div class="list-group-item list-group-item-notice">
+          <div class="list-group-item notice-list-item" style="margin-bottom:20px;">
 
             <div class="topcorner">
               {% if notice.date %}
-              <span class="notice-date">{{notice.date}}</span> {%else%}
-              <i class="fa fa-thumb-tack icon-pin"></i> {% endif %} {% if user.privilege == 1 %}
-              <a class="btn btn-sm btn-delete">
-                <i class="fa fa-trash-o"></i>
+              <span class="notice-date">{{notice.date}}</span>
+              {%else%}
+              <a class="btn btn-sm">
+                <i class="fa fa-thumb-tack pin-icon"></i>
               </a>
               {% endif %}
+
+                {% if user.privilege == 1 %}
+                    <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
+                {% endif %}
+
               <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}">
                 <i class="fa fa-expand"></i>
               </a>
@@ -86,3 +91,13 @@
 
   </div>
 </div>
+<div id="result"></div>
+
+<script>
+    function DeleteNotice(pk) {
+        $.post("{% url 'classroom:delete' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+            .done(function(data) {
+                location.reload();
+            })
+    }
+</script>

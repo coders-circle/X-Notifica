@@ -168,7 +168,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (isteacher) {
                         AttendanceActivity.info = infos.get(position);
-                        startActivity(new Intent(getActivity(), AttendanceActivity.class));
+                        if (!AttendanceActivity.info.isBreak)
+                            startActivity(new Intent(getActivity(), AttendanceActivity.class));
                     }
                 }
             });

@@ -68,6 +68,21 @@ def change_password(request):
     user.save()
     return {'password_changed':True}
 
+def delete(request):
+    if request.method != "POST":
+        return redirect('classroom:index')
+    if not request.user.is_authenticated():
+        return redirect('classroom:index')
+
+    # TODO: check privilege
+    
+    if request.POST.get("type") == "assignment":
+        Assignment.objects.get(pk=request.POST.get("pk")).delete()
+    elif request.POST.get("type") == "notice":
+        Event.objects.get(pk=request.POST.get("pk")).delete()
+    return redirect('classroom:index')
+
+
 def post_assignment(request):
     context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
                "summary":request.POST.get("summary"), "details":request.POST.get("details")}

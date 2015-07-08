@@ -17,7 +17,7 @@
         android:right="2dp"
         android:bottom="2dp">
         <shape android:shape="rectangle">
-            <solid android:color="#18bc9c" />
+            <solid android:color="@color/line_color" />
         </shape>
     </item>
 

@@ -5,9 +5,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class UpdateService {
 
@@ -16,6 +19,7 @@ public class UpdateService {
         updateListeners.add(listener);
     }
     private final static String updateUrl = "update";
+    private final static String postAttendanceUrl = "post_attendance";
 
     public static boolean IsUpdating = false;
 
@@ -28,7 +32,7 @@ public class UpdateService {
 
         try {
             json.put("message_type", "Update Request");
-            json.put("user_id", preferences.getString("user-id",""));
+            json.put("user_id", preferences.getString("user-id", ""));
             json.put("password", preferences.getString("password", ""));
             json.put("updated_at", preferences.getLong("updated-at", 0));
 
@@ -46,6 +50,10 @@ public class UpdateService {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong("updated-at", resJson.optLong("updated_at"));
             editor.apply();
+
+            String user_type = preferences.getString("user-type", "");
+            if (user_type != null && user_type.equals("Teacher"))
+                PostAttendance(ctx);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -57,6 +65,48 @@ public class UpdateService {
         int event_count;
         int assignment_count;
         boolean updated;
+    }
+
+    public static void PostAttendance(Context ctx) throws JSONException {
+        SharedPreferences preferences = MainActivity.GetPreferences(ctx);
+        Network network = new Network();
+
+        Iterator<Attendance> attendanceIter = Attendance.findAll(Attendance.class);
+        while (attendanceIter.hasNext()) {
+            Attendance attendance = attendanceIter.next();
+            if (attendance.isUpdated)
+                continue;
+
+            JSONObject json = new JSONObject();
+            json.put("message_type", "Attendance Post");
+            json.put("user_id", preferences.getString("user-id", ""));
+            json.put("password", preferences.getString("password", ""));
+
+            json.put("remote_id", attendance.remoteId);
+            json.put("date", attendance.date);
+            json.put("batch", attendance.batch);
+            json.put("faculty_code", attendance.faculty.code);
+            json.put("groups", attendance.groups);
+
+            JSONArray elementsJson = new JSONArray();
+            List<AttendanceElement> elements = AttendanceElement.find(AttendanceElement.class, "attendance=?", attendance.getId()+"");
+            for (AttendanceElement element: elements) {
+                JSONObject elementJson = new JSONObject();
+                elementJson.put("presence", element.presence);
+                elementJson.put("student_user_id", element.student.userId);
+                elementsJson.put(elementJson);
+            }
+            json.put("elements", elementsJson);
+            result = network.PostJson(postAttendanceUrl, json);
+            JSONObject resJson = new JSONObject(result);
+
+            if (resJson.optString("message_type").equals("Attendance Post Result") &&
+                    resJson.optString("post_result").equals("Success")) {
+                attendance.remoteId = resJson.optInt("remote_id", -1);
+                attendance.isUpdated = true;
+                attendance.save();
+            }
+        }
     }
 
     public static void UpdateData(Context ctx, JSONObject json, UpdateResult updateResult) {
@@ -137,6 +187,7 @@ public class UpdateService {
                     newElement.startTime = element.optInt("start_time");
                     newElement.endTime = element.optInt("end_time");
                     newElement.type = element.optInt("type");
+                    newElement.remoteId = element.optInt("remote_id");
 
                     if (isTeacher) {
                         newElement.faculty = Database.GetFaculty(element.optString("faculty_code"));

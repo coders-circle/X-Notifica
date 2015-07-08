@@ -22,6 +22,13 @@ class RoutineElementInline(admin.StackedInline):
 class RoutineAdmin(admin.ModelAdmin):
     inlines = [RoutineElementInline]
 
+class AttendanceElementInline(admin.StackedInline):
+    model = AttendanceElement
+    extra = 3
+
+class AttendanceAdmin(admin.ModelAdmin):
+    inlines = [AttendanceElementInline]
+
 
 admin.site.register(Routine, RoutineAdmin)
 admin.site.register(Faculty)
@@ -33,3 +40,4 @@ admin.site.register(Assignment)
 admin.site.register(Event)
 admin.site.register(Setting)
 admin.site.register(GcmRegistration)
+admin.site.register(Attendance, AttendanceAdmin)

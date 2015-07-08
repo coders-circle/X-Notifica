@@ -12,6 +12,8 @@ public class Database {
         Teacher.deleteAll(Teacher.class);
         Faculty.deleteAll(Faculty.class);
         Student.deleteAll(Student.class);
+        AttendanceElement.deleteAll(AttendanceElement.class);
+        Attendance.deleteAll(Attendance.class);
     }
 
     public static void DeleteExpired() {
@@ -59,6 +61,12 @@ public class Database {
 
     public static Event GetEvent(long remoteId) {
         List<Event> list = Event.find(Event.class, "remote_id = ?", remoteId+"");
+        return (list.size() > 0) ? list.get(0) : null;
+    }
+
+    public static Attendance GetAttedance(Faculty faculty, int batch, String groups) {
+        List<Attendance> list = Attendance.find(Attendance.class, "faculty = ? and batch = ? and groups = ?",
+                faculty.getId()+"", batch+"", groups);
         return (list.size() > 0) ? list.get(0) : null;
     }
 }
