@@ -2,10 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
-        <shape android:shape="rectangle">
+        <shape android:shape="oval">
             <solid android:color="@color/primaryDark"/>
-            <corners
-                android:radius="5dp"/>
+            <!--<corners
+                android:radius="100000dp"/> -->
         </shape>
     </item>
 
