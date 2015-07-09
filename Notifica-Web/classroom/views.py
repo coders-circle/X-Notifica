@@ -194,7 +194,58 @@ def student(request):
 def teacher(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
+    
+    try:
+        user = Teacher.objects.get(user=request.user)
+    except:
+        return redirect('classroom:index')
+
     context = {}
+    if request.method == "POST":
+        if 'post_assignment' in request.POST:
+            context.update(post_assignment(request))
+        elif 'post_notice' in request.POST:
+            context.update(post_notice(request))
+        elif 'change_password' in request.POST:
+            context.update(change_password(request))
+
+    DeletePassed()
+
+    elements_objects = RoutineElement.objects.filter(teacher=user).order_by('start_time')
+    assignments_objects = Assignment.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
+    events_objects = Event.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
+
+    subjects = set()
+    for element in elements_objects:
+        subjects.add(element.subject)
+
+    workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    routine = {}
+
+    last_element = {}
+
+    initial_time = None
+
+    for loopcount, elem in enumerate(elements_objects):
+        if initial_time == None or hm_to_int(initial_time) > hm_to_int(elem.start_time):
+             initial_time = elem.start_time
+
+        if elem.day in last_element:
+            elem.gap = hm_to_int(elem.start_time) - hm_to_int(last_element[elem.day].end_time)
+            elem.prevelem = last_element[elem.day]
+            last_element[elem.day].nextelem = elem
+        else:
+            elem.gap = hm_to_int(elem.start_time) - hm_to_int(initial_time)
+
+        last_element[elem.day] = elem
+        elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
+        routine[loopcount] = elem
+
+
+    names = user.name.split(' ')
+    context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
+                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
+                    'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/teacher.html', context)
 
 

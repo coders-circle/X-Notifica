@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 
 public class Network {
 
-    public final String URL = "http://192.168.0.104:8000/classroom/";
+    public final String URL = "http://notifica.herokuapp.com/classroom/";
     public final String ERR_CONNECTION = "{ \"message_type\": \"ERROR CONNECTION\" }";
 
     public String Get(String address) {
