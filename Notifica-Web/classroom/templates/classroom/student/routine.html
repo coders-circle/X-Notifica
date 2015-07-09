@@ -10,75 +10,72 @@
         <div class="row">
             {% now 'w' as today %}
             {% for a_day in workingweek %}
-                    {% with forloop.counter0 as weekcount %}
-                    <div class="col-md-2" style="padding:5px">
-
-                        {% if today|add:'0' == weekcount %}
+                {% with forloop.counter0 as weekcount %}
+                <div class="col-md-2" style="padding:5px;">
+                    {% if today|add:'0' == weekcount %}
                         <h3 style="text-align:center;color:#18bc9c"> {{ a_day }} </h3>
-                        {% else %}
+                    {% else %}
                         <h3 style="text-align:center"> {{ a_day }} </h3>
-                        {% endif %}
+                    {% endif %}
 
-                        {% for sn, element in routine.items %}
-                            {% with element.nextelem as nextelem %}
-                            {% with element.prevelem as prevelem %}
+                    {% for sn, element in routine.items %}
+                        {% with element.nextelem as nextelem %}
+                        {% with element.prevelem as prevelem %}
 
-                            {% if element.day == forloop.parentloop.counter0 %}
+                        {% if element.day == forloop.parentloop.counter0 %}
                             {% if element.day != prevelem.day or element.start_time != prevelem.start_time %}
-
                                 {% if today|add:'0' == weekcount %}
-                                <div class="list-group today">
+                                    <div class="list-group today">
                                 {% else %}
-                                <div class="list-group nottoday">
+                                    <div class="list-group nottoday">
                                 {%endif%}
-                                    {%if element.gap != 0%}
+                                {%if element.gap != 0%}
                                     <div class="gap">Break {{element.gap}}m</div>
-                                    {%endif%}
-                                    {% if today|add:'0' == weekcount %}
+                                {%endif%}
+                                {% if today|add:'0' == weekcount %}
                                     <div class="list-group-item routine-element today">
-                                    {% else %}
+                                {% else %}
                                     <div class="list-group-item routine-element nottoday">
-                                    {%endif%}
+                                {%endif%}
 
-                                        {% if element.class_type == 0 %}
-                                            <span class="badge badge-l top-corner">L</span>
-                                        {% else %}
-                                            <span class="badge badge-p top-corner">P</span>
-                                        {% endif %}
-                                        <p class="list-group-item-text period-time">
-                                            {{element.start_time}} to {{element.end_time}}
-                                        </p>
-                                        <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
-                                        <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
-                                        {% if element.remarks %}
-                                        <p class="list-group-item-text"><small>{{element.remarks}}</small></p>
-                                        {% endif %}
-                                        {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
-                                        <hr class="thinner"/>
-                                        <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
-                                        <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
-                                        {% if element.remarks %}
+                                {% if element.class_type == 0 %}
+                                    <span class="badge badge-l top-corner">L</span>
+                                {% else %}
+                                    <span class="badge badge-p top-corner">P</span>
+                                {% endif %}
+                                <p class="list-group-item-text period-time">
+                                    {{element.start_time}} to {{element.end_time}}
+                                </p>
+                                <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
+                                <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                                {% if element.remarks %}
+                                    <p class="list-group-item-text"><small>{{element.remarks}}</small></p>
+                                {% endif %}
+                                {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
+                                    <hr class="thinner"/>
+                                    <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
+                                    <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
+                                    {% if element.remarks %}
                                         <p class="list-group-item-text"><small>{{nextelem.remarks}}</small></p>
-                                        {% endif %}
-                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
 
-                                        {% if assignment_mark %}
-                                            <div class="text-right" style="color:#882222">
-                                            <i class="fa fa-exclamation-circle text-right"></i>
-                                            </div>
-                                        {% endif %}
+                                {% if assignment_mark %}
+                                    <div class="text-right" style="color:#882222">
+                                    <i class="fa fa-exclamation-circle text-right"></i>
                                     </div>
+                                {% endif %}
+                                </div>
                                 </div>
                             {% endif %}
-                            {%endif%}
+                        {%endif%}
 
-                            {%endwith%}
-                            {%endwith%}
-                        {% endfor %}
+                        {%endwith%}
+                        {%endwith%}
+                    {% endfor %}
                     </div>
                     {% endwith %}
             {% endfor %}
-
         </div>
     </div>
 </div>

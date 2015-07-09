@@ -101,6 +101,19 @@ select {
     margin: 0px;
 }
 
+.select-group{
+    padding-top:20px;
+}
+.select-group label{
+    margin-right:10px;
+    color:#aaa;
+    font-size:1.5em;
+    font-weight: lighter;
+}
+.select-group select{
+    min-width:140px;
+}
+
 .list-group-item-students,
 .list-group-item-teachers,
 .list-group-item-subjects{
@@ -108,8 +121,8 @@ select {
     margin-bottom: 10px;
     padding:20px 50px 10px 50px;
     background:#fff;
-    border-radius: 0;
-    border: 0;
+    border: 0px solid;
+    border-radius: 0px!important;
     box-shadow: 3px 3px 7px #ccc;
 }
 
@@ -135,6 +148,43 @@ select {
     padding-right:30px;
     padding-bottom:10px;
     margin:0px;
+}
+.title-group{
+    color:18bc9c!important;
+    font-size:1.24em;
+}
+
+.day h3{
+    font-size:1.24em;
+    text-align: center;
+}
+.col-md-2{
+    margin:0px;
+    padding:8px;
+}
+
+.list-group-routines{
+    margin:0px;
+    margin-bottom: 8px;
+    padding: 10px;
+
+    background:#fff;
+    border: 0px solid;
+    border-radius: 0px!important;
+    box-shadow: 3px 3px 7px #ccc;
+}
+
+.list-group-item-routines{
+    background: transparent;
+    padding:0px;
+    border: 0px solid;
+    border-radius: 0px!important;
+}
+
+.btn-edit-routine{
+    font-size:1em;
+    padding-left:10px;
+    padding-right:10px;
 }
 
 

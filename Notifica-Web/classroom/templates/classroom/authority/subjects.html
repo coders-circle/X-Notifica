@@ -1,37 +1,62 @@
 <div id="subjects" class="tab-pane fade">
     <div class="container">
-        <div class="row" style="margin-top:30px;">
-            <div class="col-md-6">
-                <h3>Subjects</h3>
-                <ul>
-                {% for subject in subjects %}
-                <li>{{ subject.name }}</li>
-                {% endfor %}
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <h3>Add Subject</h3>
-                <form method="post" name="form_addSubject" id="addSubjectForm">
+        <div class="row text-center">
+            <h2 class="page-title title-subjects">Subjects</h2>
+        </div>
+        <div class="row">
+            <a class="btn btn-add pull-right" data-toggle="collapse" data-target="#form-add-subject"><i class="fa fa-plus"></i></a>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8 collapse-group">
+                <form class="form collapse form-add-subject"method="post" name="form-add-subject" id="form-add-subject">
                     {% csrf_token %}
+                    <div class="row control-group">
+                        <h3>Add Subject</h3>
+                    </div>
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Name</label>
                             <input type="text" name="name" class="form-control" placeholder="Name of Subject" id="name">
                         </div>
                     </div>
-                    <div class="row control-group departmentSelector">
-                        <label>Department:</label>
-                        <select name="faculty" id="faculty" >
-                            <option value="current">{{user.faculty.name}}</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-xs-12 " style="margin-top:20px;">
-                            <button name="add_subject" type="submit" class="btn btn-success btn-lg">Add</button>
+                    <div class="row control-group ">
+                        <div class="col-xs-12 select-group">
+                            <label>Department: </label>
+                            <select class="select-faculty" name="faculty" id="faculty" >
+                                <option value="current">{{user.faculty.name}}</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <button name="add_subject" type="submit" class="btn btn-success btn-lg"><i class="fa fa-plus"></i> Add</button>
+                    </div>
                 </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8">
+                <div class="list-group list-group-subjects">
+                    {% if subjects %}
+                    {% for subject in subjects %}
+                        {% if not forloop.counter|divisibleby:2 %}
+                        <div class="row row-list-group-item">
+                        {%endif%}
+                        <div class="col-sm-6">
+                            <div class="list-group-item list-group-item-subjects">
+                                <p><strong>{{ subject.name }}</strong> </p>
+                            </div>
+                        </div>
+                        {% if forloop.counter|divisibleby:2 or forloop.last %}
+                        </div>
+                        {%endif%}
+                    {% endfor %}
+                    {%else%}
+                    <div class="list-group-item list-group-item-empty">
+                        <p>No subject has been added yet</p>
+                    </div>
+                    {%endif%}
+                </div>
             </div>
         </div>
     </div>

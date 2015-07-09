@@ -1,7 +1,7 @@
 <div id="students" class="tab-pane active">
     <div class="container">
         <div class="row text-center">
-            <h2 class="page-title title-students"> Students </h2>
+            <h2 class="page-title title-students">Students</h2>
         </div>
         <div class="row">
             <div class="col-sm-8">
@@ -66,7 +66,7 @@
         <div class="row">
             <div class="col-lg-offset-2 col-lg-8">
                 <div class="list-group list-group-students">
-                    {% if batch %}
+                    {% if batch and students%}
                     {% for student in students %}
                         {% if not forloop.counter|divisibleby:2 %}
                         <div class="row row-list-group-item">
@@ -79,12 +79,16 @@
                         {% if forloop.counter|divisibleby:2 or students|length == forloop.counter %}
                         </div>
                         {%endif%}
-                        
+
                     {% endfor %}
 
                     {%else%}
                     <div class="list-group-item list-group-item-empty">
-                        <p>Select a batch to get list of the students</p>
+                        {% if batch %}
+                            <p>No student has been added yet</p>
+                        {% else %}
+                            <p>Select a batch to get the list of students</p>
+                        {% endif %}
                     </div>
                     {%endif%}
                 </div>

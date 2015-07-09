@@ -53,7 +53,6 @@ p {
 .list-group-item {
     margin: 0px;
     margin-bottom: 10px!important;
-    padding:30px 50px 30px 50px;
     border-radius: 0!important;
     border: 0px solid #f7f7f7;
     transition: all .3s ease-in-out;
@@ -94,6 +93,10 @@ p {
     Routine
 ***************/
 
+.col-md-2{
+
+}
+
 .thinner {
     margin:8px;
     padding:0px;
@@ -110,18 +113,18 @@ p {
 
 .badge {
     font-size: 0.6em;
-    width: 14px;
-    border-radius: 7px;
-    padding: 3px;
+    width: 12px;
+    border-radius: 6px;
+    padding: 2px;
     margin: 0px;
 }
 
 .badge-p {
-    background-color: #f77;
+    background-color: #f61f3d;
 }
 
 .badge-l {
-    background-color: #2bb;
+    background-color: #2765c0;
 }
 
 .nottoday .badge-p,
@@ -134,12 +137,12 @@ p {
 }
 
 .nottoday {
-    color: #666666;
+    color: #666;
 }
 
 .today .gap {
     background: #fafaff;
-    border-top: 2px solid #13aacc;
+    border-top: 2px solid #2765c0;
 }
 
 .nottoday .gap {
@@ -171,6 +174,11 @@ p {
 .notice-date {
     color: #777777!important;
     font-size: 0.8em;
+}
+
+.list-group-item-assignment,
+.list-group-item-notice{
+    padding:50px 30px 50px 30px;
 }
 
 .topcorner {

@@ -22,13 +22,12 @@
         <li><a data-toggle="pill" href="#subjects">Subjects</a></li>
         <li><a data-toggle="pill" href="#teachers">Teachers</a></li>
         <li><a data-toggle="pill" href="#routines">Routines</a></li>
-
         <li class="dropdown ">
             <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="fa fa-user fa-fw"></i>{%if firstname%}{{firstname}}{%else%} {%endif%}<span class="caret"></span>
             </button>
             <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
-              <li><a href="/logout">Logout</a></li>
+              <li><a href="/logout"><i class="fa fa-sign-out"></i> Sign out</a></li>
             </ul>
         </li>
     </ul>

@@ -1,19 +1,19 @@
 <div id="teachers" class="tab-pane fade">
     <div class="container">
-        <div class="row" style="margin-top:30px;">
-            <div class="col-md-6">
-                <h3>Teachers</h3>
-                <ul>
-                {% for teacher in teachers %}
-                <li>{{ teacher.name }}</li>
-                {% endfor %}
-                </ul>
-            </div>
-            <div class="col-md-6">
-                <h3>Add Teacher</h3>
+        <div class="row text-center">
+            <h2 class="page-title title-teachers">Teachers</h2>
+        </div>
+        <div class="row">
+            <a class="btn btn-add pull-right" data-toggle="collapse" data-target="#form-add-teacher"><i class="fa fa-plus"></i></a>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8 collapse-group">
                 {% if teacher_error %} <p class="text-danger">{{ teacher_error }}</p> {% endif %}
-                <form method="post" name="form_addTeacher" id="addTeacherForm">
+                <form class="form collapse form-add-teacher" method="post" name="form-add-teacher" id="form-add-teacher">
                     {% csrf_token %}
+                    <div class="row control-group">
+                        <h3>Add Teacher</h3>
+                    </div>
                     <div class="row control-group">
                         <div class="form-group col-xs-12 floating-label-form-group controls">
                             <label>Name</label>
@@ -32,20 +32,44 @@
                             <input type="text" name="password" class="form-control" placeholder="Password" id="password">
                         </div>
                     </div>
-                    <div class="row control-group departmentSelector">
-                        <label>Department:</label>
-                        <select >
-                            <option value="current">{{user.faculty.name}}</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-xs-12" style="margin-top:20px;">
-                            <button name="add_teacher" type="submit" class="btn btn-success btn-lg">Add</button>
+                    <div class="row control-group">
+                        <div class="form-group col-xs-12 controls select-group">
+                            <label>Department:</label>
+                            <select class="select-faculty">
+                                <option value="current">{{user.faculty.name}}</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <button name="add_teacher" type="submit" class="btn btn-success btn-lg"><i class="fa fa-plus"></i> Add</button>
+                    </div>
                 </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8">
+                <div class="list-group list-group-subjects">
+                    {% if teachers %}
+                    {% for teacher in teachers %}
+                        {% if not forloop.counter|divisibleby:2 %}
+                        <div class="row row-list-group-item">
+                        {%endif%}
+                        <div class="col-sm-6">
+                            <div class="list-group-item list-group-item-teachers">
+                                <p><strong>{{ teacher.name }}</strong> </p>
+                            </div>
+                        </div>
+                        {% if forloop.counter|divisibleby:2 or forloop.last %}
+                        </div>
+                        {%endif%}
+                    {% endfor %}
+                    {%else%}
+                    <div class="list-group-item list-group-item-empty">
+                        <p>No teacher has been added yet</p>
+                    </div>
+                    {%endif%}
+                </div>
             </div>
         </div>
     </div>
