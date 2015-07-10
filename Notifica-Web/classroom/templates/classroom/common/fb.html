@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '641470069288425',
+      xfbml      : true,
+      version    : 'v2.3'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+<!-- Modal -->
+<div id="fb_share_modal" class="modal fade" role="dialog">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Share post to facebook</h4>
+        </div>
+        <div class="modal-body">
+            Select a group:
+            <select id="fb_group_selector">
+            </select> <br/>
+            <textarea id="fbTextArea" style="width:100%;" rows="10"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="fb_share();">Share</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="{% static 'js/fb.js' %}"></script>
