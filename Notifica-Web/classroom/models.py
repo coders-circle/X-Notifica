@@ -118,7 +118,7 @@ class RoutineElement(models.Model):
 
     day = models.IntegerField(choices=Days)
     subject = models.ForeignKey(Subject)
-    teacher = models.ForeignKey(Teacher)
+    teachers = models.ManyToManyField(Teacher, blank=True)
     routine = models.ForeignKey(Routine)
     start_time = models.CharField(max_length=6)
     end_time = models.CharField(max_length=6)

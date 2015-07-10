@@ -41,7 +41,7 @@
                                         <div class="list-group list-group-routines">
                                             <div class="list-group-item list-group-item-routines">
                                                 <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
-                                                <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                                                <p class="list-group-item-text"><small>{{element.teachers.all|join:', '}}</small></p>
                                                 <p class="list-group-item-text"><small>{{element.start_time}} to {{element.end_time}}</small></p>
                                                 {% if element.class_type == 0 %}
                                                     <p class ="list-group-item-text"><small>(Lecture)</small></p>

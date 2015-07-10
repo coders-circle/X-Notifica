@@ -211,7 +211,7 @@ def teacher(request):
 
     DeletePassed()
 
-    elements_objects = RoutineElement.objects.filter(teacher=user).order_by('start_time')
+    elements_objects = RoutineElement.objects.filter(teachers__pk=user.pk).order_by('start_time')
     assignments_objects = Assignment.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
     events_objects = Event.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
     attendances_objects = Attendance.objects.filter(teacher=user).order_by('-date')
@@ -243,7 +243,7 @@ def teacher(request):
         routine[loopcount] = elem
     
     for attendance in attendances_objects:
-        attendances_objects[elements] = AttendanceElement.objects.filter(attendance=attendance)
+        attendance.elements = AttendanceElement.objects.filter(attendance=attendance)
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
@@ -372,7 +372,7 @@ def routine(request, routine_id=None):
     faculty = user.faculty
 
     RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=50,
-                                                fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type', 'remarks'))
+                                                fields=('day', 'subject', 'teachers', 'start_time', 'end_time', 'class_type', 'remarks'))
     if routine_id:
         routine = Routine.objects.get(pk=routine_id)
         routineform = RoutineForm(request.POST or None, instance=routine)
