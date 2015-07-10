@@ -214,6 +214,7 @@ def teacher(request):
     elements_objects = RoutineElement.objects.filter(teacher=user).order_by('start_time')
     assignments_objects = Assignment.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
     events_objects = Event.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
+    attendances_objects = Attendance.objects.filter(teacher=user).order_by('-date')
 
     subjects = set()
     for element in elements_objects:
@@ -240,11 +241,14 @@ def teacher(request):
         last_element[elem.day] = elem
         elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
-
+    
+    for attendance in attendances_objects:
+        attendances_objects[elements] = AttendanceElement.objects.filter(attendance=attendance)
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
                     'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
+                    'attendances':attendances_objects,
                     'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/teacher.html', context)
 
@@ -368,7 +372,7 @@ def routine(request, routine_id=None):
     faculty = user.faculty
 
     RoutineElementsForm = inlineformset_factory(Routine, RoutineElement, extra=50,
-                                                fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type'))
+                                                fields=('day', 'subject', 'teacher', 'start_time', 'end_time', 'class_type', 'remarks'))
     if routine_id:
         routine = Routine.objects.get(pk=routine_id)
         routineform = RoutineForm(request.POST or None, instance=routine)
