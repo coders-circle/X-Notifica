@@ -88,7 +88,6 @@ class Routine(models.Model):
     batch = models.IntegerField()
     faculty = models.ForeignKey(Faculty)
     groups = models.CharField(max_length=26, default='A')
-    remarks = models.CharField(max_length=100, default="", blank=True)
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -119,11 +118,12 @@ class RoutineElement(models.Model):
 
     day = models.IntegerField(choices=Days)
     subject = models.ForeignKey(Subject)
-    teacher = models.ForeignKey(Teacher)
+    teachers = models.ManyToManyField(Teacher, blank=True)
     routine = models.ForeignKey(Routine)
     start_time = models.CharField(max_length=6)
     end_time = models.CharField(max_length=6)
     class_type = models.IntegerField(choices=ClassTypes)
+    remarks = models.CharField(max_length=100, default="", blank=True)
     
     def __str__(self):
         return str(self.routine) + " " + dict(Days).get(self.day) + " " + str(self.start_time)+" - "+str(self.end_time)

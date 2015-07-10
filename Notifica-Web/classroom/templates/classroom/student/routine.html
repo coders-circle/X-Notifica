@@ -47,14 +47,14 @@
                                     {{element.start_time}} to {{element.end_time}}
                                 </p>
                                 <p class="list-group-item-text"><strong>{{element.subject}}</strong></p>
-                                <p class="list-group-item-text"><small>{{element.teacher}}</small></p>
+                                <p class="list-group-item-text"><small>{{element.teachers.all | join:', '}}</small></p>
                                 {% if element.remarks %}
                                     <p class="list-group-item-text"><small>{{element.remarks}}</small></p>
                                 {% endif %}
                                 {% if element.day == nextelem.day and element.start_time == nextelem.start_time %}
                                     <hr class="thinner"/>
                                     <p class="list-group-item-text"><strong>{{nextelem.subject}}</strong></p>
-                                    <p class="list-group-item-text"><small>{{nextelem.teacher}}</small></p>
+                                    <p class="list-group-item-text"><small>{{nextelem.teachers.all | join:', '}}</small></p>
                                     {% if element.remarks %}
                                         <p class="list-group-item-text"><small>{{nextelem.remarks}}</small></p>
                                     {% endif %}

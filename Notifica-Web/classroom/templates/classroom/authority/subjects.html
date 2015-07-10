@@ -8,6 +8,7 @@
         </div>
         <div class="row">
             <div class="col-lg-offset-2 col-lg-8 collapse-group">
+                {% if subject_error %} <p class="text-danger">{{ subject_error }}</p> {% endif %}
                 <form class="form collapse form-add-subject"method="post" name="form-add-subject" id="form-add-subject">
                     {% csrf_token %}
                     <div class="row control-group">

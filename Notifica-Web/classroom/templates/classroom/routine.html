@@ -28,15 +28,15 @@
             {% endfor%}
             <tr style="width:100%;">
                 <td style="width:42%;">
-                            <button type="button" onclick="AddRow()" id="add_row" class="btn btn-info btn-lg"><i class="fa fa-plus"></i> Add Element</button>
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-success btn-lg">
-                                {% if routine_id %}<i class="fa fa-floppy-o"></i> Save Changes {% else %}<i class="fa fa-floppy-o"></i> Save Routine {% endif %}
-                            </button>
-                            <a href="/authority" class="btn btn-info btn-lg">
-                                <i class="fa fa-arrow-left"></i> Go Back
-                            </a>
+                    <button type="button" onclick="AddRow()" id="add_row" class="btn btn-info btn-lg"><i class="fa fa-plus"></i> Add Element</button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        {% if routine_id %}<i class="fa fa-floppy-o"></i> Save Changes {% else %}<i class="fa fa-floppy-o"></i> Save Routine {% endif %}
+                    </button>
+                    <a href="/authority" class="btn btn-info btn-lg">
+                        <i class="fa fa-arrow-left"></i> Go Back
+                    </a>
                 </td>
             </tr>
         </table>
