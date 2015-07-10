@@ -72,7 +72,7 @@ def delete(request):
     if request.method != "POST":
         return redirect('classroom:index')
     if not request.user.is_authenticated():
-        return redirect('classroom:index')
+        return HttpResponse('')
 
     # TODO: check privilege
     
@@ -80,7 +80,7 @@ def delete(request):
         Assignment.objects.get(pk=request.POST.get("pk")).delete()
     elif request.POST.get("type") == "notice":
         Event.objects.get(pk=request.POST.get("pk")).delete()
-    return redirect('classroom:index')
+    return HttpResponse('')
 
 
 def post_assignment(request):
@@ -258,19 +258,22 @@ def add_student(user, request):
         return {}
     context = {"student_name":request.POST.get("name"), "roll":request.POST.get("roll"),
                "group":request.POST.get("group"), "batch":request.POST.get("batch")}
+    
+    try:
+        student = Student()
+        student.name = context["student_name"]
+        student.roll = context["roll"]
+        student.group = context["group"]
+        student.batch = context["batch"]
+        student.faculty = user.faculty
 
-    student = Student()
-    student.name = context["student_name"]
-    student.roll = context["roll"]
-    student.group = context["group"]
-    student.batch = context["batch"]
-    student.faculty = user.faculty
+        username = student.batch[-3:] + user.faculty.code.lower() + student.roll
+        student.user = User.objects.create_user(username, '', username)
+        student.user.save()
 
-    username = student.batch[-3:] + user.faculty.code.lower() + student.roll
-    student.user = User.objects.create_user(username, '', username)
-    student.user.save()
-
-    student.save()
+        student.save()
+    except:
+        context["student_error"] = "Error adding student. Make sure everything is valid below."
     return context
 
 
@@ -283,14 +286,17 @@ def add_teacher(user, request):
     try:
         teacher = Teacher()
         teacher.name = context["teacher_name"]
-        teacher.faculty = user.faculty
+        if context["faculty"] == "other":
+            teacher.faculty = Faculty.objects.get(name="Unknown")
+        else:
+            teacher.faculty = user.faculty
 
         teacher.user = User.objects.create_user(context["username"], '', context["password"])
         teacher.user.save()
 
         teacher.save()
     except:
-        context["teacher_error"] = "Error adding teacher. Make everything is valid below."
+        context["teacher_error"] = "Error adding teacher. Make sure everything is valid below."
     return context
 
 
@@ -304,12 +310,19 @@ def add_subject(user, request):
     if not request.user.is_authenticated():
         return {}
     context = {"subject_name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
+    
+    try:
+        subject = Subject()
+        subject.name = context["subject_name"]
+        if context["faculty"] == "other":
+            subject.faculty = Faculty.objects.get(name="Unknown")
+        else:
+            subject.faculty = user.faculty
 
-    subject = Subject()
-    subject.name = context["subject_name"]
-    subject.faculty = user.faculty
-    subject.code = GetUniqueSubjectCode(subject.faculty.code, Subject.objects.count())
-    subject.save()
+        subject.code = GetUniqueSubjectCode(subject.faculty.code, Subject.objects.count())
+        subject.save()
+    except:
+        context["subject_error"] = "Error adding subject. Make sure everything is valid below."
     return context
 
 
@@ -339,6 +352,10 @@ def authority(request, batch=None):
     subjects = Subject.objects.filter(faculty=faculty)
     teachers = Teacher.objects.filter(faculty=faculty)
 
+    unknownfaculty = Faculty.objects.get(name="Unknown")
+    ukn_subjects = Subject.objects.filter(faculty=unknownfaculty)
+    ukn_teachers = Teacher.objects.filter(faculty=unknownfaculty)
+
     if batch:
         students = Student.objects.filter(faculty=faculty, batch=batch).order_by("roll")
         routine_objects = Routine.objects.filter(faculty=faculty, batch=batch)
@@ -357,6 +374,7 @@ def authority(request, batch=None):
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
     context.update({'user':user, 'batch':batch, "subjects":subjects, "teachers":teachers, "students":students, "routines":routines,
+                "other_subjects":ukn_subjects, "other_teachers":ukn_teachers,
                 "batches":batches_list, "workingweek":workingweek})
     return render(request, 'classroom/authority.html', context)
 

@@ -24,6 +24,7 @@
         </div>
         <div class="row">
             <div class="col-lg-offset-2 col-lg-8 collapse-group">
+                {% if student_error %} <p class="text-danger">{{ student_error }}</p> {% endif %}
                 <form class="form collapse form-add-student" method="post" name="add-student" id="form-add-student">
                     {% csrf_token %}
                     <div class="row control-group">

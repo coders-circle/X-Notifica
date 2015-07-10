@@ -185,7 +185,7 @@ def update(request):
 
     # For teacher, routine, assignments and events that reference this teacher are returned
     elif user_type == "Teacher":
-        elements_objects = RoutineElement.objects.filter(teacher=user, routine__modified_at__gt = user.updated_at)
+        elements_objects = RoutineElement.objects.filter(teachers__pk=user.pk, routine__modified_at__gt = user.updated_at)
         if elements_objects.count() > 0:
             element_objects = RoutineElement.objects.filter(teacher=user)
             
@@ -215,12 +215,14 @@ def update(request):
     
     for el in elements_objects:
         element = {"day":el.day, "start_time":hm_to_int(el.start_time), "end_time":hm_to_int(el.end_time),
-                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teacher.user.username, "remote_id":el.pk}
+                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers[0].user.username, "remote_id":el.pk}
+        element["teachers_user_ids"] = [x.user.username for x in el.teachers.all()]
+
         if user_type == "Teacher":
             element.update({"faculty_code":el.routine.faculty.code, "year":el.routine.batch, "group":el.routine.groups})
         elements.append(element)
         subjects_objects.add(el.subject)
-        teachers_objects.add(el.teacher)
+        teachers_objects.extend(el.teachers.all())
 
     for asgn in assignments_objects:
         if (asgn.date and asgn.modified_at > user.updated_at) and not asgn.cancelled:
