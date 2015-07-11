@@ -1,4 +1,3 @@
-{% load customtags %}
 <div id="assignments" class="tab-pane fade">
   <div class="container">
 
@@ -8,8 +7,6 @@
         <hr>
       </div>
     </div>
-
-    {% if user.privilege == 1 %}
     <div class="row">
       <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-assignment"><i class="fa fa-plus"></i></a></p>
       <div class="col-lg-offset-2 col-lg-8 collapse-group">
@@ -64,7 +61,6 @@
         </form>
       </div>
     </div>
-    {% endif %}
 
     <div class="row">
       <div class="col-lg-offset-2 col-lg-8">
@@ -79,10 +75,10 @@
                 <i class="fa fa-thumb-tack pin-icon"></i>
               </a>
               {% endif %}
-              {% if user.privilege == 1 %}
+
               <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-              <a class="btn btn-share-on-fb" onclick="fb_share_open('Assignment', '{{assignment.summary}}', '{{assignment.poster|name_of_user}}', '{{assignment.details}}', '{{assignment.date}}', '{{assignment.subject}}', '{{assignment.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
-              {% endif %}
+              <a class="btn btn-share-on-fb" onclick="fb_share_open('Assignment', '{{assignment.summary}}', '{{assignment.details}}', '{{assignment.date}}', '{{assignment.subject}}', '{{assignment.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
+
               <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}">
                 <i class="fa fa-expand"></i>
               </a>
@@ -94,10 +90,6 @@
               <small>{{assignment.summary}}</small>
             </p>
 
-            <p class="list-group-item-text">
-              <small>posted by: {{assignment.poster|name_of_user}}</small>
-            </p>
-
             <div class="collapse-group">
               {% autoescape off %}
               <p class="collapse list-group-item-text" id="detail{{forloop.counter}}">
@@ -106,6 +98,7 @@
               {% endautoescape %}
             </div>
           </div>
+          {%empty%}
           <div class="list-group-item list-group-item-empty">
               <p>No recent assignments found</p>
           </div>
@@ -113,7 +106,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 

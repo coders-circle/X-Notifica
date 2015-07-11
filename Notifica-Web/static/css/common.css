@@ -56,8 +56,8 @@ p {
         font-size: 2em;
         transition: all .3s;
     }
+/*
 
-    /*
     .navbar-fixed-top.navbar-shrink {
         height: 70px;
         padding: 10px 0;
@@ -67,19 +67,20 @@ p {
         font-size: 1.5em;
     }
 
-    .navbar-fixed-top.navbar-shrink .navbar-logo{
+    .navbar-fixed-top.navbar-shrink .img-navbar-logo{
         float:left;
-        width:22px;
-        margin-top:14px;
-        margin-right: 5px;
+        width:30px;
+        margin-top:8px;
+        margin-right: 6px;
     }
-    */
+*/
 }
 
 .img-navbar-logo{
     margin-top:4px;
     margin-right:10px;
     width:37px;
+    transition: all .3s ease-in-out;
 }
 
 

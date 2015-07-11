@@ -1,6 +1,49 @@
 {% extends 'classroom/base.html' %}
 {% load static %}
+{% load humanize %}
+
+{% block head %}
+<link href = "{% static 'css/teacher.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{%block navbarIconBars%}
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+{%endblock%}
+
+{% block navbar %}
+<div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="hidden"><a href="#page-top"></a></li>
+        <li class="active"><a data-toggle="pill" href="#routine">Routine</a></li>
+        <li><a data-toggle="pill" href="#assignments">Assignments</a></li>
+        <li><a data-toggle="pill" href="#notices">Notices</a></li>
+        <li><a data-toggle="pill" href="#notices">Attendances</a></li>
+        <li class="dropdown ">
+            <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <i class="fa fa-user fa-fw"></i> {%if firstname%}{{firstname}}{%endif%} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
+              <li><a data-toggle="pill" href="#changepass"><i class="fa fa-edit"></i> Change Password</a></li>
+              <li><a href="/logout"><i class="fa fa-sign-out"></i> Sign out</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
 
 {% block body %}
+<div class="tab-content">
+  {% include "classroom/teacher/routine.html" %}
+  {% include "classroom/teacher/assignments.html" %}
+  {% include "classroom/teacher/notices.html" %}
+  {% include "classroom/teacher/attendances.html" %}
+</div>
+{% endblock %}
 
+{% block footer %}
+<script src="{% static 'js/teacher.js' %}"></script>
 {% endblock %}

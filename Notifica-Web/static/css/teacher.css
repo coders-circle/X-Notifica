@@ -1,3 +1,7 @@
+.main-content{
+    min-height: 600px;
+}
+
 /****************************
     common for all tabs
 *****************************/
@@ -170,13 +174,13 @@ p {
     background: transparent;
     box-shadow: none;
 }
-
 .list-group-item-empty p{
     font-size: 2em;
     color:#aaa;
     text-align: center;
 
 }
+
 .assignment-date,
 .notice-date {
     color: #777777!important;

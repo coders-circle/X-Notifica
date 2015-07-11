@@ -1,16 +1,16 @@
 p {
-    font-size: 20px;
+    font-size: 16px;
 }
 
 p.small {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .img-centered {
     margin: 0 auto;
 }
 
-#todo, #about, #login{
+#todo, #about, #sign-in{
     min-height: 640px;
 }
 
@@ -48,7 +48,7 @@ header .intro-text .skills {
     display: block;
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 1.24em;
+    font-size: 1em;
     color:#007d65;
 }
 
@@ -60,11 +60,29 @@ header .intro-text .skills {
   margin:20px;
 }
 
+
+header .container {
+    padding-top: 200px;
+    padding-bottom: 100px;
+}
+
+section {
+    padding-top:200px;
+    padding-bottom:50px;
+}
+
+
+section h2 {
+    margin: 0;
+    font-size: 2em;
+}
+
+section.success {
+    color: #fff;
+    background: #00A686;
+}
+
 @media(min-width:768px) {
-    header .container {
-        padding-top: 200px;
-        padding-bottom: 100px;
-    }
 
     header .intro-text .name {
         font-size: 4.75em;
@@ -73,22 +91,24 @@ header .intro-text .skills {
     header .intro-text .skills {
         font-size: 1.75em;
     }
+    .text-todo{
+        font-size:1.2em;
+    }
+    section h2 {
+        margin: 0;
+        font-size: 3em;
+    }
+    p {
+        font-size: 18px;
+    }
+
+    p.small {
+        font-size: 16px;
+    }
+
+
 }
 
-section {
-    padding-top:100px;
-    padding-bottom:100px;
-}
-
-section h2 {
-    margin: 0;
-    font-size: 3em;
-}
-
-section.success {
-    color: #fff;
-    background: #00A686;
-}
 
 .btn-sign-in {
     margin-top:40px;
