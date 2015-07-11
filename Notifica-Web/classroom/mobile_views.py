@@ -27,10 +27,10 @@ def GetDeltaDay(delta):
 def DeletePassed():
     yesterday = GetDeltaDay(1)
     Assignment.objects.filter(date__lte = yesterday).delete()
-    Event.objects.filter(date__lte = yesterday).delete()
+    Notice.objects.filter(date__lte = yesterday).delete()
 
     Assignment.objects.filter(date = None, cancelled = True).delete()
-    Event.objects.filter(date = None, cancelled = True).delete()
+    Notice.objects.filter(date = None, cancelled = True).delete()
 
 # set value to a key in the settings table
 def SetSetting(key, value):
@@ -43,6 +43,22 @@ def SetSetting(key, value):
 error_response = { 'message_type':'Error' }
 error_response_auth = { 'message_type':'Error on Authentication', 'failure_message':'Invalid Login' }
 
+# Get user type and object
+def GetUser(user):
+    try:
+        teacher = Teacher.objects.get(user=user)
+        return "Teacher", teacher
+    except:
+        try:
+            student = Student.objects.get(user=user)
+            return "Student", student
+        except:
+            try:
+                authority = Student.objects.get(user=user)
+                return "Authority", authority
+            except:
+                return "Invalid", None
+
 # Helper method to authenticate json request containing "user_id" and "password" fields
 def json_authenticate(data):
     global error_response_auth
@@ -50,21 +66,15 @@ def json_authenticate(data):
     error_response_auth["failure_message"] = "Invalid Login"
 
     if not user is None and user.is_active:
-        teachers = Teacher.objects.filter(user=user)
-        if teachers.count() == 0:
-            students = Student.objects.filter(user=user)
-            if students.count() > 0:
-                student = list(students)[0]
-                return "Student", student
-        else:
-            teacher = list(teachers)[0]
-            return "Teacher", teacher
+        tp, obj = GetUser(user)
+        if tp == "Authority":
+            return "Invalid", None
+        return tp, obj
     else:
         if User.objects.filter(username=data.get("user_id","")).count() > 0:
             error_response_auth["failure_message"] = "Invalid Password"
         else:
             error_response_auth["failure_message"] = "Invalid User"
-
     return "Invalid", None
 
 
@@ -175,7 +185,7 @@ def update(request):
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
             Q(date = None) | Q(modified_at__gt = user.updated_at)
         )
-        events_objects = Event.objects.filter(
+        events_objects = Notice.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0), 
             Q(faculty=user.faculty) | Q(faculty = None), 
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
@@ -187,10 +197,10 @@ def update(request):
     elif user_type == "Teacher":
         elements_objects = RoutineElement.objects.filter(teachers__pk=user.pk, routine__modified_at__gt = user.updated_at)
         if elements_objects.count() > 0:
-            element_objects = RoutineElement.objects.filter(teacher=user)
+            element_objects = RoutineElement.objects.filter(teachers__pk=user.pk)
             
             for el in element_objects:
-                students_objects.update(list(Student.objects.filter(batch=el.routine.batch, faculty=el.routine.faculty)))
+                students_objects.update(list(Student.objects.filter(batch=el.routine.batch, faculty=el.routine.faculty, modified_at__gt = user.updated_at)))
 
             attendance_objects = Attendance.objects.filter(teacher=user, date__gt=last_week)
             for at in attendance_objects:
@@ -206,8 +216,9 @@ def update(request):
                     at_elements.append({"presence": ate.presence, "student_user_id": ate.student.user.username})
                 attendance["elements"] = at_elements
                 attendances.append(attendance)
+
         assignments_objects = Assignment.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
-        events_objects = Event.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
+        events_objects = Notice.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
     
     else:
         return JsonResponse(error_response)
@@ -215,20 +226,20 @@ def update(request):
     
     for el in elements_objects:
         element = {"day":el.day, "start_time":hm_to_int(el.start_time), "end_time":hm_to_int(el.end_time),
-                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers[0].user.username, "remote_id":el.pk}
+                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers.all()[0].user.username, "remote_id":el.pk}
         element["teachers_user_ids"] = [x.user.username for x in el.teachers.all()]
 
         if user_type == "Teacher":
             element.update({"faculty_code":el.routine.faculty.code, "year":el.routine.batch, "group":el.routine.groups})
         elements.append(element)
         subjects_objects.add(el.subject)
-        teachers_objects.extend(el.teachers.all())
+        teachers_objects.update(el.teachers.all())
 
     for asgn in assignments_objects:
         if (asgn.date and asgn.modified_at > user.updated_at) and not asgn.cancelled:
             acnt += 1
         assignment = {"date":datetime_to_seconds(asgn.date) if asgn.date else -1, "summary":asgn.summary, "subject_code":asgn.subject.code,
-                            "details":asgn.details, "poster_id":asgn.poster.username, "remote_id":asgn.pk, "deleted":asgn.cancelled}
+                            "details":asgn.details, "poster_id":asgn.poster.username, "poster_name":GetUser(asgn.poster)[1].name, "remote_id":asgn.pk, "deleted":asgn.cancelled}
         if asgn.cancelled:
             assignment["date"] = datetime_to_seconds(GetYesterday())
         if user_type == "Teacher":
@@ -242,7 +253,7 @@ def update(request):
         if (evnt.date and evnt.modified_at > user.updated_at) and not evnt.cancelled:
             ecnt += 1
         event = {"date":datetime_to_seconds(evnt.date) if evnt.date else -1, "summary":evnt.summary,
-                            "details":evnt.details, "poster_id":evnt.poster.username, "remote_id":evnt.pk, "deleted":evnt.cancelled}
+                            "details":evnt.details, "poster_id":evnt.poster.username, "poster_name":GetUser(evnt.poster)[1].name, "remote_id":evnt.pk, "deleted":evnt.cancelled}
         if evnt.cancelled:
             event["date"] = datetime_to_seconds(GetYesterday())
         if user_type == "Teacher":
@@ -315,7 +326,7 @@ def post(request):
         assignment.save()
 
     elif posttype == 3:
-        event = Event.objects.get(pk=indata.get("postid", -1))
+        event = Notice.objects.get(pk=indata.get("postid", -1))
         event.cancelled = True
         event.save()
 
@@ -339,7 +350,7 @@ def post(request):
         if posttype == 0:
             newpost = Assignment()
         else:
-            newpost = Event()
+            newpost = Notice()
 
         newpost.summary = summary
         newpost.details = details

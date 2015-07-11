@@ -72,6 +72,9 @@ class Teacher(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['faculty']
+
 
 # Subject
 class Subject(models.Model):
@@ -83,6 +86,10 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
  
+    class Meta:
+        ordering = ['faculty']
+
+
 # Routine - made up of several RoutineElements
 class Routine(models.Model):
     batch = models.IntegerField()
@@ -129,7 +136,7 @@ class RoutineElement(models.Model):
         return str(self.routine) + " " + dict(Days).get(self.day) + " " + str(self.start_time)+" - "+str(self.end_time)
 
 
-# Assignment and Notices (Events)
+# Assignment and Notice
 class Assignment(models.Model):
     summary = models.TextField()
     details = models.TextField()
@@ -150,7 +157,7 @@ class Assignment(models.Model):
         return self.summary
 
 
-class Event(models.Model):
+class Notice(models.Model):
     summary = models.TextField()
     details = models.TextField()
     poster = models.ForeignKey(User)
@@ -162,7 +169,7 @@ class Event(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        super(Event, self).save(*args, **kwargs)
+        super(Notice, self).save(*args, **kwargs)
         Notify("Notice", self)
 
     def __str__(self):

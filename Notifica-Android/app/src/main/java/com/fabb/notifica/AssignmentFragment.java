@@ -30,8 +30,11 @@ public class AssignmentFragment extends InfoFragment {
                 DateFormat format1 = DateFormat.getDateInstance();
                 extra += "\nDate of Submission:\n    " + format1.format(cal.getTime());
             }
-            if (as.deleted)
-                extra += "\nDeleted";
+            if (!as.posterName.equals("")){
+                if (extra.length() > 0)
+                    extra += "\n";
+                extra += "Posted by: " + as.posterName;
+            }
 
             listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra));
             mIds.add(as.remoteId);

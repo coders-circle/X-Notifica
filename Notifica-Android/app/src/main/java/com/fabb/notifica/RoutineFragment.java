@@ -149,7 +149,15 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
                 RoutineAdapter.Item info = new RoutineAdapter.Item();
                 info.subject = r.subject;
-                info.teacher = r.teacher;
+
+                if (isteacher)
+                    info.teachers = null;
+                else {
+                    String[] userids = r.teachers_ids.split("\\s");
+                    info.teachers = new ArrayList<>();
+                    for (String userId: userids)
+                        info.teachers.add(Database.GetTeacher(userId));
+                }
                 info.faculty = r.faculty;
                 info.group = r.groups;
                 info.batch = r.year;

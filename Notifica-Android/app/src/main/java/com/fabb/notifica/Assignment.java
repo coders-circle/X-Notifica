@@ -7,6 +7,7 @@ public class Assignment extends SugarRecord<Assignment>{
     public String summary;
     public String details;
     public String posterId;
+    public String posterName;
     public boolean deleted;
     public long remoteId;
     public Subject subject;

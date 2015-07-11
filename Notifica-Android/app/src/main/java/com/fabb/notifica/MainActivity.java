@@ -25,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 
 import java.security.MessageDigest;
@@ -168,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
     private Fragment routine_fragment = new RoutineFragment();
     private Fragment assignment_fragment = new AssignmentFragment();
-    private Fragment event_fragment = new EventFragment();
+    private Fragment event_fragment = new NoticeFragment();
     private int lastItemSelected = 0;
     /** Swaps fragments in the main content view */
     private void selectItem(int position) {

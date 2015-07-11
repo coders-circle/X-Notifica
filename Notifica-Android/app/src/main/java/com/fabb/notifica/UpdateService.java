@@ -139,7 +139,6 @@ public class UpdateService {
             }
         }
 
-        if (!isTeacher)
         if (teachers != null) {
             for (int i=0; i < teachers.length(); ++i) {
                 JSONObject teacher = teachers.optJSONObject(i);
@@ -183,7 +182,14 @@ public class UpdateService {
                     RoutineElement newElement = new RoutineElement();
                     newElement.day = element.optInt("day");
                     newElement.subject = Database.GetSubject(element.optString("subject_code"));
-                    newElement.teacher = Database.GetTeacher(element.optString("teacher_user_id"));
+                    String teachers_ids = "";
+
+                    JSONArray ids = element.optJSONArray("teachers_user_ids");
+                    if (ids != null)
+                    for (int k=0; k<ids.length(); ++k)
+                        teachers_ids += ids.optString(k) + " ";
+                    newElement.teachers_ids = teachers_ids;
+
                     newElement.startTime = element.optInt("start_time");
                     newElement.endTime = element.optInt("end_time");
                     newElement.type = element.optInt("type");
@@ -271,6 +277,7 @@ public class UpdateService {
                 newAssignment.summary = assignment.optString("summary");
                 newAssignment.details = assignment.optString("details");
                 newAssignment.posterId = assignment.optString("poster_id");
+                newAssignment.posterName = assignment.optString("poster_name");
                 newAssignment.deleted = assignment.optBoolean("deleted");
 
                 if (isTeacher) {
@@ -288,24 +295,25 @@ public class UpdateService {
                 JSONObject event = events.optJSONObject(i);
                 if (event == null)
                     continue;
-                Event newEvent = Database.GetEvent(event.optLong("remote_id"));
-                if (newEvent == null)
-                    newEvent = new Event();
+                Notice newNotice = Database.GetEvent(event.optLong("remote_id"));
+                if (newNotice == null)
+                    newNotice = new Notice();
 
-                newEvent.remoteId = event.optLong("remote_id");
-                newEvent.date = event.optLong("date");
-                newEvent.summary = event.optString("summary");
-                newEvent.details = event.optString("details");
-                newEvent.posterId = event.optString("poster_id");
-                newEvent.deleted = event.optBoolean("deleted");
+                newNotice.remoteId = event.optLong("remote_id");
+                newNotice.date = event.optLong("date");
+                newNotice.summary = event.optString("summary");
+                newNotice.details = event.optString("details");
+                newNotice.posterId = event.optString("poster_id");
+                newNotice.deleted = event.optBoolean("deleted");
+                newNotice.posterName = event.optString("poster_name");
 
                 if (isTeacher) {
-                    newEvent.year = event.optInt("year");
-                    newEvent.faculty = Database.GetFaculty(event.optString("faculty_code"));
-                    newEvent.groups = event.optString("groups");
+                    newNotice.year = event.optInt("year");
+                    newNotice.faculty = Database.GetFaculty(event.optString("faculty_code"));
+                    newNotice.groups = event.optString("groups");
                 }
 
-                newEvent.save();
+                newNotice.save();
             }
         }
 

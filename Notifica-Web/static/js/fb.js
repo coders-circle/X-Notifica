@@ -40,11 +40,13 @@ function fb_logged_in() {
     });
 }
 
-function fb_share_open(type, summary, details, finaldate, subject, groups) {
+function fb_share_open(type, summary, posted_by, details, finaldate, subject, groups) {
     var text = type;
     if (subject != "")
         text += " of " + subject;
     text += "\n" + summary;
+    if (posted_by != "")
+        text += "\nPosted by: " + posted_by;
     if (finaldate != "None")
         text += "\nDate: " + finaldate;
     if (groups != "" && group != "None")
