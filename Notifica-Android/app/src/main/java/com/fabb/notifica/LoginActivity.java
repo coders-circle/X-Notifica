@@ -47,6 +47,8 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        new AutoUpdateApk(getApplicationContext());
+
         SharedPreferences preferences = MainActivity.GetPreferences(this);
         //noinspection ConstantConditions
         if (preferences.getBoolean("logged-in", false)
