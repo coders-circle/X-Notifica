@@ -227,8 +227,12 @@ def teacher(request):
     attendances_objects = Attendance.objects.filter(teacher=user).order_by('-date')
 
     subjects = set()
+    batches = set()
+    faculties = set()
     for element in elements_objects:
         subjects.add(element.subject)
+        faculties.add(element.faculty)
+        batches.add(element.batch)
 
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
@@ -259,7 +263,8 @@ def teacher(request):
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
                     'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
                     'attendances':attendances_objects,
-                    'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
+                    'subjectlist':list(subjects), 'facultylist':list(faculties), 'batchlist':list(batches),
+                    'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/teacher.html', context)
 
 
