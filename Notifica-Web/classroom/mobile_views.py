@@ -54,7 +54,7 @@ def GetUser(user):
             return "Student", student
         except:
             try:
-                authority = Student.objects.get(user=user)
+                authority = Authority.objects.get(user=user)
                 return "Authority", authority
             except:
                 return "Invalid", None
@@ -217,8 +217,8 @@ def update(request):
                 attendance["elements"] = at_elements
                 attendances.append(attendance)
 
-        assignments_objects = Assignment.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
-        events_objects = Notice.objects.filter(poster=user.user, modified_at__gt = user.updated_at)
+        assignments_objects = Assignment.objects.filter(Q(date = None) | Q(modified_at__gt = user.updated_at), poster=user.user)
+        events_objects = Notice.objects.filter(Q(date = None) | Q(modified_at__gt = user.updated_at), poster=user.user)
     
     else:
         return JsonResponse(error_response)

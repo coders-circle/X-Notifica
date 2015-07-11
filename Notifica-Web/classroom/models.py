@@ -31,6 +31,9 @@ class Authority(models.Model):
     faculty = models.ForeignKey(Faculty)
     user = models.OneToOneField(User)
 
+    def __str__(self):
+        return self.faculty.name + ": " + self.name
+
     class Meta:
         verbose_name_plural = "Authorities"
 

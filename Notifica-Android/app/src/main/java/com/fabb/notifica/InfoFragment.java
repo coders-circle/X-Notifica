@@ -1,6 +1,8 @@
 package com.fabb.notifica;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -106,11 +108,12 @@ public class InfoFragment  extends Fragment implements UpdateListener {
         if (!privileged)
             return;
         ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
-
         int type = ExpandableListView.getPackedPositionType(info.packedPosition);
 
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-            menu.add("Delete");
+            MenuInflater inflater = getActivity().getMenuInflater();
+            inflater.inflate(R.menu.menu_context_info, menu);
+
         }
     }
 
@@ -118,26 +121,60 @@ public class InfoFragment  extends Fragment implements UpdateListener {
     public boolean onContextItemSelected(MenuItem item) {
         if (!privileged)
             return super.onContextItemSelected(item);
+
         ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item
                 .getMenuInfo();
-        SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
-
         int type = ExpandableListView.getPackedPositionType(info.packedPosition);
-        int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+        final int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
 
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-            JSONObject json = new JSONObject();
-            try {
-                json.put("message_type", "Delete "+info_name);
-                json.put("user_id", preferences.getString("user-id", ""));
-                json.put("password", preferences.getString("password", ""));
-                json.put("postid", mIds.get(groupPosition));
+            if (item.getItemId() == R.id.delete_info) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Delete " + info_name)
+                        .setMessage("Are you sure you want to delete this?")
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
+                                JSONObject json = new JSONObject();
+                                try {
+                                    json.put("message_type", "Delete " + info_name);
+                                    json.put("user_id", preferences.getString("user-id", ""));
+                                    json.put("password", preferences.getString("password", ""));
+                                    json.put("postid", mIds.get(groupPosition));
 
-                new InfoAdder.PostTask(getActivity(), json, false, "Deleting").execute();
-            } catch (Exception e) {
-                e.printStackTrace();
+                                    new InfoAdder.PostTask(getActivity(), json, false, "Deleting").execute();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            } else if (item.getItemId() == R.id.share_info) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Share " + info_name + " to Facebook")
+                        .setMessage("Are you sure you want to share this post?")
+                        .setPositiveButton("Share", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                PostToFacebook(mIds.get(groupPosition));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
             }
         }
         return super.onContextItemSelected(item);
     }
+
+    protected void PostToFacebook(long id) {}
 }

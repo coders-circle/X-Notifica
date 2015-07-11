@@ -41,4 +41,11 @@ public class AssignmentFragment extends InfoFragment {
         }
     }
 
+    @Override
+    protected void PostToFacebook(long id) {
+        Assignment assignment = Assignment.find(Assignment.class, "remote_id = ?", id + "").get(0);
+        InfoAdder.PostToFacebook(getActivity(), "Assignment", assignment.groups, assignment.date, assignment.subject,
+                assignment.summary, assignment.details, assignment.posterName);
+    }
+
 }

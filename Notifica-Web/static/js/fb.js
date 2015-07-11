@@ -52,6 +52,8 @@ function fb_share_open(type, summary, posted_by, details, finaldate, subject, gr
     if (groups != "" && group != "None")
         text += "\nFor group: " + groups;
     text += "\n\n" + details;
+    text += "\n\nPosted from: Notifica (http://notifica.herokuapp.com/)";
+
     document.getElementById("fbTextArea").value = text;
 
     FB.getLoginStatus(function(response) {

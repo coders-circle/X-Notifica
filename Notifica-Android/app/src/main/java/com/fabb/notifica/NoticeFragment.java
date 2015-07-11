@@ -38,4 +38,12 @@ public class NoticeFragment extends InfoFragment {
         }
     }
 
+
+    @Override
+    protected void PostToFacebook(long id) {
+        Notice notice = Notice.find(Notice.class, "remote_id = ?", id + "").get(0);
+        InfoAdder.PostToFacebook(getActivity(), "Assignment", notice.groups, notice.date, null,
+                notice.summary, notice.details, notice.posterName);
+    }
+
 }
