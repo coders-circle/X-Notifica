@@ -376,7 +376,7 @@ def post(request):
  { "message_type" : "Gcm Registration", "user_id":<username>, "password":<password>, "token":<token>, "device_id":<device_id> }
  { "message_type" : "Registration Result", "register_result":"Success" }
 """
-
+import traceback
 @csrf_exempt
 def register(request):   
     if request.method != "POST":
@@ -392,12 +392,13 @@ def register(request):
 
     dev_id = indata.get("device_id", "")
     token = indata.get("token", "")
-
+    
     if dev_id == "":
         GcmRegistration.objects.update_or_create(user=user.user, defaults={"token":token})
     else:
         try:
             registration = GcmRegistration.objects.get(device_id=dev_id)
+            GcmRegistration.objects.filter(device_id="", user=user.user).delete()
         except:
             registration = GcmRegistration()
             registration.device_id = dev_id
@@ -459,3 +460,15 @@ def post_attendance(request):
     return JsonResponse(outdata)
 
  
+@csrf_exempt
+def check_expired(request):
+    indata = json.loads(request.body.decode('utf-8'))
+    outdata = {}
+    try:
+        if indata["type"] == "Assignment":
+            outdata["expired"] = Assignment.objects.get(pk=indata["remote_id"]).cancelled
+        elif indata["type"] == "Notice":
+            outdata["expired"] = Notice.objects.get(pk=indata["remote_id"]).cancelled
+    except:
+        outdata["expired"] = True
+    return JsonResponse(outdata)
