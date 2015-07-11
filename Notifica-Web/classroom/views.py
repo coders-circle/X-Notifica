@@ -85,10 +85,17 @@ def post_assignment(request):
     if not request.user.is_authenticated():
         return {}
 
-    user = Student.objects.get(user=request.user)
     assignment = Assignment()
-    assignment.faculty = user.faculty
-    assignment.batch = user.batch
+
+    user_type, user = GetUser(request.user)
+    if user_type == "Student":
+        assignment.faculty = user.faculty
+        assignment.batch = user.batch
+    elif user_type == "Teacher":
+        context.update({"faculty":request.POST.get("faculty"), "batch":request.POST.get("batch")})
+        assignment.faculty = Faculty.objects.get(code=context["faculty"])
+        assignment.batch = context["batch"]
+
     assignment.groups = "" if context["group"] == "All" else context["group"]
     assignment.poster = request.user
     assignment.subject = Subject.objects.get(code=context["subject"])
@@ -105,10 +112,17 @@ def post_notice(request):
     if not request.user.is_authenticated():
         return {}
 
-    user = Student.objects.get(user=request.user)
     notice = Notice()
-    notice.faculty = user.faculty
-    notice.batch = user.batch
+
+    user_type, user = GetUser(request.user)
+    if user_type == "Student":
+        notice.faculty = user.faculty
+        notice.batch = user.batch
+    elif user_type == "Teacher":
+        context.update({"faculty":request.POST.get("faculty"), "batch":request.POST.get("batch")})
+        notice.faculty = Faculty.objects.get(code=context["faculty"])
+        notice.batch = context["batch"]
+
     notice.groups = "" if context["group"] == "All" else context["group"]
     notice.poster = request.user
     notice.summary = context["summary"]
