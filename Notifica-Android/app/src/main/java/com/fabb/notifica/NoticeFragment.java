@@ -6,9 +6,9 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class EventFragment extends InfoFragment {
+public class NoticeFragment extends InfoFragment {
 
-    public EventFragment() {
+    public NoticeFragment() {
         super();
         this.info_name = "Event";
     }
@@ -16,9 +16,9 @@ public class EventFragment extends InfoFragment {
      protected void prepareListData() {
         mIds.clear();
         listItems = new ArrayList<>();
-         List<Event> ass = Event.listAll(Event.class);
+         List<Notice> ass = Notice.listAll(Notice.class);
          for (int i=ass.size()-1; i>=0; --i){
-             Event as = ass.get(i);
+             Notice as = ass.get(i);
              String extra = "";
 
              if (as.date != -1) {
@@ -27,12 +27,23 @@ public class EventFragment extends InfoFragment {
                  DateFormat format1 = DateFormat.getDateInstance();
                  extra += "Date:  " + format1.format(cal.getTime());
              }
-             if (as.deleted)
-                 extra += "\nDeleted";
+             if (!as.posterName.equals("")) {
+                 if (extra.length() > 0)
+                     extra += "\n";
+                 extra += "Posted by: " + as.posterName;
+             }
 
              listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra));
              mIds.add(as.remoteId);
         }
+    }
+
+
+    @Override
+    protected void PostToFacebook(long id) {
+        Notice notice = Notice.find(Notice.class, "remote_id = ?", id + "").get(0);
+        InfoAdder.PostToFacebook(getActivity(), "Assignment", notice.groups, notice.date, null,
+                notice.summary, notice.details, notice.posterName);
     }
 
 }

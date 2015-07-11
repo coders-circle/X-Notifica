@@ -81,9 +81,11 @@ public class InfoListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.info_group, parent, false);
         }
 
-        String headerTitle = item.summary + "\n" + item.extra;
         TextView lblListHeader = (TextView) convertView.findViewById(R.id.summary_view);
-        lblListHeader.setText(headerTitle);
+        lblListHeader.setText(item.summary);
+
+        TextView lblListExtra = (TextView) convertView.findViewById(R.id.extra_view);
+        lblListExtra.setText(item.extra);
         return convertView;
     }
 

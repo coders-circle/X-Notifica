@@ -9,11 +9,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +37,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         super.onCreate(save);
         setRetainInstance(true);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,12 +111,15 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
+            registerForContextMenu(rootView.findViewById(R.id.routine_list));
+
             SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
 
             String user_type = preferences.getString("user-type","");
             final boolean isteacher = user_type != null && user_type.equals("Teacher");
 
-            ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
+            final ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
+            lv.setLongClickable(true);
             Bundle args = getArguments();
 
             Calendar c = Calendar.getInstance();
@@ -149,7 +157,15 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
                 RoutineAdapter.Item info = new RoutineAdapter.Item();
                 info.subject = r.subject;
-                info.teacher = r.teacher;
+
+                if (isteacher)
+                    info.teachers = null;
+                else {
+                    String[] userids = r.teachers_ids.split("\\s");
+                    info.teachers = new ArrayList<>();
+                    for (String userId: userids)
+                        info.teachers.add(Database.GetTeacher(userId));
+                }
                 info.faculty = r.faculty;
                 info.group = r.groups;
                 info.batch = r.year;
@@ -167,16 +183,62 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (isteacher) {
-                        AttendanceListActivity.info = infos.get(position);
+                        AttendanceListActivity.info = (RoutineAdapter.Item)lv.getItemAtPosition(position);
                         if (!AttendanceListActivity.info.isBreak)
                             startActivity(new Intent(getActivity(), AttendanceListActivity.class));
                     }
                 }
             });
+            lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View v, int position, long id) {
+                    selectedItem = (RoutineAdapter.Item)lv.getItemAtPosition(position);
+                    if (!selectedItem.isBreak)
+                        lv.showContextMenu();
+                    return true;
+                }
+            });
             return rootView;
+        }
+        private static RoutineAdapter.Item selectedItem;
+
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            super.onCreateContextMenu(menu, v, menuInfo);
+            MenuInflater inflater = getActivity().getMenuInflater();
+            inflater.inflate(R.menu.menu_context_routine, menu);
+        }
+
+        @Override
+        public boolean onContextItemSelected(MenuItem item) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+            Intent i;
+            switch (item.getItemId()) {
+                case R.id.add_notice:
+                    InfoAdder.routineItem = selectedItem;
+                    i = new Intent(getActivity(), InfoAdder.class);
+                    i.putExtra("parentActivity", "Events");
+                    startActivity(i);
+                    return true;
+                case R.id.add_assignment:
+                    InfoAdder.routineItem = selectedItem;
+                    i = new Intent(getActivity(), InfoAdder.class);
+                    i.putExtra("parentActivity", "Assignments");
+                    startActivity(i);
+                    return true;
+                case R.id.show_attendances:
+                    AttendanceListActivity.info = selectedItem;
+                    startActivity(new Intent(getActivity(), AttendanceListActivity.class));
+                    return true;
+                default:
+                    return super.onContextItemSelected(item);
+            }
         }
 
     }
+
 
     class DaysCollectionPagerAdapter extends  FragmentPagerAdapter{
 

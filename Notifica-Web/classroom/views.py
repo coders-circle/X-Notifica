@@ -7,24 +7,20 @@ from datetime import datetime
 
 from django.db.models import Q
 from .models import *
-from .mobile_views import DeletePassed
+from .mobile_views import DeletePassed, GetUser
 from .forms import *
 from helpers import hm_to_int
 
 def redirect_user(user):
-    try:
-        teacher = Teacher.objects.get(user=user)
+    tp, obj = GetUser(user)
+    if tp == "Teacher":
         return redirect('classroom:teacher')
-    except:
-        try:
-            student = Student.objects.get(user=user)
-            return redirect('classroom:student')
-        except:
-            try:
-                authority = Authority.objects.get(user=user)
-                return redirect('classroom:authority')
-            except:
-                return None
+    elif tp == "Student":
+        return redirect('classroom:student')
+    elif tp == "Authority":
+        return redirect('classroom:authority')
+    else:
+        return None
 
 def index(request):
     context = {}
@@ -79,7 +75,7 @@ def delete(request):
     if request.POST.get("type") == "assignment":
         Assignment.objects.get(pk=request.POST.get("pk")).delete()
     elif request.POST.get("type") == "notice":
-        Event.objects.get(pk=request.POST.get("pk")).delete()
+        Notice.objects.get(pk=request.POST.get("pk")).delete()
     return HttpResponse('')
 
 
@@ -110,7 +106,7 @@ def post_notice(request):
         return {}
 
     user = Student.objects.get(user=request.user)
-    notice = Event()
+    notice = Notice()
     notice.faculty = user.faculty
     notice.batch = user.batch
     notice.groups = "" if context["group"] == "All" else context["group"]
@@ -151,7 +147,7 @@ def student(request):
         Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
         cancelled = False
     ).order_by('-modified_at')
-    events_objects = Event.objects.filter(
+    events_objects = Notice.objects.filter(
             Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
             Q(faculty=user.faculty) | Q(faculty = None),
             Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
@@ -213,7 +209,7 @@ def teacher(request):
 
     elements_objects = RoutineElement.objects.filter(teachers__pk=user.pk).order_by('start_time')
     assignments_objects = Assignment.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
-    events_objects = Event.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
+    events_objects = Notice.objects.filter(poster=user.user, cancelled = False).order_by('-modified_at')
     attendances_objects = Attendance.objects.filter(teacher=user).order_by('-date')
 
     subjects = set()

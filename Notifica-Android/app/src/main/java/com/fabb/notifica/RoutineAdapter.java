@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class RoutineAdapter extends BaseAdapter {
     public static class Item {
         public Subject subject;
-        public Teacher teacher;
+        public ArrayList<Teacher> teachers;
         public String time;
 
         public boolean isBreak = false;
@@ -81,8 +81,16 @@ public class RoutineAdapter extends BaseAdapter {
             else
                 subject.setText("");
 
-            if (info.teacher != null)
-                teacher.setText(info.teacher.name);
+            if (info.teachers != null) {
+                String teacherNames = "";
+                for (Teacher t: info.teachers)
+                    if (t != null) {
+                        if (teacherNames.length() > 0)
+                            teacherNames += ", ";
+                        teacherNames += t.name;
+                    }
+                teacher.setText(teacherNames);
+            }
             else if (info.faculty != null) {
                 if (info.group != null && !info.group.equals(""))
                     teacher.setText(info.batch + " " + info.faculty.name + " Group: " + info.group);

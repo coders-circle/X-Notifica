@@ -4,7 +4,8 @@ import com.orm.SugarRecord;
 
 public class RoutineElement extends SugarRecord<RoutineElement> {
     public Subject subject;
-    public Teacher teacher;
+    //public Teacher teacher;
+    public String teachers_ids;
     public int startTime;
     public int endTime;
     public int day;

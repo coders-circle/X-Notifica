@@ -40,16 +40,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <CheckBox
+            android:id="@+id/event_check_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pinned post"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date: "/>
 
-        <CheckBox
-            android:id="@+id/event_check_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"/>
         <DatePicker
             android:id="@+id/event_edit_date"
             android:layout_width="wrap_content"

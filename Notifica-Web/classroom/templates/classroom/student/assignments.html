@@ -1,3 +1,4 @@
+{% load customtags %}
 <div id="assignments" class="tab-pane fade">
   <div class="container">
 
@@ -80,7 +81,7 @@
               {% endif %}
               {% if user.privilege == 1 %}
               <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-              <a class="btn btn-share-on-fb" onclick="fb_share_open('Assignment', '{{assignment.summary}}', '{{assignment.details}}', '{{assignment.date}}', '{{assignment.subject}}', '{{assignment.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
+              <a class="btn btn-share-on-fb" onclick="fb_share_open('Assignment', '{{assignment.summary}}', '{{assignment.poster|name_of_user}}', '{{assignment.details}}', '{{assignment.date}}', '{{assignment.subject}}', '{{assignment.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
               {% endif %}
               <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}">
                 <i class="fa fa-expand"></i>
@@ -91,6 +92,10 @@
 
             <p class="list-group-item-text">
               <small>{{assignment.summary}}</small>
+            </p>
+
+            <p class="list-group-item-text">
+              <small>posted by: {{assignment.poster|name_of_user}}</small>
             </p>
 
             <div class="collapse-group">

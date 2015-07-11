@@ -6,7 +6,7 @@ import java.util.List;
 public class Database {
     public static void DeleteAll() {
         Assignment.deleteAll(Assignment.class);
-        Event.deleteAll(Event.class);
+        Notice.deleteAll(Notice.class);
         RoutineElement.deleteAll(RoutineElement.class);
         Subject.deleteAll(Subject.class);
         Teacher.deleteAll(Teacher.class);
@@ -21,11 +21,11 @@ public class Database {
         cal.add(Calendar.DATE, -1);
         long date = cal.getTimeInMillis()/1000;
 
-        Event.deleteAll(Event.class, "date < ? AND date <> -1", date+"");
+        Notice.deleteAll(Notice.class, "date < ? AND date <> -1", date + "");
         Assignment.deleteAll(Assignment.class, "date < ? AND date <> -1", date + "");
 
 
-        Event.deleteAll(Event.class, "deleted = 'true'");
+        Notice.deleteAll(Notice.class, "deleted = 'true'");
         Assignment.deleteAll(Assignment.class, "deleted = 'true'");
 
         cal = Calendar.getInstance();
@@ -35,7 +35,7 @@ public class Database {
     }
 
     public static void DeletePinned() {
-        Event.deleteAll(Event.class, "date = -1");
+        Notice.deleteAll(Notice.class, "date = -1");
         Assignment.deleteAll(Assignment.class, "date = -1");
     }
 
@@ -64,8 +64,8 @@ public class Database {
         return (list.size() > 0) ? list.get(0) : null;
     }
 
-    public static Event GetEvent(long remoteId) {
-        List<Event> list = Event.find(Event.class, "remote_id = ?", remoteId+"");
+    public static Notice GetEvent(long remoteId) {
+        List<Notice> list = Notice.find(Notice.class, "remote_id = ?", remoteId + "");
         return (list.size() > 0) ? list.get(0) : null;
     }
 
