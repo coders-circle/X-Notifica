@@ -44,7 +44,9 @@
             </div>
           </div>
           <div class="row">
+              <div class="form-group col-xs-12 ">
             <button name="post_notice" type="submit" class="btn btn-success btn-lg">Post</button>
+        </div>
           </div>
         </form>
       </div>
@@ -55,7 +57,7 @@
       <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group list-group-notice">
           {% for notice in events %}
-          <div class="list-group-item list-group-item-notice" style="margin-bottom:20px;">
+          <div class="list-group-item list-group-item-notice">
 
             <div class="topcorner">
               {% if notice.date %}

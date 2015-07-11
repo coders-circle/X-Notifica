@@ -21,8 +21,7 @@
     {% block head %}
     {% endblock %}
 </head>
-<body id="page-top">
-    {% block bodystart %}{% endblock %}
+<body id="body-top">
     {%if navbarDisabled == false %}
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -33,7 +32,7 @@
                     {%endblock%}
                 </button>
                 <img class="img-responsive img-navbar-logo pull-left" src="{% static 'imgs/notifica-logo.png' %}" alt="">
-                <a class="navbar-brand" href="#page-top">Notifica</a>
+                <a class="navbar-brand" href="#body-top">Notifica</a>
             </div>
             {% block navbar %}
             {% endblock %}

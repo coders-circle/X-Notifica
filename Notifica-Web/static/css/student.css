@@ -48,20 +48,15 @@ p {
 .list-group {
     padding: 0px;
     margin: 0px;
+    padding-bottom:10px;
 }
 
 .list-group-item {
     margin: 0px;
-    margin-bottom: 10px!important;
     border-radius: 0!important;
     border: 0px solid #f7f7f7;
     transition: all .3s ease-in-out;
     box-shadow: 3px 3px 7px #ccc;
-}
-
-.list-group-item:hover {
-    background: #fff;
-    color: #445;
 }
 
 .floating-label-form-group {
@@ -94,7 +89,6 @@ p {
 ***************/
 
 .col-md-2{
-
 }
 
 .thinner {
@@ -150,6 +144,7 @@ p {
 }
 
 .gap {
+    min-height: 55px;
     margin: 2px;
     margin-bottom: 10px!important;
     padding-top: 16px;
@@ -158,7 +153,7 @@ p {
     transition: all .3s ease-in-out;
     background: #f7f7f7;
     border-radius: 0!important;
-    min-height: 55px;
+    box-shadow: 3px 3px 7px #ccc;
 }
 
 
@@ -170,6 +165,18 @@ p {
 /**************************
     Assignment & Notice
 ***************************/
+
+.list-group-item-empty{
+    background: transparent;
+    box-shadow: none;
+}
+
+.list-group-item-empty p{
+    font-size: 2em;
+    color:#aaa;
+    text-align: center;
+
+}
 .assignment-date,
 .notice-date {
     color: #777777!important;
@@ -178,7 +185,8 @@ p {
 
 .list-group-item-assignment,
 .list-group-item-notice{
-    padding:50px 30px 50px 30px;
+    margin-bottom: 10px;
+    padding:40px 50px 30px 50px;
 }
 
 .topcorner {
@@ -211,21 +219,6 @@ p {
   color:#fff;
   background-color:#10aa82;
 }
-
-.notice-detail{
-    padding-left:5px;
-}
-
-.notice-title{
-    padding-bottom:10px;
-}
-
-.list-action-btn-group{
-    position: absolute;
-    bottom:15px;
-    right:15px;
-}
-
 .form {
     margin:0;
     padding:0;
@@ -241,10 +234,11 @@ p {
 }
 
 .form > div > h3 {
-    margin-top: 30px;
+    margin-left:3px;
+    margin-top:30px;
 }
-.form > div > .btn {
-    margin-bottom: 50px;
+.form > div > div > .btn {
+    margin-bottom: 30px;
 }
 
 /***********************

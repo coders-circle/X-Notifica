@@ -10,11 +10,12 @@
 
     {% if user.privilege == 1 %}
     <div class="row">
-      <a class="btn btn-add pull-right" data-toggle="collapse" data-target="#form-assignment"><i class="fa fa-plus"></i></a>
+      <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-assignment"><i class="fa fa-plus"></i></a></p>
       <div class="col-lg-offset-2 col-lg-8 collapse-group">
         <form class="form collapse form-assignment" method="post" name="newassignment" id="form-assignment">
           {% csrf_token %}
           <div class="row control-group">
+
             <h3> Post New Assignment </h3>
           </div>
           <div class="row control-group">
@@ -55,7 +56,9 @@
             </div>
           </div>
           <div class="row">
+                  <div class="form-group col-xs-12 ">
             <button name="post_assignment" type="submit" class="btn btn-success btn-lg">Post</button>
+        </div>
           </div>
         </form>
       </div>
@@ -97,6 +100,9 @@
               </p>
               {% endautoescape %}
             </div>
+          </div>
+          <div class="list-group-item list-group-item-empty">
+              <p>No recent assignments found</p>
           </div>
           {%endfor%}
         </div>
