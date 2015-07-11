@@ -190,7 +190,7 @@ class Setting(models.Model):
 
 class GcmRegistration(models.Model):
     device_id = models.TextField(default="")
-    user = models.OneToOneField(User)
+    user = models.ForeignKey(User)
     token = models.TextField()
 
     def __str__(self):

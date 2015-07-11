@@ -15,13 +15,11 @@ def Notify(title, event):
             continue
         if event.faculty and student.faculty != event.faculty:
             continue
-        try:
-            gcm = GcmRegistration.objects.get(user=student.user)
+        gcms = GcmRegistration.objects.filter(user=student.user)
+        for gcm in gcms:
             ids.append(gcm.token)
-        except:
-            pass
 
-    message = { "message": event.summary, "title": title }
+    message = { "message": event.summary, "title": title, "remote_id": str(event.pk) }
     data = {"data": message, "registration_ids":ids}
 
     key = "key=AIzaSyCOMeSxYMQq4lh9UvMxhCQHI2Bq9tzujjU"
