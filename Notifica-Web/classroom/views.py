@@ -71,7 +71,7 @@ def delete(request):
         return HttpResponse('')
 
     # TODO: check privilege
-    
+
     if request.POST.get("type") == "assignment":
         Assignment.objects.get(pk=request.POST.get("pk")).delete()
     elif request.POST.get("type") == "notice":
@@ -204,7 +204,7 @@ def student(request):
 def teacher(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
-    
+
     try:
         user = Teacher.objects.get(user=request.user)
     except:
@@ -231,8 +231,8 @@ def teacher(request):
     faculties = set()
     for element in elements_objects:
         subjects.add(element.subject)
-        faculties.add(element.faculty)
-        batches.add(element.batch)
+        faculties.add(element.routine.faculty)
+        batches.add(element.routine.batch)
 
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
@@ -255,7 +255,7 @@ def teacher(request):
         last_element[elem.day] = elem
         elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
-    
+
     for attendance in attendances_objects:
         attendance.elements = AttendanceElement.objects.filter(attendance=attendance)
 
@@ -273,7 +273,7 @@ def add_student(user, request):
         return {}
     context = {"student_name":request.POST.get("name"), "roll":request.POST.get("roll"),
                "group":request.POST.get("group"), "batch":request.POST.get("batch")}
-    
+
     try:
         student = Student()
         student.name = context["student_name"]
@@ -325,7 +325,7 @@ def add_subject(user, request):
     if not request.user.is_authenticated():
         return {}
     context = {"subject_name":request.POST.get("name"), "faculty":request.POST.get("faculty")}
-    
+
     try:
         subject = Subject()
         subject.name = context["subject_name"]
