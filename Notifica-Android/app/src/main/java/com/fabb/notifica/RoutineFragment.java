@@ -113,7 +113,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
             registerForContextMenu(rootView.findViewById(R.id.routine_list));
 
-            SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
+            final SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
 
             String user_type = preferences.getString("user-type","");
             final boolean isteacher = user_type != null && user_type.equals("Teacher");
@@ -192,9 +192,12 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View v, int position, long id) {
-                    selectedItem = (RoutineAdapter.Item)lv.getItemAtPosition(position);
-                    if (!selectedItem.isBreak)
-                        lv.showContextMenu();
+                    if (isteacher || preferences.getInt("privilege", 0) == 1) {
+                        selectedItem = (RoutineAdapter.Item) lv.getItemAtPosition(position);
+                        if (!selectedItem.isBreak)
+                            lv.showContextMenu();
+
+                    }
                     return true;
                 }
             });
@@ -208,11 +211,19 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             super.onCreateContextMenu(menu, v, menuInfo);
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.menu_context_routine, menu);
+
+            String user_type = MainActivity.GetPreferences(getActivity()).getString("user-type", "");
+            final boolean isteacher = user_type != null && user_type.equals("Teacher");
+            if (!isteacher)
+                menu.findItem(R.id.show_attendances).setVisible(false);
+            else
+                menu.findItem(R.id.show_attendances).setVisible(true);
+
         }
 
         @Override
         public boolean onContextItemSelected(MenuItem item) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            //AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
             Intent i;
             switch (item.getItemId()) {

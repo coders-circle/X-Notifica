@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load humanize %}
 
+{% block bodystart %}{%include 'classroom/common/fb.html'%}{% endblock %}
 {% block head %}
 <link href = "{% static 'css/student.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
