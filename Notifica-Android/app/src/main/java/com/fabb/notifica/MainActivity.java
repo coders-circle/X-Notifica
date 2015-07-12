@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +40,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     private ListView mDrawerList;
     private String[] mPageTitles;
     private ActionBarDrawerToggle mDrawerToggle;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public Menu menu;
 
@@ -115,6 +117,22 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         if (token != null && !token.equals(""))
         if (!GetPreferences(this).getBoolean("gcm_token_sent", false))
             GcmRegisterIntent.sendRegistrationToServer(this,  preferences.getString("gcm_token", ""));
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
+                                        new UpdateService.UpdateTask(MainActivity.this).execute();
+                                    }
+                                }
+        );
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new UpdateService.UpdateTask(MainActivity.this).execute();
+            }
+        });
     }
 
 //    private int new_assignment_cnt = 0;
@@ -133,10 +151,10 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
     @Override
     public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
-        if (menu != null) {
-            menu.findItem(R.id.action_update).setVisible(true);
-            menu.findItem(R.id.action_clean_update).setVisible(true);
-        }
+//        if (menu != null) {
+//            menu.findItem(R.id.action_update).setVisible(true);
+//            menu.findItem(R.id.action_clean_update).setVisible(true);
+//        }
 
         if (hasUpdated) {
 //                String res = "";
@@ -154,7 +172,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         else
             Toast.makeText(this, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
 
-
+        swipeRefreshLayout.setRefreshing(false);
         Database.DeleteExpired();
     }
 

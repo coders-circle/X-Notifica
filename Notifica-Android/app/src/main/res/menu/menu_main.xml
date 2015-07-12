@@ -6,9 +6,11 @@
     -->
     <item android:id="@+id/action_update" android:title="@string/action_update"
         android:icon="@drawable/ic_sync"
-        android:orderInCategory="105"  app:showAsAction="ifRoom" />
+        android:orderInCategory="105"  app:showAsAction="ifRoom"
+        android:visible="false"/>
 
-    <item android:id="@+id/action_clean_update" android:title="Clean Update"
-        android:orderInCategory="105" />
+    <item android:id="@+id/action_clean_update" android:title="@string/action_clean_update"
+        android:orderInCategory="105"
+        android:visible="false"/>
 
 </menu>

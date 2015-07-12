@@ -48,4 +48,5 @@
     <!-- facebook app id -->
     <string name="facebook_app_id">641470069288425</string>
     <string name="title_activity_facebook_settings">Facebook Connection Settings</string>
+    <string name="action_clean_update">Clean Update</string>
 </resources>

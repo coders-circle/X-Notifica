@@ -19,6 +19,7 @@ def GetSetting(key):
     except:
         return None
 
+
 def GetDeltaDay(delta):
     day = datetime.fromordinal(date.today().toordinal()) - timedelta(days=delta)
     return day

@@ -223,3 +223,21 @@ class AttendanceElement(models.Model):
             return str(self.student.roll) + ". " + self.student.name + " - Absent"
 
 from .notifications import Notify
+
+#
+## Unseen notifications
+#class UnseenAssignment(models.Model):
+#    user = models.ForeignKey(User)
+#    assignment = models.ForeignKey(Assignment)
+#
+#    def __str__(self):
+#        return self.user.username + " - " + self.assignment.summary
+#
+#class UnseenNotice(models.Model):
+#    user = models.ForeignKey(User)
+#    notice = models.ForeignKey(Notice)
+#
+#    def __str__(self):
+#        return self.user.username + " - " + self.notice.summary
+#
+#

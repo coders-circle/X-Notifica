@@ -81,7 +81,7 @@ def delete(request):
 
 def post_assignment(request):
     context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
-               "summary":request.POST.get("summary"), "details":request.POST.get("details")}
+               "summary":request.POST.get("summary"), "details":request.POST.get("details"), "pinned":request.POST.get("pinned")}
     if not request.user.is_authenticated():
         return {}
 
@@ -101,7 +101,7 @@ def post_assignment(request):
     assignment.subject = Subject.objects.get(code=context["subject"])
     assignment.summary = context["summary"]
     assignment.details = context["details"]
-    assignment.date = context["date"] if context["date"] != "" else None
+    assignment.date = context["date"] if not context["pinned"] else None
     assignment.save()
 
     return {'assignment_posted':True}
@@ -150,6 +150,7 @@ def student(request):
             context.update(post_notice(request))
         elif 'change_password' in request.POST:
             context.update(change_password(request))
+        return redirect('classroom:student')
 
     DeletePassed()
 
@@ -201,6 +202,7 @@ def student(request):
                     'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/student.html', context)
 
+
 def teacher(request):
     if not request.user.is_authenticated():
         return redirect('classroom:index')
@@ -218,6 +220,7 @@ def teacher(request):
             context.update(post_notice(request))
         elif 'change_password' in request.POST:
             context.update(change_password(request))
+        return redirect('classroom:teacher')
 
     DeletePassed()
 
