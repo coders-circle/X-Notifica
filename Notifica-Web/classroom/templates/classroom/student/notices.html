@@ -18,12 +18,17 @@
             <h3> Post New Notice </h3>
           </div>
           <div class="row control-group">
-            <div class="form-group col-md-8 floating-label-form-group controls">
+            <div class="col-md-4 form-group floating-label-form-group controls">
               <label>Date</label>
-              <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
+              <input type="text" name="date" class="form-control input-date" placeholder="Date" id="date-notice" required>
             </div>
-            <div class="form-group col-md-offset-1 col-md-3 select-group">
-              <label>Group</label>
+            <div class="form-group col-md-2 col-md-offset-1">
+                <div class="checkbox chekbox-pinned">
+                    <label><input id="pinned-notice" name="pinned" type="checkbox"> Pinned</label>
+                </div>
+            </div>
+            <div class="form-group col-md-offset-1 col-md-4 select-group">
+              <label class="lab">Group: </label>
               <select name="group" id="groups">
                 {% for value in grouplist %}
                 <option value="{{value}}">{{value}}</option>

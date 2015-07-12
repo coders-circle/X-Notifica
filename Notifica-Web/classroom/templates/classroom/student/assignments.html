@@ -16,13 +16,17 @@
         <form class="form collapse form-assignment" method="post" name="newassignment" id="form-assignment">
           {% csrf_token %}
           <div class="row control-group">
-
             <h3> Post New Assignment </h3>
           </div>
           <div class="row control-group">
-            <div class="col-md-7 form-group floating-label-form-group controls">
+            <div class="col-md-4 form-group floating-label-form-group controls">
               <label>Date</label>
-              <input type="date" name="date" class="form-control" placeholder="Date (optional)" id="date">
+              <input type="text" name="date" class="form-control input-date" placeholder="Date" id="date-assignment" required>
+            </div>
+            <div class="form-group col-md-2 col-md-offset-1">
+                <div class="checkbox chekbox-pinned">
+                    <label><input id="pinned-assignment" name="pinned" type="checkbox"> Pinned</label>
+                </div>
             </div>
             <div class="form-group col-md-offset-1 col-md-4 select-group">
               <label class="lab">Group: </label>
@@ -119,6 +123,8 @@
   </div>
 </div>
 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
     function DeleteAssignment(pk) {
         $.post("{% url 'classroom:delete' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
