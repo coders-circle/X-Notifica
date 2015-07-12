@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     private ListView mDrawerList;
     private String[] mPageTitles;
     private ActionBarDrawerToggle mDrawerToggle;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    public SwipeRefreshLayout swipeRefreshLayout;
 
     public Menu menu;
 
