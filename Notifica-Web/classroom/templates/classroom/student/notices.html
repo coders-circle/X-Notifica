@@ -71,7 +71,7 @@
 
                 {% if user.privilege == 1 %}
                     <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-                    <a class="btn btn-share-on-fb" onclick="fb_share_open('Notice', '{{notice.summary}}', '{{notice.poster|name_of_user}}', '{{notice.details}}', '{{notice.date}}', '', '{{notice.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
+                    <a class="btn btn-share-on-fb" onclick="fb_share_open('Notice', '{{notice.summary|escapejs}}', '{{notice.poster|name_of_user}}', '{{notice.details|escapejs}}', '{{notice.date}}', '', '{{notice.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
                 {% endif %}
 
               <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}">

@@ -6,7 +6,7 @@ def Notify(title, event):
     if event.cancelled:
         return
     url = "https://gcm-http.googleapis.com/gcm/send"
-    ids = []
+    ids = set()
     students = Student.objects.all()
     for student in students:
         if event.batch and event.batch > 0 and student.batch != event.batch:
@@ -17,10 +17,10 @@ def Notify(title, event):
             continue
         gcms = GcmRegistration.objects.filter(user=student.user)
         for gcm in gcms:
-            ids.append(gcm.token)
+            ids.add(gcm.token)
 
     message = { "message": event.summary, "title": title, "remote_id": str(event.pk) }
-    data = {"data": message, "registration_ids":ids}
+    data = {"data": message, "registration_ids":list(ids)}
 
     key = "key=AIzaSyCOMeSxYMQq4lh9UvMxhCQHI2Bq9tzujjU"
     headers = {'Content-type':'application/json', 'Authorization':key}

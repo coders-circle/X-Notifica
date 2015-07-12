@@ -48,7 +48,7 @@ public class FacebookSettingsActivity extends ActionBarActivity {
                 .commit();
 
         final LoginButton loginButton = (LoginButton)findViewById(R.id.fb_login_button);
-        loginButton.setReadPermissions(Arrays.asList("user_groups", "user_managed_groups"));
+        loginButton.setReadPermissions(Arrays.asList("user_groups"));
 
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
