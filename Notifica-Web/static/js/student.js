@@ -9,3 +9,14 @@ $(function(){
     $('html,body').scrollTop(scrollmem);
   });
 });
+
+
+$("#pinned-assignment").click(function(){
+    $("#date-assignment").attr('disabled', this.checked)
+    $("#date-assignment").attr('required', !this.checked)
+});
+
+$("#pinned-notice").click(function(){
+    $("#date-notice").attr('disabled', this.checked)
+    $("#date-notice").attr('required', !this.checked)
+});

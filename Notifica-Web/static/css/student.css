@@ -166,6 +166,16 @@ p {
     Assignment & Notice
 ***************************/
 
+.chekbox-pinned{
+    padding-top:25px;
+    font-size:1.25em;
+}
+input[type="checkbox"]{
+    vertical-align: baseline;
+    transform:scale(1.25, 1.25)!important;
+}
+
+
 .list-group-item-empty{
     background: transparent;
     box-shadow: none;
