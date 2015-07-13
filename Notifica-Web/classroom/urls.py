@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^authority/routine/(?P<routine_id>\d+)/$', views.routine, name='routine'),
 
     url(r'^delete/$', views.delete, name='delete'),
+    url(r'^set_post_seen/$', views.set_post_seen, name='set_post_seen'),
 
     url(r'^teacher/$', views.teacher, name='teacher'),
 )

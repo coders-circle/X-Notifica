@@ -78,6 +78,18 @@ def delete(request):
         Notice.objects.get(pk=request.POST.get("pk")).delete()
     return HttpResponse('')
 
+def set_post_seen(request):
+    if request.method != "POST":
+        return redirect('classroom:index')
+    if not request.user.is_authenticated():
+        return HttpResponse('')
+    
+    if request.POST.get("type") == "assignment":
+        UnseenAssignment.objects.filter(user=request.user, assignment__pk=request.POST.get("pk")).delete()
+    elif request.POST.get("type") == "notice":
+        UnseenNotice.objects.filter(user=request.user, notice__pk=request.POST.get("pk")).delete()
+    return HttpResponse('')
+
 
 def post_assignment(request):
     context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
@@ -195,7 +207,9 @@ def student(request):
         elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
 
-
+    context["unseen_assignments"] = UnseenAssignment.objects.filter(user=user.user).values_list('assignment',flat=True)
+    context["unseen_notices"] = UnseenNotice.objects.filter(user=user.user).values_list('notice',flat=True)
+    
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
                     'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],

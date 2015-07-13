@@ -79,13 +79,14 @@
                     <a class="btn btn-share-on-fb" onclick="fb_share_open('Notice', '{{notice.summary|escapejs}}', '{{notice.poster|name_of_user}}', '{{notice.details|escapejs}}', '{{notice.date}}', '', '{{notice.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
                 {% endif %}
 
-              <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}">
+              <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}" href="javascript:SetNoticeSeen({{notice.pk}})">
                 <i class="fa fa-expand"></i>
               </a>
             </div>
 
             <h4 class="list-group-item-heading notice-title">{{notice.summary}}</h4>
             <p class="list-group-item-text">
+              {% if notice.pk in unseen_notices %}<small id="unseen_div_notice_{{notice.pk}}">Unseen<br></small>{% endif %}
               <small>posted by: {{notice.poster|name_of_user}}</small>
             </p>
             <div class="collapse-group">
@@ -114,6 +115,12 @@
         $.post("{% url 'classroom:delete' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
             .done(function(data) {
                 location.reload();
+            })
+    }
+    function SetNoticeSeen(pk) {
+        $.post("{% url 'classroom:set_post_seen' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+            .done(function(data) {
+                $("#unseen_div_notice_"+pk).hide();
             })
     }
 </script>
