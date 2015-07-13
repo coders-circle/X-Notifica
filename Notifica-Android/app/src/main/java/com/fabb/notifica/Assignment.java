@@ -16,4 +16,7 @@ public class Assignment extends SugarRecord<Assignment>{
     public Faculty faculty;
     public int year;
     public String groups;
+
+    // Seen status
+    public boolean seen = true;
 }

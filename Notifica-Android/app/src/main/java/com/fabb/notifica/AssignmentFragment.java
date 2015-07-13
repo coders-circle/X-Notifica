@@ -1,5 +1,8 @@
 package com.fabb.notifica;
 
+import android.os.Bundle;
+import android.widget.ExpandableListView;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,13 +16,33 @@ public class AssignmentFragment extends InfoFragment {
         this.info_name = "Assignment";
     }
 
+    List<Assignment> assignments;
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (assignments != null) {
+                    Assignment assignment = assignments.get(assignments.size() - 1 - groupPosition);
+                    if (!assignment.seen) {
+                        assignment.seen = true;
+                        assignment.save();
+                        RefreshItems();
+                        new UpdateService.PostSeenUpdateTask(getActivity()).execute();
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     protected void prepareListData() {
         mIds.clear();
         listItems = new ArrayList<>();
-        List<Assignment> ass = Assignment.listAll(Assignment.class);
-        for (int i=ass.size()-1; i>=0; --i){
-            Assignment as = ass.get(i);
+        assignments = Assignment.listAll(Assignment.class);
+        for (int i=assignments.size()-1; i>=0; --i){
+            Assignment as = assignments.get(i);
 
             String extra = "";
             if (as.subject != null)
@@ -35,6 +58,8 @@ public class AssignmentFragment extends InfoFragment {
                     extra += "\n";
                 extra += "Posted by: " + as.posterName;
             }
+            if (!as.seen)
+                extra += "\nUnseen";
 
             listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra));
             mIds.add(as.remoteId);

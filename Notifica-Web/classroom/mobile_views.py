@@ -242,11 +242,12 @@ def update(request):
         assignment = {"date":datetime_to_seconds(asgn.date) if asgn.date else -1, "summary":asgn.summary, "subject_code":asgn.subject.code,
                             "details":asgn.details, "poster_id":asgn.poster.username, "poster_name":GetUser(asgn.poster)[1].name, "remote_id":asgn.pk, "deleted":asgn.cancelled}
         if asgn.cancelled:
-            assignment["date"] = datetime_to_seconds(GetYesterday())
+            assignment["date"] = datetime_to_seconds(GetDeltaDay(1))
         if user_type == "Teacher":
             assignment["faculty_code"] = "" if asgn.faculty is None else asgn.faculty.code
             assignment["year"] = 0 if asgn.batch is None else asgn.batch
             assignment["groups"] = "" if asgn.groups is None else asgn.groups
+
         assignments.append(assignment)
         subjects_objects.add(asgn.subject)
 
@@ -256,11 +257,12 @@ def update(request):
         event = {"date":datetime_to_seconds(evnt.date) if evnt.date else -1, "summary":evnt.summary,
                             "details":evnt.details, "poster_id":evnt.poster.username, "poster_name":GetUser(evnt.poster)[1].name, "remote_id":evnt.pk, "deleted":evnt.cancelled}
         if evnt.cancelled:
-            event["date"] = datetime_to_seconds(GetYesterday())
+            event["date"] = datetime_to_seconds(GetDeltaDay(1))
         if user_type == "Teacher":
             event["faculty_code"] = "" if evnt.faculty is None else evnt.faculty.code
             event["year"] = 0 if evnt.batch is None else evnt.batch
             event["groups"] = "" if evnt.groups is None else evnt.groups
+
         events.append(event)
 
     if len(elements) > 0:
@@ -277,7 +279,17 @@ def update(request):
     for st in students_objects:
         students.append({"user_id":st.user.username, "name":st.name, "roll":st.roll, "year":st.batch, "faculty_code":st.faculty.code,
                         "group":st.group, "privilege":st.privilege})
-    
+
+    outdata["unseen_assignments"] = []
+    unseen_assignments = UnseenAssignment.objects.filter(user=user.user)
+    for ua in unseen_assignments:
+        outdata["unseen_assignments"].append({"remote_id":ua.assignment.pk})
+ 
+    outdata["unseen_notices"] = []
+    unseen_notices = UnseenNotice.objects.filter(user=user.user)
+    for ua in unseen_notices:
+        outdata["unseen_notices"].append({"remote_id":ua.notice.pk})       
+
     outdata["routine"] = routine
     outdata["assignments"] = assignments
     outdata["events"] = events
@@ -472,4 +484,37 @@ def check_expired(request):
             outdata["expired"] = Notice.objects.get(pk=indata["remote_id"]).cancelled
     except:
         outdata["expired"] = True
+    return JsonResponse(outdata)
+
+
+@csrf_exempt
+def post_seen_data(request):
+    if request.method != "POST":
+        return JsonResponse(error_response)
+ 
+    indata = json.loads(request.body.decode('utf-8'))
+    if (indata.get("message_type","") != "Post Seen Data"):
+        return JsonResponse(error_response)
+    
+    user_type, user = json_authenticate(indata)
+    if (user is None or user_type=="Invalid"):
+        return JsonResponse(error_response_auth)
+
+    outdata = {}
+
+    assignments = indata["assignments"]
+    for asgn in assignments:
+        try:
+            UnseenAssignment.objects.get(user=user.user, assignment__pk=asgn).delete()
+        except:
+            pass
+
+    notices = indata["notices"]
+    for notice in notices:
+        try:
+            UnseenNotice.objects.get(user=user.user, notice__pk=notice).delete()
+        except:
+            pass
+
+    outdata["Success"] = True
     return JsonResponse(outdata)

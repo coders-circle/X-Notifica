@@ -50,8 +50,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_info, container, false);
     }
 
@@ -92,14 +91,18 @@ public class InfoFragment  extends Fragment implements UpdateListener {
     public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
         if (!hasUpdated)
             return;
+        RefreshItems();
+    }
+
+    protected void RefreshItems() {
         try {
             prepareListData();
-            listAdapter = new InfoListAdapter(getActivity(), listItems);
-            expListView.setAdapter(listAdapter);
-            expListView.invalidate();
-            registerForContextMenu(expListView);
-        } catch (Exception ignore) {
-        }
+            listAdapter.SetListItems(listItems);
+//            listAdapter = new InfoListAdapter(getActivity(), listItems);
+//            expListView.setAdapter(listAdapter);
+//            expListView.invalidate();
+//            registerForContextMenu(expListView);
+        } catch (Exception ignore) {}
     }
 
     @Override
@@ -130,7 +133,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
             if (item.getItemId() == R.id.delete_info) {
                 new AlertDialog.Builder(getActivity())
-                        .setTitle("Delete " + info_name)
+                        .setTitle("Delete")
                         .setMessage("Are you sure you want to delete this?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

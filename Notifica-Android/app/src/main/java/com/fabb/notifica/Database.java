@@ -25,8 +25,8 @@ public class Database {
         Assignment.deleteAll(Assignment.class, "date < ? AND date <> -1", date + "");
 
 
-        Notice.deleteAll(Notice.class, "deleted = 'true'");
-        Assignment.deleteAll(Assignment.class, "deleted = 'true'");
+        Notice.deleteAll(Notice.class, "deleted = 1");
+        Assignment.deleteAll(Assignment.class, "deleted = 1");
 
         cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);

@@ -8,5 +8,6 @@ urlpatterns = patterns('',
     url(r'^register$', mobile_views.register, name='register'),
     url(r'^check_expired$', mobile_views.check_expired, name='check_expired'),
     url(r'^post_attendance$', mobile_views.post_attendance, name='post_attendance'),
+    url(r'^post_seen_data$', mobile_views.post_seen_data, name='post_seen_data'),
 )
 

@@ -13,6 +13,7 @@ public class InfoListAdapter extends BaseExpandableListAdapter {
 
     public static class Item {
         String summary, details, extra;
+
         public Item(String summary, String details, String extra) {
             this.summary = summary;
             this.details = details;
@@ -26,6 +27,11 @@ public class InfoListAdapter extends BaseExpandableListAdapter {
     public InfoListAdapter(Context context, List<Item> listItems) {
         this.mContext = context;
         this.mListItems = listItems;
+    }
+
+    public void SetListItems(List<Item> listItems) {
+        mListItems = listItems;
+        notifyDataSetChanged();
     }
 
     @Override
