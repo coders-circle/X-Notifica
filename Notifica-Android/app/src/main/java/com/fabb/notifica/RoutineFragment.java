@@ -8,17 +8,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,7 +65,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
             @Override
             public void onPageSelected(int position) {
-
+                DayFragment page = (DayFragment)mViewPager.getAdapter().instantiateItem(mViewPager, mViewPager.getCurrentItem());
+                ((MainActivity)getActivity()).swipeRefreshLayout.setListView(page.mListView);
             }
 
             @Override
@@ -93,6 +94,10 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         //mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
 
         UpdateService.AddUpdateListener(this);
+
+
+        DayFragment page = (DayFragment)mViewPager.getAdapter().instantiateItem(mViewPager, mViewPager.getCurrentItem());
+        ((MainActivity)getActivity()).swipeRefreshLayout.setListView(page.mListView);
     }
 
     public void Refresh() {
@@ -125,19 +130,20 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         public static final String ARG_DAY = "day";
         public static final String[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-
+        public ListView mListView;
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
-            registerForContextMenu(rootView.findViewById(R.id.routine_list));
+
+            mListView = (ListView) rootView.findViewById(R.id.routine_list);
+            registerForContextMenu(mListView);
 
             final SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
 
             String user_type = preferences.getString("user-type","");
             final boolean isteacher = user_type != null && user_type.equals("Teacher");
 
-            final ListView lv = (ListView) rootView.findViewById(R.id.routine_list);
-            lv.setLongClickable(true);
+            mListView.setLongClickable(true);
             Bundle args = getArguments();
 
             Calendar c = Calendar.getInstance();
@@ -194,26 +200,26 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 lastInfo = info;
                 lastElement = r;
             }
-            lv.addFooterView(new View(getActivity()));
+            mListView.addFooterView(new View(getActivity()));
             RoutineAdapter adapter = new RoutineAdapter(getActivity(), infos);
-            lv.setAdapter(adapter);
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (isteacher) {
-                        AttendanceListActivity.info = (RoutineAdapter.Item)lv.getItemAtPosition(position);
+                        AttendanceListActivity.info = (RoutineAdapter.Item) mListView.getItemAtPosition(position);
                         if (!AttendanceListActivity.info.isBreak)
                             startActivity(new Intent(getActivity(), AttendanceListActivity.class));
                     }
                 }
             });
-            lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View v, int position, long id) {
                     if (isteacher || preferences.getInt("privilege", 0) == 1) {
-                        selectedItem = (RoutineAdapter.Item) lv.getItemAtPosition(position);
+                        selectedItem = (RoutineAdapter.Item) mListView.getItemAtPosition(position);
                         if (!selectedItem.isBreak)
-                            lv.showContextMenu();
+                            mListView.showContextMenu();
 
                     }
                     return true;

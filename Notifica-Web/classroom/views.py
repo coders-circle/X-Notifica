@@ -207,8 +207,8 @@ def student(request):
         elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
 
-    context["unseen_assignments"] = UnseenAssignment.objects.filter(user=user.user).values_list('assignment',flat=True)
-    context["unseen_notices"] = UnseenNotice.objects.filter(user=user.user).values_list('notice',flat=True)
+    context["unseen_assignments"] = UnseenAssignment.objects.filter(user=user.user, assignment__cancelled=False).values_list('assignment',flat=True)
+    context["unseen_notices"] = UnseenNotice.objects.filter(user=user.user, notice__cancelled=False).values_list('notice',flat=True)
     
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,

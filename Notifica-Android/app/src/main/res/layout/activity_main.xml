@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:theme="@style/AppTheme.Base">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <com.fabb.notifica.CustomSwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/swipe_refresh_layout">
@@ -30,7 +30,7 @@
                 android:id="@+id/content_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </com.fabb.notifica.CustomSwipeRefreshLayout>
 
         <ListView
             android:id="@+id/left_drawer"
