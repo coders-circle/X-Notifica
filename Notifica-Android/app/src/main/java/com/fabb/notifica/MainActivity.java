@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     private ListView mDrawerList;
     private String[] mPageTitles;
     private ActionBarDrawerToggle mDrawerToggle;
-    public SwipeRefreshLayout swipeRefreshLayout;
+    public CustomSwipeRefreshLayout swipeRefreshLayout;
 
     public Menu menu;
 
@@ -118,7 +118,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         if (!GetPreferences(this).getBoolean("gcm_token_sent", false))
             GcmRegisterIntent.sendRegistrationToServer(this,  preferences.getString("gcm_token", ""));
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
