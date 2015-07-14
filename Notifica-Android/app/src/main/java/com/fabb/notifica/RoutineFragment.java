@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -72,6 +70,16 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             @Override
             public void onPageScrollStateChanged(int state) {
                 ((MainActivity)getActivity()).swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
+
+                int currentPage = mViewPager.getCurrentItem();
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    final int lastPosition = mViewPager.getAdapter().getCount() - 1;
+                    if (currentPage == lastPosition) {
+                        mViewPager.setCurrentItem(1, false); //false so we don't animate
+                    } else if (currentPage == 0) {
+                        mViewPager.setCurrentItem(lastPosition - 1, false);
+                    }
+                }
             }
         });
 
@@ -89,7 +97,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             mLoaded = true;
         }
 
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(1);
         //Calendar cal = Calendar.getInstance();
         //mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
 
@@ -283,22 +291,36 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
         @Override
         public Fragment getItem(int i) {
+            int day = i;
+            if (day == 0)
+                day = 6;
+            else if (day == 8)
+                day = 0;
+            else
+                day = day - 1;
             Fragment fragment = new DayFragment();
             Bundle args = new Bundle();
-            args.putInt(DayFragment.ARG_DAY, i);
+            args.putInt(DayFragment.ARG_DAY, day);
             fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return 7;
+            return 9;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             Calendar c = Calendar.getInstance();
-            return DayFragment.days[(c.get(Calendar.DAY_OF_WEEK)-1+position)%7];
+            int day = position;
+            if (day == 0)
+                day = 6;
+            else if (day == 8)
+                day = 0;
+            else
+                day = day - 1;
+            return DayFragment.days[(c.get(Calendar.DAY_OF_WEEK)-1+day)%7];
         }
     }
 }
