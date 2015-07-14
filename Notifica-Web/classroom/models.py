@@ -154,7 +154,7 @@ class Assignment(models.Model):
 
     def save(self, *args, **kwargs):
         super(Assignment, self).save(*args, **kwargs)
-        Notify("Assignment", self)
+        NewAssignment(self)
 
     def __str__(self):
         return self.summary
@@ -173,7 +173,7 @@ class Notice(models.Model):
 
     def save(self, *args, **kwargs):
         super(Notice, self).save(*args, **kwargs)
-        Notify("Notice", self)
+        NewNotice(self)
 
     def __str__(self):
         return self.summary
@@ -222,4 +222,46 @@ class AttendanceElement(models.Model):
         else:
             return str(self.student.roll) + ". " + self.student.name + " - Absent"
 
-from .notifications import Notify
+from .notifications import Notify, GetStudents
+
+
+# Unseen notifications
+class UnseenAssignment(models.Model):
+    user = models.ForeignKey(User)
+    assignment = models.ForeignKey(Assignment)
+
+    def __str__(self):
+        return self.user.username + " - " + self.assignment.summary
+
+class UnseenNotice(models.Model):
+    user = models.ForeignKey(User)
+    notice = models.ForeignKey(Notice)
+
+    def __str__(self):
+        return self.user.username + " - " + self.notice.summary
+
+
+def NewAssignment(assignment):
+    students = GetStudents(assignment)
+    for student in students:
+        try:
+            UnseenAssignment.objects.get(user=student.user, assignment=assignment)
+        except:
+            unseen = UnseenAssignment()
+            unseen.user = student.user
+            unseen.assignment = assignment
+            unseen.save()
+    Notify(students, "Assignment", assignment)
+
+def NewNotice(notice):
+    students = GetStudents(notice)
+    for student in students:
+        try:
+            UnseenNotice.objects.get(user=student.user, notice=notice)
+        except:
+            unseen = UnseenNotice()
+            unseen.user = student.user
+            unseen.notice = notice
+            unseen.save()
+    Notify(students, "Notice", notice)
+

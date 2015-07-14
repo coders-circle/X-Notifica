@@ -78,10 +78,22 @@ def delete(request):
         Notice.objects.get(pk=request.POST.get("pk")).delete()
     return HttpResponse('')
 
+def set_post_seen(request):
+    if request.method != "POST":
+        return redirect('classroom:index')
+    if not request.user.is_authenticated():
+        return HttpResponse('')
+    
+    if request.POST.get("type") == "assignment":
+        UnseenAssignment.objects.filter(user=request.user, assignment__pk=request.POST.get("pk")).delete()
+    elif request.POST.get("type") == "notice":
+        UnseenNotice.objects.filter(user=request.user, notice__pk=request.POST.get("pk")).delete()
+    return HttpResponse('')
+
 
 def post_assignment(request):
     context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
-               "summary":request.POST.get("summary"), "details":request.POST.get("details")}
+               "summary":request.POST.get("summary"), "details":request.POST.get("details"), "pinned":request.POST.get("pinned")}
     if not request.user.is_authenticated():
         return {}
 
@@ -101,7 +113,7 @@ def post_assignment(request):
     assignment.subject = Subject.objects.get(code=context["subject"])
     assignment.summary = context["summary"]
     assignment.details = context["details"]
-    assignment.date = context["date"] if context["date"] != "" else None
+    assignment.date = context["date"] if not context["pinned"] else None
     assignment.save()
 
     return {'assignment_posted':True}
@@ -150,6 +162,7 @@ def student(request):
             context.update(post_notice(request))
         elif 'change_password' in request.POST:
             context.update(change_password(request))
+        return redirect('classroom:student')
 
     DeletePassed()
 
@@ -194,12 +207,15 @@ def student(request):
         elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
 
-
+    context["unseen_assignments"] = UnseenAssignment.objects.filter(user=user.user).values_list('assignment',flat=True)
+    context["unseen_notices"] = UnseenNotice.objects.filter(user=user.user).values_list('notice',flat=True)
+    
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
                     'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
                     'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
     return render(request, 'classroom/student.html', context)
+
 
 def teacher(request):
     if not request.user.is_authenticated():
@@ -218,6 +234,7 @@ def teacher(request):
             context.update(post_notice(request))
         elif 'change_password' in request.POST:
             context.update(change_password(request))
+        return redirect('classroom:teacher')
 
     DeletePassed()
 

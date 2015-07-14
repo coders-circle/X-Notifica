@@ -20,6 +20,7 @@ public class UpdateService {
     }
     private final static String updateUrl = "update";
     private final static String postAttendanceUrl = "post_attendance";
+    private final static String postSeenDataUrl = "post_seen_data";
 
     public static boolean IsUpdating = false;
 
@@ -31,6 +32,8 @@ public class UpdateService {
         Network network = new Network();
 
         try {
+            PostSeenData(ctx);
+
             json.put("message_type", "Update Request");
             json.put("user_id", preferences.getString("user-id", ""));
             json.put("password", preferences.getString("password", ""));
@@ -109,6 +112,34 @@ public class UpdateService {
         }
     }
 
+    public static void PostSeenData(Context ctx) throws JSONException {
+        SharedPreferences preferences = MainActivity.GetPreferences(ctx);
+        Network network = new Network();
+
+        JSONObject json = new JSONObject();
+        json.put("message_type", "Post Seen Data");
+        json.put("user_id", preferences.getString("user-id", ""));
+        json.put("password", preferences.getString("password", ""));
+
+        JSONArray assignments_arr = new JSONArray();
+        List<Assignment> assignments = Assignment.find(Assignment.class, "seen = 1");
+        for (Assignment assignment: assignments) {
+            assignments_arr.put(assignment.remoteId);
+        }
+
+        JSONArray notices_arr = new JSONArray();
+        List<Notice> notices = Notice.find(Notice.class, "seen = 1");
+        for (Notice notice: notices) {
+            notices_arr.put(notice.remoteId);
+        }
+
+        json.put("assignments", assignments_arr);
+        json.put("notices", notices_arr);
+
+        result = network.PostJson(postSeenDataUrl, json);
+        /*JSONObject resJson =*/ new JSONObject(result);
+    }
+
     public static void UpdateData(Context ctx, JSONObject json, UpdateResult updateResult) {
         if (!json.optString("message_type").equals("Database Update")
                 || !json.optString("update_result").equals("Success"))
@@ -121,6 +152,8 @@ public class UpdateService {
         JSONArray students = json.optJSONArray("students");
         JSONArray attendances = json.optJSONArray("attendances");
         JSONArray faculties = json.optJSONArray("faculties");
+        JSONArray unseenNotices = json.optJSONArray("unseen_notices");
+        JSONArray unseenAssignments = json.optJSONArray("unseen_assignments");
 
         String user_type = MainActivity.GetPreferences(ctx).getString("user-type", "");
         boolean isTeacher = user_type != null && user_type.equals("Teacher");
@@ -317,6 +350,42 @@ public class UpdateService {
             }
         }
 
+        if (unseenNotices != null) {
+            List<Notice> notices = Notice.find(Notice.class, "seen = 0");
+            for (Notice notice: notices) {
+                notice.seen = true;
+                notice.save();
+            }
+            for (int i=0; i<unseenNotices.length(); ++i) {
+                JSONObject notice = unseenNotices.optJSONObject(i);
+                if (notice == null)
+                    continue;
+                Notice localNotice = Database.GetEvent(notice.optLong("remote_id"));
+                if (localNotice != null) {
+                    localNotice.seen = false;
+                    localNotice.save();
+                }
+            }
+        }
+
+        if (unseenAssignments != null) {
+            List<Assignment> assignments1 = Assignment.find(Assignment.class, "seen = 0");
+            for (Assignment assignment: assignments1) {
+                assignment.seen = true;
+                assignment.save();
+            }
+            for (int i=0; i<unseenAssignments.length(); ++i) {
+                JSONObject assignment = unseenAssignments.optJSONObject(i);
+                if (assignment == null)
+                    continue;
+                Assignment localAssignment = Database.GetAssignment(assignment.optLong("remote_id"));
+                if (localAssignment != null) {
+                    localAssignment.seen = false;
+                    localAssignment.save();
+                }
+            }
+        }
+
         updateResult.event_count = json.optInt("new_events_count");
         updateResult.assignment_count = json.optInt("new_assignments_count");
         updateResult.updated = true;
@@ -352,6 +421,33 @@ public class UpdateService {
                 return;
             FinishUpdate(result);
             IsUpdating = false;
+        }
+    }
+
+
+    private static boolean postSeenUpdating = false;
+    public static class PostSeenUpdateTask extends AsyncTask<Void, Void, Void> {
+        private final Context mContext;
+
+        PostSeenUpdateTask(Context context) {
+            mContext = context;
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (!postSeenUpdating) {
+                postSeenUpdating = true;
+                try {
+                    PostSeenData(mContext);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void v) {
+            postSeenUpdating = false;
         }
     }
 

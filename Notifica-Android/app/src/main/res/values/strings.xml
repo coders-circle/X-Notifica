@@ -4,7 +4,7 @@
     <string name="action_settings">Settings</string>
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Notifica</string>
 
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
@@ -48,4 +48,5 @@
     <!-- facebook app id -->
     <string name="facebook_app_id">641470069288425</string>
     <string name="title_activity_facebook_settings">Facebook Connection Settings</string>
+    <string name="action_clean_update">Clean Update</string>
 </resources>

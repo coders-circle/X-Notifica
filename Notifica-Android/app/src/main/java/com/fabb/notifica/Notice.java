@@ -15,4 +15,7 @@ public class Notice extends SugarRecord<Notice>{
     public Faculty faculty;
     public int year;
     public String groups;
+
+    // Seen status
+    public boolean seen = true;
 }

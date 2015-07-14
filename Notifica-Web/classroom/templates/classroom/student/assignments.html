@@ -88,7 +88,7 @@
               <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
               <a class="btn btn-share-on-fb" onclick="fb_share_open('Assignment', '{{assignment.summary}}', '{{assignment.poster|name_of_user}}', '{{assignment.details}}', '{{assignment.date}}', '{{assignment.subject}}', '{{assignment.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
               {% endif %}
-              <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}">
+              <a class="btn btn-sm" data-toggle="collapse" data-target="#detail{{forloop.counter}}" href="javascript:SetAssignmentSeen({{assignment.pk}})">
                 <i class="fa fa-expand"></i>
               </a>
             </div>
@@ -97,6 +97,7 @@
 
             <p class="list-group-item-text">
               <small>{{assignment.summary}}</small>
+              {% if assignment.pk in unseen_assignments %}<small id="unseen_div_asgn_{{assignment.pk}}"><br>Unseen</small>{% endif %}
             </p>
 
             <p class="list-group-item-text">
@@ -131,5 +132,11 @@
             .done(function(data) {
                 location.reload();
             });
+    }
+    function SetAssignmentSeen(pk) {
+        $.post("{% url 'classroom:set_post_seen' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+            .done(function(data) {
+                $("#unseen_div_asgn_"+pk).hide();
+            })
     }
 </script>

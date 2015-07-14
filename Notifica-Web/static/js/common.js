@@ -11,7 +11,13 @@ $(function() {
 
 
 $(function () {
+<<<<<<< HEAD
     $('.input-date').datepicker({ dateFormat: 'yy-mm-dd' });
+=======
+    $('.input-date').datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
+>>>>>>> 50073ce99f49fe3d4d97d421afa792b7c49e4f54
 });
 
 // Closes the Responsive Menu on Menu Item Click
