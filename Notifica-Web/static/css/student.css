@@ -88,9 +88,6 @@ p {
     Routine
 ***************/
 
-.col-md-2{
-}
-
 .thinner {
     margin:8px;
     padding:0px;
@@ -103,6 +100,13 @@ p {
 .nottoday .list-group-item {
     background: #f7f7f7;
     border-top: 2px solid #ddd;
+}
+
+.badge-menu-unseen{
+    position:absolute;
+    top:8px;
+    right:3px;
+    background: #f61f3d;
 }
 
 .badge {
@@ -175,7 +179,6 @@ input[type="checkbox"]{
     transform:scale(1.25, 1.25)!important;
 }
 
-
 .list-group-item-empty{
     background: transparent;
     box-shadow: none;
@@ -197,7 +200,15 @@ input[type="checkbox"]{
 .list-group-item-notice{
     margin-bottom: 10px;
     padding:40px 50px 30px 50px;
+    border-top:2px solid;
+    border-top-color: #18bc9c;
 }
+
+.list-group-item-unseen{
+    border-top:2px solid;
+    border-top-color: #b61f3d!important;
+}
+
 
 .topcorner {
     position: absolute;

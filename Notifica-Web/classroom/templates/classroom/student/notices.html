@@ -63,8 +63,7 @@
       <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group list-group-notice">
           {% for notice in events %}
-          <div class="list-group-item list-group-item-notice">
-
+          <div class="list-group-item list-group-item-notice {% if notice.pk in unseen_notices %}list-group-item-unseen{% endif %}" {% if notice.pk in unseen_notices %}id="list-group-item-unseen-notice-{{notice.pk}}"{% endif %}>
             <div class="topcorner">
               {% if notice.date %}
               <span class="notice-date">{{notice.date}}</span>
@@ -85,8 +84,8 @@
             </div>
 
             <h4 class="list-group-item-heading notice-title">{{notice.summary}}</h4>
+
             <p class="list-group-item-text">
-              {% if notice.pk in unseen_notices %}<small id="unseen_div_notice_{{notice.pk}}">Unseen<br></small>{% endif %}
               <small>posted by: {{notice.poster|name_of_user}}</small>
             </p>
             <div class="collapse-group">
@@ -120,7 +119,16 @@
     function SetNoticeSeen(pk) {
         $.post("{% url 'classroom:set_post_seen' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
             .done(function(data) {
-                $("#unseen_div_notice_"+pk).hide();
+                document.getElementById("list-group-item-unseen-notice-"+pk).className = document.getElementById("list-group-item-unseen-notice-"+pk).className.replace('list-group-item-unseen', '');
+                var nb = document.getElementById("badge-menu-unseen-notices");
+                var un = Number(nb.innerHTML);
+                if(un > 0){
+                    --un;
+                    nb.innerHTML = un;
+                }
+                if(un == 0){
+                    nb.style.display='none';
+                }
             })
     }
 </script>

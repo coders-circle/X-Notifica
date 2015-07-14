@@ -73,10 +73,8 @@
     <div class="row">
       <div class="col-lg-offset-2 col-lg-8">
         <div class="list-group list-group-assignment">
-
           {% for assignment in assignments %}
-          <div class="list-group-item list-group-item-assignment">
-
+          <div class="list-group-item list-group-item-assignment {% if assignment.pk in unseen_assignments %}list-group-item-unseen{% endif %}" {% if assignment.pk in unseen_assignments %} id="list-group-item-unseen-assignment-{{assignment.pk}}"{% endif %}>
             <div class="topcorner">
               {% if assignment.date %}
               <span class="assignment-date"> {{assignment.date|timeuntil}}</span> {%else%}
@@ -97,7 +95,7 @@
 
             <p class="list-group-item-text">
               <small>{{assignment.summary}}</small>
-              {% if assignment.pk in unseen_assignments %}<small id="unseen_div_asgn_{{assignment.pk}}"><br>Unseen</small>{% endif %}
+
             </p>
 
             <p class="list-group-item-text">
@@ -136,7 +134,16 @@
     function SetAssignmentSeen(pk) {
         $.post("{% url 'classroom:set_post_seen' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
             .done(function(data) {
-                $("#unseen_div_asgn_"+pk).hide();
+                document.getElementById("list-group-item-unseen-assignment-"+pk).className = document.getElementById("list-group-item-unseen-assignment-"+pk).className.replace('list-group-item-unseen', '');
+                var nb = document.getElementById("badge-menu-unseen-assignments");
+                var un = Number(nb.innerHTML);
+                if(un > 0){
+                    --un;
+                    nb.innerHTML = un;
+                }
+                if(un == 0){
+                    nb.style.display='none';
+                }
             })
     }
 </script>
