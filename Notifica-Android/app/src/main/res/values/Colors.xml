@@ -7,4 +7,6 @@
     <color name="divider">#B6B6B6</color>
     <color name="line_color">#19bc9c</color>
     <color name="line_color_dark">#ff14977d</color>
+    <color name="line_color_red">#ffbc1111</color>
+    <color name="line_color_dark_red">#ffb61f38</color>
 </resources>

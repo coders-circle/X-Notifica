@@ -3,9 +3,6 @@ package com.fabb.notifica;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,20 +13,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 
 
 public class MainActivity extends ActionBarActivity implements UpdateListener {
@@ -51,7 +43,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        ShowHashKey();
+        //ShowHashKey();
 
         Database.DeleteExpired();
 
@@ -80,7 +72,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mPageTitles));
+        UpdateDrawer();
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -135,19 +127,27 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         });
     }
 
-//    private int new_assignment_cnt = 0;
-//    private int new_event_cnt = 0;
-//    public void UpdateDrawer() {
-//        if (new_assignment_cnt > 0)
-//            mPageTitles[1] = "Assignments    (" + new_assignment_cnt + " new)";
-//        else
-//            mPageTitles[1] = "Assignments";
-//        if (new_event_cnt > 0)
-//            mPageTitles[2] = "Notices    (" + new_event_cnt + " new)";
-//        else
-//            mPageTitles[2] = "Notices";
-//        mDrawerList.setAdapter(new ArrayAdapter<>(this, R.layout.drawer_list_item, mPageTitles));
-//    }
+    public void UpdateDrawer() {
+        int new_assignment_cnt = 0;
+        int new_notice_cnt = 0;
+
+        Iterator<Notice> noticeIterator = Notice.findAll(Notice.class);
+        while (noticeIterator.hasNext()) {
+            if (!noticeIterator.next().seen)
+                new_notice_cnt++;
+        }
+
+        Iterator<Assignment> assignmentIterator = Assignment.findAll(Assignment.class);
+        while (assignmentIterator.hasNext()) {
+            if (!assignmentIterator.next().seen)
+                new_assignment_cnt++;
+        }
+
+        DrawerAdapter adapter = new DrawerAdapter(this, R.layout.drawer_list_item, mPageTitles);
+        adapter.setCount(1, new_assignment_cnt);
+        adapter.setCount(2, new_notice_cnt);
+        mDrawerList.setAdapter(adapter);
+    }
 
     @Override
     public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
@@ -157,17 +157,8 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 //        }
 
         if (hasUpdated) {
-//                String res = "";
-//                if (assignmentCnt > 0)
-//                    res += "\n" + assignmentCnt + " new " + (assignmentCnt > 1 ? "assignments" : "assignment");
-//                if (eventCnt > 0)
-//                    res += "\n" + eventCnt + " new "+ (eventCnt > 1 ? "notices" : "notice");
-//                Toast.makeText(this, "Up-To-Date" + res, Toast.LENGTH_LONG).show();
             Toast.makeText(this, "Up-To-Date", Toast.LENGTH_LONG).show();
-
-//            new_assignment_cnt = assignmentCnt;
-//            new_event_cnt = eventCnt;
-//            UpdateDrawer();
+            UpdateDrawer();
         }
         else
             Toast.makeText(this, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
@@ -196,13 +187,9 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 break;
             case 1:
                 fragment = assignment_fragment;
-//                new_assignment_cnt = 0;
-//                UpdateDrawer();
                 break;
             case 2:
                 fragment = event_fragment;
-//                new_event_cnt = 0;
-//                UpdateDrawer();
                 break;
             case 3:
                 startActivityForResult(new Intent(this, SettingsActivity.class), 0);
@@ -301,24 +288,24 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
 
 
-    public void ShowHashKey() {
-        PackageInfo info;
-        try {
-            info = getPackageManager().getPackageInfo("com.fabb.notifica", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String something = new String(Base64.encode(md.digest(), 0));
-                Log.d("hash key", something);
-            }
-        } catch (PackageManager.NameNotFoundException e1) {
-            Log.e("name not found", e1.toString());
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("no such an algorithm", e.toString());
-        } catch (Exception e) {
-            Log.e("exception", e.toString());
-        }
-    }
+//    public void ShowHashKey() {
+//        PackageInfo info;
+//        try {
+//            info = getPackageManager().getPackageInfo("com.fabb.notifica", PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md;
+//                md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String something = new String(Base64.encode(md.digest(), 0));
+//                Log.d("hash key", something);
+//            }
+//        } catch (PackageManager.NameNotFoundException e1) {
+//            Log.e("name not found", e1.toString());
+//        } catch (NoSuchAlgorithmException e) {
+//            Log.e("no such an algorithm", e.toString());
+//        } catch (Exception e) {
+//            Log.e("exception", e.toString());
+//        }
+//    }
 
 }

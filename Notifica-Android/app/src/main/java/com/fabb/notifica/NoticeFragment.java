@@ -1,8 +1,6 @@
 package com.fabb.notifica;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 
 import java.text.DateFormat;
@@ -26,12 +24,16 @@ public class NoticeFragment extends InfoFragment {
             @Override
             public void onGroupExpand(int groupPosition) {
                 if (notices != null) {
-                    Notice notice = notices.get(notices.size()-1-groupPosition);
+                    Notice notice = notices.get(groupPosition);
                     if (!notice.seen) {
                         notice.seen = true;
                         notice.save();
                         RefreshItems();
                         new UpdateService.PostSeenUpdateTask(getActivity()).execute();
+
+
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.UpdateDrawer();
                     }
                 }
             }
@@ -42,7 +44,8 @@ public class NoticeFragment extends InfoFragment {
         mIds.clear();
         listItems = new ArrayList<>();
         notices = Notice.listAll(Notice.class);
-        for (int i=notices.size()-1; i>=0; --i){
+
+        for (int i=0; i<notices.size(); ++i){
             Notice as = notices.get(i);
             String extra = "";
 
@@ -57,10 +60,8 @@ public class NoticeFragment extends InfoFragment {
                     extra += "\n";
                 extra += "Posted by: " + as.posterName;
             }
-            if (!as.seen)
-                extra += "\nUnseen";
 
-            listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra));
+            listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra, !as.seen));
             mIds.add(as.remoteId);
         }
     }
