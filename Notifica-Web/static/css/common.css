@@ -36,6 +36,10 @@ a, a:hover, a:focus, a:active, a.active {
     outline: 0;
 }
 
+p > a, p>a:hover, p>a:focus, p>a:active, p>a.active{
+    color:#18bc9c;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: "Trebuchet MS", Montserrat,"Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
