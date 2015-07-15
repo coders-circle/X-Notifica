@@ -24,12 +24,15 @@ public class AssignmentFragment extends InfoFragment {
             @Override
             public void onGroupExpand(int groupPosition) {
                 if (assignments != null) {
-                    Assignment assignment = assignments.get(assignments.size() - 1 - groupPosition);
+                    Assignment assignment = assignments.get(groupPosition);
                     if (!assignment.seen) {
                         assignment.seen = true;
                         assignment.save();
                         RefreshItems();
                         new UpdateService.PostSeenUpdateTask(getActivity()).execute();
+
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.UpdateDrawer();
                     }
                 }
             }
@@ -41,7 +44,7 @@ public class AssignmentFragment extends InfoFragment {
         mIds.clear();
         listItems = new ArrayList<>();
         assignments = Assignment.listAll(Assignment.class);
-        for (int i=assignments.size()-1; i>=0; --i){
+        for (int i=0; i<assignments.size(); ++i){
             Assignment as = assignments.get(i);
 
             String extra = "";
@@ -58,10 +61,8 @@ public class AssignmentFragment extends InfoFragment {
                     extra += "\n";
                 extra += "Posted by: " + as.posterName;
             }
-            if (!as.seen)
-                extra += "\nUnseen";
 
-            listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra));
+            listItems.add(new InfoListAdapter.Item(as.summary, as.details, extra, !as.seen));
             mIds.add(as.remoteId);
         }
     }

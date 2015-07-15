@@ -1,6 +1,7 @@
 package com.fabb.notifica;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,13 @@ public class InfoListAdapter extends BaseExpandableListAdapter {
 
     public static class Item {
         String summary, details, extra;
+        boolean unseen;
 
-        public Item(String summary, String details, String extra) {
+        public Item(String summary, String details, String extra, boolean unseen) {
             this.summary = summary;
             this.details = details;
             this.extra = extra;
+            this.unseen = unseen;
         }
     }
 
@@ -86,6 +89,11 @@ public class InfoListAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.info_group, parent, false);
         }
+
+        if (item.unseen)
+            convertView.setBackgroundResource(R.drawable.selector_background_red);
+        else
+            convertView.setBackgroundResource(R.drawable.selector_background);
 
         TextView lblListHeader = (TextView) convertView.findViewById(R.id.summary_view);
         lblListHeader.setText(item.summary);
