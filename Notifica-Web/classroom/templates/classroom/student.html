@@ -7,12 +7,11 @@
 <link href = "{% static 'css/student.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
-{%block navbarIconBars%}
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-{%endblock%}
+{% block navbar_togglebtn %}
+    {% if unseen_assignments.count > 0 or unseen_notices.count > 0 %}
+        <span class="badge toggle-badge-unseen" id="toggle-badge-unseen"><i class="fa fa-bell"></i></span>
+    {% endif %}
+{% endblock %}
 
 {% block navbar %}
 <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">

@@ -127,6 +127,15 @@ p {
     transition: all .3s ease-in-out;
 }
 
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #ddd;
+}
+
+.navbar-toggle:hover .icon-bar,
+.navbar-toggle:focus .icon-bar{
+    background-color: #007d65;
+}
+
 .btn-outline:hover,
 .btn-outline:focus,
 .btn-outline:active,

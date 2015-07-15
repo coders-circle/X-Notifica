@@ -83,11 +83,17 @@ p {
     margin-top: 20px;
 }
 
+.toggle-badge-unseen{
+    background: #f61f3d;
+    position: absolute;
+    top:1px;
+    right: 1px;
+}
+
 
 /**************
     Routine
 ***************/
-
 .thinner {
     margin:8px;
     padding:0px;
@@ -138,14 +144,6 @@ p {
     color: #666;
 }
 
-.today .gap {
-    background: #fafaff;
-    border-top: 2px solid #2765c0;
-}
-
-.nottoday .gap {
-    border-top: 2px solid #ddd;
-}
 
 .gap {
     min-height: 55px;
@@ -153,6 +151,7 @@ p {
     margin-bottom: 10px!important;
     padding-top: 16px;
     padding-left: 20px;
+    font-family: "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.9em;
     transition: all .3s ease-in-out;
     background: #f7f7f7;
@@ -191,8 +190,9 @@ input[type="checkbox"]{
 }
 .assignment-date,
 .notice-date {
-    color: #777777!important;
+    color: #222!important;
     font-size: 0.8em;
+    font-family: "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .list-group-item-assignment,
