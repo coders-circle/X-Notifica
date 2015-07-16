@@ -77,7 +77,7 @@
           <div class="list-group-item list-group-item-assignment {% if assignment.pk in unseen_assignments %}list-group-item-unseen{% endif %}" {% if assignment.pk in unseen_assignments %} id="list-group-item-unseen-assignment-{{assignment.pk}}"{% endif %}>
             <div class="topcorner">
               {% if assignment.date %}
-              <span class="assignment-date"> {{assignment.date|timeuntil}}</span> {%else%}
+              <span class="assignment-date"> {{assignment.date|daysuntil}}</span> {%else%}
               <a class="btn btn-sm">
                 <i class="fa fa-thumb-tack pin-icon"></i>
               </a>
@@ -134,7 +134,10 @@
     function SetAssignmentSeen(pk) {
         $.post("{% url 'classroom:set_post_seen' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
             .done(function(data) {
-                document.getElementById("list-group-item-unseen-assignment-"+pk).className = document.getElementById("list-group-item-unseen-assignment-"+pk).className.replace('list-group-item-unseen', '');
+                var li = document.getElementById("list-group-item-unseen-assignment-"+pk);
+                if(li){
+                    li.className = li.className.replace('list-group-item-unseen', '');
+                }
                 var nb = document.getElementById("badge-menu-unseen-assignments");
                 var un = Number(nb.innerHTML);
                 if(un > 0){
@@ -143,6 +146,12 @@
                 }
                 if(un == 0){
                     nb.style.display='none';
+                    var nnb = document.getElementById("badge-menu-unseen-notices");
+                    var unn = 0;
+                    if(nnb){
+                        unn = Number(nnb.innerHTML);
+                    }
+                if(unn == 0) document.getElementById('toggle-badge-unseen').style.display='none';
                 }
             })
     }

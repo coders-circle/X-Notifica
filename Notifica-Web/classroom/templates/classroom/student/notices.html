@@ -119,7 +119,10 @@
     function SetNoticeSeen(pk) {
         $.post("{% url 'classroom:set_post_seen' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
             .done(function(data) {
-                document.getElementById("list-group-item-unseen-notice-"+pk).className = document.getElementById("list-group-item-unseen-notice-"+pk).className.replace('list-group-item-unseen', '');
+                var li = document.getElementById("list-group-item-unseen-notice-"+pk);
+                if(li){
+                    li.className = li.className.replace('list-group-item-unseen', '');
+                }
                 var nb = document.getElementById("badge-menu-unseen-notices");
                 var un = Number(nb.innerHTML);
                 if(un > 0){
@@ -128,6 +131,12 @@
                 }
                 if(un == 0){
                     nb.style.display='none';
+                    var nab = document.getElementById("badge-menu-unseen-assignments");
+                    var uan = 0;
+                    if(nab){
+                        uan = Number(nab.innerHTML);
+                    }
+                if(uan == 0) document.getElementById('toggle-badge-unseen').style.display='none';
                 }
             })
     }

@@ -29,8 +29,10 @@
             <div class="navbar-header page-scroll">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#notifica-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
-                    {%block navbarIconBars %}
-                    {%endblock%}
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    {% block navbar_togglebtn %}{% endblock %}
                 </button>
                 <img class="img-responsive img-navbar-logo pull-left" src="{% static 'imgs/notifica-logo.png' %}" alt="">
                 <a class="navbar-brand" href="#body-top">Notifica</a>
