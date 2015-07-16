@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -31,6 +32,11 @@ public class DrawerAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(resource, null);
         }
+
+        int icon[]={R.drawable.ic_routine,R.drawable.ic_assignment,R.drawable.ic_notice,R.drawable.ic_settings};
+
+        ImageView imageView = (ImageView)v.findViewById(R.id.drawer_icon);
+        imageView.setImageResource(icon[position]);
 
         TextView textView = (TextView)v.findViewById(R.id.drawer_text);
         textView.setText(objects[position]);
