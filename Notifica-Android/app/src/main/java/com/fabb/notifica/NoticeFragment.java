@@ -14,6 +14,7 @@ public class NoticeFragment extends InfoFragment {
     public NoticeFragment() {
         super();
         this.info_name = "Event";
+        this.display_name = "Notice";
     }
 
     List<Notice> notices;

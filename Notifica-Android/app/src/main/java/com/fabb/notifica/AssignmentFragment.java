@@ -14,6 +14,7 @@ public class AssignmentFragment extends InfoFragment {
     public AssignmentFragment() {
         super();
         this.info_name = "Assignment";
+        this.display_name = "Assignment";
     }
 
     List<Assignment> assignments;

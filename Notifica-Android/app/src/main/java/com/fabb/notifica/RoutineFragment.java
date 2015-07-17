@@ -212,8 +212,15 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 info.batch = r.year;
                 info.type = r.type;
                 info.time = time;
-                infos.add(info);
 
+                if (lastElement != null) {
+                    if (lastElement.startTime == r.startTime && lastElement.endTime == r.endTime) {
+                        infos.get(infos.size()-1).alternateItem = info;
+                        continue;
+                    }
+                }
+
+                infos.add(info);
                 lastInfo = info;
                 lastElement = r;
             }

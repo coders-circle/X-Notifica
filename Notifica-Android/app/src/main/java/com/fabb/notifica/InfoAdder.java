@@ -335,7 +335,7 @@ public class InfoAdder extends ActionBarActivity {
 
             if (success) {
                 UpdateService.FinishUpdate(mUpdateResult);
-                Toast.makeText(mActivity, "Success", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mActivity, "Success", Toast.LENGTH_SHORT).show();
                 if (mShutdown)
                     mActivity.finish();
                 return;

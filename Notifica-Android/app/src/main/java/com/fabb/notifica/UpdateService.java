@@ -227,6 +227,7 @@ public class UpdateService {
                     newElement.endTime = element.optInt("end_time");
                     newElement.type = element.optInt("type");
                     newElement.remoteId = element.optInt("remote_id");
+                    newElement.remarks = element.optString("remarks");
 
                     if (isTeacher) {
                         newElement.faculty = Database.GetFaculty(element.optString("faculty_code"));

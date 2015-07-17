@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 
@@ -29,6 +30,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
     protected boolean privileged = false;
 
     protected String info_name = "Event";
+    protected String display_name = "Notice";
 
     @Override
     public void onCreate(Bundle save) {
@@ -62,6 +64,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
         prepareListData();
         listAdapter = new InfoListAdapter(getActivity(), listItems);
         expListView.setAdapter(listAdapter);
+        RefreshEmptyTextView();
     }
 
     @Override
@@ -94,10 +97,22 @@ public class InfoFragment  extends Fragment implements UpdateListener {
         RefreshItems();
     }
 
+    private void RefreshEmptyTextView() {
+        TextView emptytv = (TextView)getActivity().findViewById(R.id.empty_info_text_view);
+        if (listItems.size() == 0) {
+            emptytv.setText("No recent " + display_name.toLowerCase() + "s found");
+            emptytv.setVisibility(View.VISIBLE);
+        }
+        else
+            emptytv.setVisibility(View.INVISIBLE);
+    }
+
     protected void RefreshItems() {
         try {
             prepareListData();
             listAdapter.SetListItems(listItems);
+            RefreshEmptyTextView();
+
 //            listAdapter = new InfoListAdapter(getActivity(), listItems);
 //            expListView.setAdapter(listAdapter);
 //            expListView.invalidate();
@@ -133,7 +148,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
             if (item.getItemId() == R.id.delete_info) {
                 new AlertDialog.Builder(getActivity())
-                        .setTitle("Delete")
+                        .setTitle("Delete " + display_name)
                         .setMessage("Are you sure you want to delete this?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

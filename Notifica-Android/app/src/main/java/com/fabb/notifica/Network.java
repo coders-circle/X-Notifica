@@ -41,7 +41,8 @@ public class Network {
 
     public String PostJson(String address, JSONObject jsonObject) {
         HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout for connection
+        HttpConnectionParams.setSoTimeout(client.getParams(), 60000); // Timeout for data waiting
         HttpResponse response;
 
         String result = "";

@@ -227,7 +227,8 @@ def update(request):
     
     for el in elements_objects:
         element = {"day":el.day, "start_time":hm_to_int(el.start_time), "end_time":hm_to_int(el.end_time),
-                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers.all()[0].user.username, "remote_id":el.pk}
+                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers.all()[0].user.username, 
+                  "remote_id":el.pk, "remarks":el.remarks }
         element["teachers_user_ids"] = [x.user.username for x in el.teachers.all()]
 
         if user_type == "Teacher":

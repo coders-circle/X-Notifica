@@ -17,6 +17,8 @@ public class RoutineAdapter extends BaseAdapter {
         public ArrayList<Teacher> teachers;
         public String time;
 
+        public Item alternateItem = null;
+
         public boolean isBreak = false;
 
         public int type;
@@ -100,6 +102,45 @@ public class RoutineAdapter extends BaseAdapter {
             }
         }
         time.setText(info.time);
+
+        View alternateView = convertView.findViewById(R.id.alternate_frame);
+        if (alternateView != null) {
+            if (info.alternateItem != null) {
+                alternateView.setVisibility(View.VISIBLE);
+
+                Item alternateItem = info.alternateItem;
+                TextView teacher2 = (TextView) alternateView.findViewById(R.id.teacher_name2);
+                TextView subject2 = (TextView) alternateView.findViewById(R.id.subject_name2);
+                TextView type2 = (TextView) alternateView.findViewById(R.id.type2);
+                if (alternateItem.subject != null) {
+                    subject2.setText(alternateItem.subject.name);
+                    if (alternateItem.type == 0) {
+                        type2.setText(" L ");
+                    } else {
+                        type2.setText(" P ");
+                    }
+                } else
+                    subject2.setText("");
+
+                if (alternateItem.teachers != null) {
+                    String teacherNames = "";
+                    for (Teacher t : alternateItem.teachers)
+                        if (t != null) {
+                            if (teacherNames.length() > 0)
+                                teacherNames += ", ";
+                            teacherNames += t.name;
+                        }
+                    teacher2.setText(teacherNames);
+                } else if (alternateItem.faculty != null) {
+                    if (alternateItem.group != null && !alternateItem.group.equals(""))
+                        teacher2.setText(alternateItem.batch + " " + alternateItem.faculty.name + " Group: " + alternateItem.group);
+                    else
+                        teacher2.setText(alternateItem.batch + " " + alternateItem.faculty.name);
+
+                }
+            } else
+                alternateView.setVisibility(View.GONE);
+        }
         return convertView;
     }
 }

@@ -27,9 +27,10 @@
 
 
     <string name="text_about">
-        Version: 0.1 Beta\n\n
+        Version: 1.0\n\n
         Created By:\n
-        Notifica-Group
+        Notifica-Group\n\n\n
+        http://notifica.herokuapp.com/
     </string>
 
 

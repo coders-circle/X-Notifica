@@ -10,6 +10,7 @@ public class RoutineElement extends SugarRecord<RoutineElement> {
     public int endTime;
     public int day;
     public int type;
+    public String remarks;
 
     public int remoteId;
 
