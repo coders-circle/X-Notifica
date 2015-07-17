@@ -43,7 +43,8 @@ public class AssignmentFragment extends InfoFragment {
     protected void prepareListData() {
         mIds.clear();
         listItems = new ArrayList<>();
-        assignments = Assignment.listAll(Assignment.class);
+        assignments = Assignment.findWithQuery(Assignment.class, "SELECT * FROM " + Assignment.getTableName(Assignment.class) + " ORDER BY modified_at DESC");
+
         for (int i=0; i<assignments.size(); ++i){
             Assignment as = assignments.get(i);
 

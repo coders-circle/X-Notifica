@@ -45,6 +45,9 @@
     <string name="error_field_required">This field is required</string>
 
 
+    <string name="holiday_string">छुट्टी मकै भुट्टी</string>
+
+
     <!-- facebook app id -->
     <string name="facebook_app_id">641470069288425</string>
     <string name="title_activity_facebook_settings">Facebook Connection Settings</string>

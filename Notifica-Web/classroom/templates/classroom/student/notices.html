@@ -91,7 +91,7 @@
             <div class="collapse-group">
               {% autoescape off %}
               <p class="collapse list-group-item-text notice-detail" id="notice-detail{{forloop.counter}}">
-                {{notice.details|urlize}}
+                {{notice.details|urlizetrunc:50}}
               </p>
               {% endautoescape %}
             </div>

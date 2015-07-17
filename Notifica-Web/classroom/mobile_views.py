@@ -240,7 +240,8 @@ def update(request):
         if (asgn.date and asgn.modified_at > user.updated_at) and not asgn.cancelled:
             acnt += 1
         assignment = {"date":datetime_to_seconds(asgn.date) if asgn.date else -1, "summary":asgn.summary, "subject_code":asgn.subject.code,
-                            "details":asgn.details, "poster_id":asgn.poster.username, "poster_name":GetUser(asgn.poster)[1].name, "remote_id":asgn.pk, "deleted":asgn.cancelled}
+                            "details":asgn.details, "poster_id":asgn.poster.username, "poster_name":GetUser(asgn.poster)[1].name, "remote_id":asgn.pk, "deleted":asgn.cancelled,
+                            "modified_at":datetime_to_seconds(asgn.modified_at)}
         if asgn.cancelled:
             assignment["date"] = datetime_to_seconds(GetDeltaDay(1))
         if user_type == "Teacher":
@@ -255,7 +256,8 @@ def update(request):
         if (evnt.date and evnt.modified_at > user.updated_at) and not evnt.cancelled:
             ecnt += 1
         event = {"date":datetime_to_seconds(evnt.date) if evnt.date else -1, "summary":evnt.summary,
-                            "details":evnt.details, "poster_id":evnt.poster.username, "poster_name":GetUser(evnt.poster)[1].name, "remote_id":evnt.pk, "deleted":evnt.cancelled}
+                            "details":evnt.details, "poster_id":evnt.poster.username, "poster_name":GetUser(evnt.poster)[1].name, "remote_id":evnt.pk, "deleted":evnt.cancelled,
+                            "modified_at":datetime_to_seconds(evnt.modified_at)}
         if evnt.cancelled:
             event["date"] = datetime_to_seconds(GetDeltaDay(1))
         if user_type == "Teacher":

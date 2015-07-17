@@ -3,9 +3,11 @@ package com.fabb.notifica;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -97,9 +100,9 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             mLoaded = true;
         }
 
-        mViewPager.setCurrentItem(1);
-        //Calendar cal = Calendar.getInstance();
-        //mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK) - 1);
+        // mViewPager.setCurrentItem(1);
+        Calendar cal = Calendar.getInstance();
+        mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK));
 
         UpdateService.AddUpdateListener(this);
 
@@ -112,6 +115,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         try {
             if (!this.isVisible())
                 return;
+            mDaysCollection.notifyDataSetChanged();
 //            int i = mViewPager.getCurrentItem();
 //            mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
 //            mViewPager.setAdapter(mDaysCollection);
@@ -146,6 +150,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             mListView = (ListView) rootView.findViewById(R.id.routine_list);
             registerForContextMenu(mListView);
 
+            TextView holidayTextView = (TextView) rootView.findViewById(R.id.holiday_textview);
+
             final SharedPreferences preferences = MainActivity.GetPreferences(getActivity());
 
             String user_type = preferences.getString("user-type","");
@@ -154,15 +160,18 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             mListView.setLongClickable(true);
             Bundle args = getArguments();
 
-            Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY, 0);
-            c.set(Calendar.MINUTE, 0);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
+//            Calendar c = Calendar.getInstance();
+//            int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
 
-            int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
+            int day = args.getInt(ARG_DAY)%7;
 
             final List<RoutineElement> rtn = routine.get(day);
+            if (rtn.size() == 0)
+                holidayTextView.setVisibility(View.VISIBLE);
+            else
+                holidayTextView.setVisibility(View.INVISIBLE);
+
+
             final ArrayList<RoutineAdapter.Item> infos = new ArrayList<>();
             RoutineElement lastElement = null;
             RoutineAdapter.Item lastInfo = null;
@@ -283,7 +292,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     }
 
 
-    class DaysCollectionPagerAdapter extends  FragmentPagerAdapter{
+    class DaysCollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         public DaysCollectionPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -312,7 +321,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Calendar c = Calendar.getInstance();
+            // Calendar c = Calendar.getInstance();
             int day = position;
             if (day == 0)
                 day = 6;
@@ -320,8 +329,20 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 day = 0;
             else
                 day = day - 1;
-            return DayFragment.days[(c.get(Calendar.DAY_OF_WEEK)-1+day)%7];
+            // return DayFragment.days[(c.get(Calendar.DAY_OF_WEEK)-1+day)%7];
+            return DayFragment.days[day%7];
         }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public void restoreState(Parcelable arg0, ClassLoader arg1) {
+            //do nothing here! no call to super.restoreState(arg0, arg1);
+        }
+
     }
 }
 

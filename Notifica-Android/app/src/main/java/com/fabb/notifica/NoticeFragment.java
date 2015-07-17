@@ -43,7 +43,7 @@ public class NoticeFragment extends InfoFragment {
     protected void prepareListData() {
         mIds.clear();
         listItems = new ArrayList<>();
-        notices = Notice.listAll(Notice.class);
+        notices = Notice.findWithQuery(Notice.class, "SELECT * FROM " + Notice.getTableName(Notice.class) + " ORDER BY modified_at DESC");
 
         for (int i=0; i<notices.size(); ++i){
             Notice as = notices.get(i);

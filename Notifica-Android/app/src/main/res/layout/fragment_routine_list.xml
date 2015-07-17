@@ -9,19 +9,26 @@
     tools:context="com.fabb.notifica.RoutineActivity$PlaceholderFragment">
 
 
-        <ListView
-            android:divider="@null"
-            android:dividerHeight="10dp"
-            android:listSelector="@android:color/transparent"
-            android:cacheColorHint="@android:color/transparent"
-            android:headerDividersEnabled="true"
-            android:footerDividersEnabled="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/routine_list"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
-        </ListView>
+    <ListView
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:listSelector="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:headerDividersEnabled="true"
+        android:footerDividersEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/routine_list"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+    </ListView>
+
+    <TextView
+        android:id="@+id/holiday_textview"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/holiday_string"/>
 
  </RelativeLayout>
