@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name=".InfoAdder"
-            android:label="@string/title_activity_event_adder" >
+            android:label="Add New" >
         </activity>
 
         <receiver

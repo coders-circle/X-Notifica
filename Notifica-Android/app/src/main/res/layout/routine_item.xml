@@ -51,16 +51,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/remarks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#999999"
+        android:textStyle="italic"/>
+
     <LinearLayout
         android:id="@+id/alternate_frame"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/box_separator">
+        android:layout_height="wrap_content">
 
-
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,6 +100,13 @@
             android:id="@+id/teacher_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/remarks2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#999999"
+            android:textStyle="italic" />
     </LinearLayout>
 
 </LinearLayout>

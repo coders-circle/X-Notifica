@@ -22,7 +22,6 @@
         <item>Notices</item>
         <item>Settings</item>
     </string-array>
-    <string name="title_activity_event_adder">EventAdder</string>
     <string name="action_update">Update</string>
 
 
@@ -46,7 +45,10 @@
     <string name="error_field_required">This field is required</string>
 
 
-    <string name="holiday_string">छुट्टी मकै भुट्टी</string>
+    <string name="holiday_string">
+        छुट्टी, मकै भुट्टी\n
+        पाले दाइको टुप्पी !
+    </string>
 
 
     <!-- facebook app id -->

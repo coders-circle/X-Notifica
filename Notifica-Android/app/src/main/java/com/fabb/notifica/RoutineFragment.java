@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -212,6 +211,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 info.batch = r.year;
                 info.type = r.type;
                 info.time = time;
+                info.remarks = r.remarks;
 
                 if (lastElement != null) {
                     if (lastElement.startTime == r.startTime && lastElement.endTime == r.endTime) {
@@ -295,6 +295,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                     return super.onContextItemSelected(item);
             }
         }
+
 
     }
 

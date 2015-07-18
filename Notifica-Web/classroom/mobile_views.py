@@ -392,7 +392,7 @@ def post(request):
  { "message_type" : "Gcm Registration", "user_id":<username>, "password":<password>, "token":<token>, "device_id":<device_id> }
  { "message_type" : "Registration Result", "register_result":"Success" }
 """
-import traceback
+
 @csrf_exempt
 def register(request):   
     if request.method != "POST":
@@ -476,6 +476,13 @@ def post_attendance(request):
     return JsonResponse(outdata)
 
  
+
+"""
+ Check if an assignment or a notice is already expired (deleted)
+ { "type":"Assignment/Notice", "remote_id":<id> }
+ { "expired" : "True/False" }
+"""
+
 @csrf_exempt
 def check_expired(request):
     indata = json.loads(request.body.decode('utf-8'))
@@ -489,6 +496,13 @@ def check_expired(request):
         outdata["expired"] = True
     return JsonResponse(outdata)
 
+
+
+"""
+ Attendance post
+ { "message_type" : "Post Seen Data", "user_id":<username>, "password":<password>, "assignments":[<seen_assignments_ids>], "notices":[<seen_notices_ids>] }
+ { "Success":"True/False" }
+"""
 
 @csrf_exempt
 def post_seen_data(request):

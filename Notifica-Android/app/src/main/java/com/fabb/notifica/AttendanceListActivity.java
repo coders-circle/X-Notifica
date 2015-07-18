@@ -40,9 +40,6 @@ public class AttendanceListActivity extends ActionBarActivity {
         if (!mInfo.group.equals(""))
             heading += " Group: " + mInfo.group;
 
-        DateFormat format1 = DateFormat.getDateInstance();
-        heading += "\n" + "Date:  " + format1.format(cal.getTime());
-
         headingTextView.setText(heading);
 
         final List<Attendance> attendanceList = Database.GetAttendances(mInfo.faculty, mInfo.batch, mInfo.group);
