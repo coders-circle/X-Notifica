@@ -30,9 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="250dp"
-        android:layout_marginStart="250dp"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:background="@drawable/notify_badge"/>
