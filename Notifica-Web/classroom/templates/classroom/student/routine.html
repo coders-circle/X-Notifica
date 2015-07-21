@@ -6,8 +6,28 @@
                 <h2>Routine</h2>
                 <hr class="hr-dark">
             </div>
+
         </div>
         <div class="row row-routine">
+            <div id="modal-reschedule-class" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Reschedule class</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p class="label-modal-body" id="modal-reschedule-class-label-subject"></p>
+                            <p class="lable-modal-body" id="modal-reschedule-class-label-time-old"></p>
+                            <input class="form-control" id="modal-reschedule-class-input-time"type="text" placeholder="New time">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% now 'w' as today %}
             {% for sn, day in daily_routine.items %}
             <div class="col-md-2 col-md-2-routine">
@@ -35,7 +55,7 @@
                         {% if user.privilege == 1 %}
                         <div class="list-group-item-cr-options">
                             <button onclick="CancelClass({{period.pk}});" title=" remove this class "><i class="fa fa-times"></i></button>
-                            <button onclick="RescheduleClass({{period.pk}});" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
+                            <button onclick="RescheduleClass({{period.pk}}, '{{period.start_time}}', '{{period.subject}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
                         </div>
                         {% endif %}
                         {% if period.nextelem.start_time == period.start_time %}
@@ -49,7 +69,7 @@
                         {% if user.privilege == 1 %}
                         <div class="list-group-item-cr-options">
                             <button onclick="CancelClass({{period.nextelem.pk}});" title=" remove this class "><i class="fa fa-times"></i></button>
-                            <button onclick="RescheduleClass({{period.nextelem.pk}});" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
+                            <button onclick="RescheduleClass({{period.nextelem.pk}}, '{{period.nextelem.start_time}}', '{{period.nextelem.subject}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
                         </div>
                         {% endif %}
                         {% endif %}
