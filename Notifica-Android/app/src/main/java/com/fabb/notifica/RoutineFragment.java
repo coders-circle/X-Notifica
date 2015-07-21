@@ -31,7 +31,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
     private static boolean mLoaded = false;
     private static List<List<RoutineElement>> routine = new ArrayList<>();
-
+    private static int last_id = -1;
 
     @Override
     public void onCreate(Bundle save)
@@ -46,13 +46,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_routine, container, false);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mViewPager != null)
-            outState.putInt("page-id" , mViewPager.getCurrentItem());
     }
 
     @Override
@@ -72,6 +65,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             public void onPageSelected(int position) {
                 DayFragment page = (DayFragment)mViewPager.getAdapter().instantiateItem(mViewPager, mViewPager.getCurrentItem());
                 ((MainActivity)getActivity()).swipeRefreshLayout.setListView(page.mListView);
+
+                last_id = position;
             }
 
             @Override
@@ -105,8 +100,8 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
         Calendar cal = Calendar.getInstance();
         int currentPos = cal.get(Calendar.DAY_OF_WEEK);
-        if (savedInstanceState != null)
-            currentPos = savedInstanceState.getInt("page-id", currentPos);
+        if (last_id >= 0)
+            currentPos = last_id;
 
         mViewPager.setCurrentItem(currentPos);
     }

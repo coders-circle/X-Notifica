@@ -3,7 +3,6 @@ package com.fabb.notifica;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
-import java.util.List;
 
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
@@ -77,9 +75,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             if (position == selectedItem+1) {
                 int color = Color.parseColor("#FD4444");
                 if (position == 2)
-                    color = Color.parseColor("#33B4E3");
-                else if (position == 3)
                     color = Color.parseColor("#98CB01");
+                else if (position == 3)
+                    color = Color.parseColor("#33B4E3");
                 holder.row_title.setTextColor(color);
                 holder.row_icon.setColorFilter(color);
                 holder.itemView.setSelected(true);

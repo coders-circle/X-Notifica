@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,11 +99,17 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         }
         selectItem(fragment_id);
 
+        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+        UpdateService.AddUpdateListener(this);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getBoolean("pref_key_auto_update", true)) {
-            UpdateService.AddUpdateListener(this);
+        if (settings.getBoolean("just-logged-in", true) || settings.getBoolean("pref_key_auto_update", true)) {
             new UpdateService.UpdateTask(this).execute();
+            swipeRefreshLayout.setRefreshing(true);
+            settings.edit().putBoolean("just-logged-in", false).apply();
         }
+        else
+            swipeRefreshLayout.setRefreshing(false);
 
         String token = preferences.getString("gcm_token", "");
         if (token == null || token.equals("")) {
@@ -117,7 +122,6 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         if (!GetPreferences(this).getBoolean("gcm_token_sent", false))
             GcmRegisterIntent.sendRegistrationToServer(this,  preferences.getString("gcm_token", ""));
 
-        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
