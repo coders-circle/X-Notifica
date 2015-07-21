@@ -20,3 +20,12 @@ $("#pinned-notice").click(function(){
     $("#date-notice").attr('disabled', this.checked)
     $("#date-notice").attr('required', !this.checked)
 });
+
+
+function RescheduleClass(classID){
+    prompt("New Start Time:", "");
+}
+
+function CancelClass(classID){
+    confirm("Are you sure to remove this class?");
+}

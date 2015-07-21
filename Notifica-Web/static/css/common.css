@@ -1,6 +1,6 @@
 /*
-Standard CSS Structure for this Site
-------------------------------------
+# Standard CSS Structure
+------------------------
 position:   absolute/relative
 float:      left/right/center
 
@@ -25,7 +25,23 @@ transition:
 transform:
 
 ...
+
+
+# Theme Info
+------------
+
+base color
+----------
+darker: 007d65
+dark: 00A686
+normal: 18bc9c
+
+harmonics
+----------
+red: f61f3d
+blue; 2765c0
 */
+
 
 body {
     overflow-x: hidden;
@@ -50,6 +66,10 @@ p {
     font-family: "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.hr-dark{
+    border-color: #ddd;
+}
+
 /* for large screen */
 @media(min-width:768px) {
     .navbar-fixed-top {
@@ -61,7 +81,6 @@ p {
         transition: all .3s;
     }
 /*
-
     .navbar-fixed-top.navbar-shrink {
         height: 70px;
         padding: 10px 0;

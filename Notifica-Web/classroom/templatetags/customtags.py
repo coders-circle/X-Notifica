@@ -40,3 +40,13 @@ def daysuntil(value):
     if difference == timedelta(days=0):
         return 'today'
     return str(difference).split(',')[0]
+
+
+@register.filter(name='item')
+def item(value, arg):
+    try:
+        return value[arg]
+    except:
+        return None
+
+        

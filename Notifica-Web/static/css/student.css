@@ -94,6 +94,89 @@ p {
 /**************
     Routine
 ***************/
+
+.col-md-2-routine{
+    padding:5px;
+}
+
+.list-group-routine{
+    margin: 0px;
+}
+
+.list-group-item-routine{
+    margin-top:5px;
+    margin-bottom:10px;
+    padding-top:12px;
+    padding-bottom:12px;
+    font-family: "Open Sans", "Trebuchet MS";
+    background: #f4f4f4;
+    border-top: 2px solid #ddd;
+}
+
+.list-group-item-routine > p{
+    font-family: "Open Sans", "Trebuchet MS";
+    margin-bottom: 2px;
+    margin-top:2px;
+    color:#888;
+}
+
+.list-group-routine-today > .list-group-item{
+    background: #fff;
+    border-top: 2px solid #18bc9c;
+}
+
+.list-group-item-routine-break,
+.list-group-routine-today > .list-group-item-routine-break{
+    border-top:0;
+    color: #fff;
+}
+
+.list-group-routine-today  p{
+    color:#000;
+}
+
+.list-group-routine-today > h3{
+    color: #007d65;
+}
+
+.list-group-item-routine > p > small{
+    font-size:0.733em;
+}
+
+.badge-routine{
+    width:14px;
+    height:14px;
+    padding:0px;
+    padding-top:3px;
+    background-color: #ddd;
+    font-size:0.6em;
+    text-align: center;
+    border-radius: 50%;
+}
+.list-group-routine-today .badge-routine-p {
+    background-color: #f61f3d;
+}
+.list-group-routine-today .badge-routine-l{
+    background-color: #2765c0;
+}
+
+
+.list-group-item-cr-options{
+    text-align: right;
+}
+
+.list-group-item-cr-options > button{
+    background: transparent;
+    border:0;
+    color: #ddd;
+}
+.list-group-routine-today .list-group-item-cr-options > button{
+    color: #007d65;
+}
+.list-group-item-cr-options > button:hover{
+    color: #18bc9c;
+}
+
 .thinner {
     margin:8px;
     padding:0px;
@@ -115,54 +198,27 @@ p {
     background: #f61f3d;
 }
 
-.badge {
-    font-size: 0.6em;
-    width: 12px;
-    border-radius: 6px;
-    padding: 2px;
-    margin: 0px;
-}
-
-.badge-p {
-    background-color: #f61f3d;
-}
-
-.badge-l {
-    background-color: #2765c0;
-}
-
-.nottoday .badge-p,
-.nottoday .badge-l {
-    background-color: #ddd;
-}
-
-.today h3 {
-    color: #18bc9c;
-}
-
-.nottoday {
-    color: #666;
-}
-
-
-.gap {
-    min-height: 55px;
-    margin: 2px;
-    margin-bottom: 10px!important;
-    padding-top: 16px;
-    padding-left: 20px;
-    font-family: "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 0.9em;
-    transition: all .3s ease-in-out;
-    background: #f7f7f7;
-    border-radius: 0!important;
-    box-shadow: 3px 3px 7px #ccc;
-}
-
-
 .period-time {
     font-size: 0.78em;
 }
+
+.cr-options{
+    position:absolute;
+    bottom:0px;
+    right:0px;
+
+}
+
+.cr-options>button{
+    background: transparent;
+    border:0;
+}
+.cr-options>button:hover{
+    color:red;
+    background: transparent;
+    border:0;
+}
+
 
 
 /**************************
@@ -304,8 +360,9 @@ input[type="checkbox"]{
     padding-bottom:10px;
 }
 
-.form-changepass > div > .btn{
+.form-changepass .btn{
     margin-top:30px;
+    margin-bottom:30px;
 }
 
 .btn-success {

@@ -11,6 +11,8 @@ from .mobile_views import DeletePassed, GetUser
 from .forms import *
 from helpers import hm_to_int
 
+from collections import defaultdict
+
 def redirect_user(user):
     tp, obj = GetUser(user)
     if tp == "Teacher":
@@ -207,13 +209,21 @@ def student(request):
         elem.duration = hm_to_int(elem.end_time) - hm_to_int(elem.start_time)
         routine[loopcount] = elem
 
+    # static daily routine
+    daily_routine = defaultdict(list)
+    for i, element in routine.items():
+        daily_routine[element.day].append(element)
+
+
+    daily_routine.default_factory = None
+
     context["unseen_assignments"] = UnseenAssignment.objects.filter(user=user.user, assignment__cancelled=False).values_list('assignment',flat=True)
     context["unseen_notices"] = UnseenNotice.objects.filter(user=user.user, notice__cancelled=False).values_list('notice',flat=True)
 
     names = user.name.split(' ')
     context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
                     'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
-                    'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'] })
+                    'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'], 'daily_routine':daily_routine })
     return render(request, 'classroom/student.html', context)
 
 
