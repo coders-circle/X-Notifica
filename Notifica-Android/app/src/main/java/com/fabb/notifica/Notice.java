@@ -11,6 +11,8 @@ public class Notice extends SugarRecord<Notice>{
     public boolean deleted;
     public long remoteId;
 
+    public long modifiedAt;
+
     // for teacher only
     public Faculty faculty;
     public int year;

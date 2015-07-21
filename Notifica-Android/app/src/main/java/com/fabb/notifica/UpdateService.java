@@ -227,6 +227,7 @@ public class UpdateService {
                     newElement.endTime = element.optInt("end_time");
                     newElement.type = element.optInt("type");
                     newElement.remoteId = element.optInt("remote_id");
+                    newElement.remarks = element.optString("remarks");
 
                     if (isTeacher) {
                         newElement.faculty = Database.GetFaculty(element.optString("faculty_code"));
@@ -312,6 +313,7 @@ public class UpdateService {
                 newAssignment.posterId = assignment.optString("poster_id");
                 newAssignment.posterName = assignment.optString("poster_name");
                 newAssignment.deleted = assignment.optBoolean("deleted");
+                newAssignment.modifiedAt = assignment.optLong("modified_at");
 
                 if (isTeacher) {
                     newAssignment.year = assignment.optInt("year");
@@ -339,6 +341,7 @@ public class UpdateService {
                 newNotice.posterId = event.optString("poster_id");
                 newNotice.deleted = event.optBoolean("deleted");
                 newNotice.posterName = event.optString("poster_name");
+                newNotice.modifiedAt = event.optLong("modified_at");
 
                 if (isTeacher) {
                     newNotice.year = event.optInt("year");

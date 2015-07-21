@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 
 public class Network {
 
-    public final String URL = "http://192.168.0.40:8000/classroom/";
+    public final String URL = "http://notifica.herokuapp.com/classroom/";
     public final String ERR_CONNECTION = "{ \"message_type\": \"ERROR CONNECTION\" }";
 
     public String Get(String address) {
@@ -41,7 +41,8 @@ public class Network {
 
     public String PostJson(String address, JSONObject jsonObject) {
         HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout for connection
+        HttpConnectionParams.setSoTimeout(client.getParams(), 60000); // Timeout for data waiting
         HttpResponse response;
 
         String result = "";

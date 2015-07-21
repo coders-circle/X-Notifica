@@ -17,6 +17,10 @@ public class RoutineAdapter extends BaseAdapter {
         public ArrayList<Teacher> teachers;
         public String time;
 
+        public String remarks;
+
+        public Item alternateItem = null;
+
         public boolean isBreak = false;
 
         public int type;
@@ -63,13 +67,14 @@ public class RoutineAdapter extends BaseAdapter {
 
         TextView teacher = (TextView) convertView.findViewById(R.id.teacher_name);
         TextView time = (TextView) convertView.findViewById(R.id.time);
-
+        TextView remarks = (TextView) convertView.findViewById(R.id.remarks);
 
         if (info.isBreak)
             teacher.setText("Break");
         else {
             TextView subject = (TextView) convertView.findViewById(R.id.subject_name);
-            TextView type=  (TextView) convertView.findViewById(R.id.type);
+            TextView type = (TextView) convertView.findViewById(R.id.type);
+
             if (info.subject != null) {
                 subject.setText(info.subject.name);
                 if (info.type == 0) {
@@ -98,8 +103,63 @@ public class RoutineAdapter extends BaseAdapter {
                     teacher.setText(info.batch + " " + info.faculty.name);
 
             }
+
+            if (info.remarks != null && !info.remarks.equals("")) {
+                remarks.setText(info.remarks);
+                remarks.setVisibility(View.VISIBLE);
+            }
+            else
+                remarks.setVisibility(View.GONE);
         }
         time.setText(info.time);
+
+        View alternateView = convertView.findViewById(R.id.alternate_frame);
+        if (alternateView != null) {
+            if (info.alternateItem != null) {
+                alternateView.setVisibility(View.VISIBLE);
+
+                Item alternateItem = info.alternateItem;
+                TextView teacher2 = (TextView) alternateView.findViewById(R.id.teacher_name2);
+                TextView subject2 = (TextView) alternateView.findViewById(R.id.subject_name2);
+                TextView type2 = (TextView) alternateView.findViewById(R.id.type2);
+                TextView remarks2 = (TextView) convertView.findViewById(R.id.remarks2);
+
+                if (alternateItem.subject != null) {
+                    subject2.setText(alternateItem.subject.name);
+                    if (alternateItem.type == 0) {
+                        type2.setText(" L ");
+                    } else {
+                        type2.setText(" P ");
+                    }
+                } else
+                    subject2.setText("");
+
+                if (alternateItem.teachers != null) {
+                    String teacherNames = "";
+                    for (Teacher t : alternateItem.teachers)
+                        if (t != null) {
+                            if (teacherNames.length() > 0)
+                                teacherNames += ", ";
+                            teacherNames += t.name;
+                        }
+                    teacher2.setText(teacherNames);
+                } else if (alternateItem.faculty != null) {
+                    if (alternateItem.group != null && !alternateItem.group.equals(""))
+                        teacher2.setText(alternateItem.batch + " " + alternateItem.faculty.name + " Group: " + alternateItem.group);
+                    else
+                        teacher2.setText(alternateItem.batch + " " + alternateItem.faculty.name);
+
+                }
+
+                if (alternateItem.remarks != null && !alternateItem.remarks.equals("")) {
+                    remarks2.setText(alternateItem.remarks);
+                    remarks2.setVisibility(View.VISIBLE);
+                }
+                else
+                    remarks2.setVisibility(View.GONE);
+            } else
+                alternateView.setVisibility(View.GONE);
+        }
         return convertView;
     }
 }

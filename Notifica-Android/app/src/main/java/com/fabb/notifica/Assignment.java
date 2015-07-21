@@ -12,6 +12,8 @@ public class Assignment extends SugarRecord<Assignment>{
     public long remoteId;
     public Subject subject;
 
+    public long modifiedAt;
+
     // for teachers only
     public Faculty faculty;
     public int year;

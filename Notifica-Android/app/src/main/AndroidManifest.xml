@@ -27,7 +27,7 @@
             android:value="notifica_sugar.db" />
         <meta-data
             android:name="VERSION"
-            android:value="9" />
+            android:value="11" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name=".InfoAdder"
-            android:label="@string/title_activity_event_adder" >
+            android:label="Add New" >
         </activity>
 
         <receiver

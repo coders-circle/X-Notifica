@@ -131,6 +131,8 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         int new_assignment_cnt = 0;
         int new_notice_cnt = 0;
 
+        int selected = mDrawerList.getCheckedItemPosition();
+
         Iterator<Notice> noticeIterator = Notice.findAll(Notice.class);
         while (noticeIterator.hasNext()) {
             if (!noticeIterator.next().seen)
@@ -147,6 +149,8 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         adapter.setCount(1, new_assignment_cnt);
         adapter.setCount(2, new_notice_cnt);
         mDrawerList.setAdapter(adapter);
+
+        mDrawerList.setItemChecked(selected, true);
     }
 
     @Override
@@ -204,7 +208,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame, fragment)
-                    .commit();
+                    .commitAllowingStateLoss();
         }
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);

@@ -22,14 +22,14 @@
         <item>Notices</item>
         <item>Settings</item>
     </string-array>
-    <string name="title_activity_event_adder">EventAdder</string>
     <string name="action_update">Update</string>
 
 
     <string name="text_about">
-        Version: 0.1 Beta\n\n
+        Version: 1.0\n\n
         Created By:\n
-        Notifica-Group
+        Notifica-Group\n\n\n
+        http://notifica.herokuapp.com/
     </string>
 
 
@@ -43,6 +43,12 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password does not match with the user id</string>
     <string name="error_field_required">This field is required</string>
+
+
+    <string name="holiday_string">
+        छुट्टी, मकै भुट्टी\n
+        पाले दाइको टुप्पी !
+    </string>
 
 
     <!-- facebook app id -->

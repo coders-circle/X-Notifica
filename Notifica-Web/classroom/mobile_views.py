@@ -227,7 +227,8 @@ def update(request):
     
     for el in elements_objects:
         element = {"day":el.day, "start_time":hm_to_int(el.start_time), "end_time":hm_to_int(el.end_time),
-                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers.all()[0].user.username, "remote_id":el.pk}
+                  "type":el.class_type, "subject_code":el.subject.code, "teacher_user_id":el.teachers.all()[0].user.username, 
+                  "remote_id":el.pk, "remarks":el.remarks }
         element["teachers_user_ids"] = [x.user.username for x in el.teachers.all()]
 
         if user_type == "Teacher":
@@ -240,7 +241,8 @@ def update(request):
         if (asgn.date and asgn.modified_at > user.updated_at) and not asgn.cancelled:
             acnt += 1
         assignment = {"date":datetime_to_seconds(asgn.date) if asgn.date else -1, "summary":asgn.summary, "subject_code":asgn.subject.code,
-                            "details":asgn.details, "poster_id":asgn.poster.username, "poster_name":GetUser(asgn.poster)[1].name, "remote_id":asgn.pk, "deleted":asgn.cancelled}
+                            "details":asgn.details, "poster_id":asgn.poster.username, "poster_name":GetUser(asgn.poster)[1].name, "remote_id":asgn.pk, "deleted":asgn.cancelled,
+                            "modified_at":datetime_to_seconds(asgn.modified_at)}
         if asgn.cancelled:
             assignment["date"] = datetime_to_seconds(GetDeltaDay(1))
         if user_type == "Teacher":
@@ -255,7 +257,8 @@ def update(request):
         if (evnt.date and evnt.modified_at > user.updated_at) and not evnt.cancelled:
             ecnt += 1
         event = {"date":datetime_to_seconds(evnt.date) if evnt.date else -1, "summary":evnt.summary,
-                            "details":evnt.details, "poster_id":evnt.poster.username, "poster_name":GetUser(evnt.poster)[1].name, "remote_id":evnt.pk, "deleted":evnt.cancelled}
+                            "details":evnt.details, "poster_id":evnt.poster.username, "poster_name":GetUser(evnt.poster)[1].name, "remote_id":evnt.pk, "deleted":evnt.cancelled,
+                            "modified_at":datetime_to_seconds(evnt.modified_at)}
         if evnt.cancelled:
             event["date"] = datetime_to_seconds(GetDeltaDay(1))
         if user_type == "Teacher":
@@ -389,7 +392,7 @@ def post(request):
  { "message_type" : "Gcm Registration", "user_id":<username>, "password":<password>, "token":<token>, "device_id":<device_id> }
  { "message_type" : "Registration Result", "register_result":"Success" }
 """
-import traceback
+
 @csrf_exempt
 def register(request):   
     if request.method != "POST":
@@ -473,6 +476,13 @@ def post_attendance(request):
     return JsonResponse(outdata)
 
  
+
+"""
+ Check if an assignment or a notice is already expired (deleted)
+ { "type":"Assignment/Notice", "remote_id":<id> }
+ { "expired" : "True/False" }
+"""
+
 @csrf_exempt
 def check_expired(request):
     indata = json.loads(request.body.decode('utf-8'))
@@ -486,6 +496,13 @@ def check_expired(request):
         outdata["expired"] = True
     return JsonResponse(outdata)
 
+
+
+"""
+ Attendance post
+ { "message_type" : "Post Seen Data", "user_id":<username>, "password":<password>, "assignments":[<seen_assignments_ids>], "notices":[<seen_notices_ids>] }
+ { "Success":"True/False" }
+"""
 
 @csrf_exempt
 def post_seen_data(request):

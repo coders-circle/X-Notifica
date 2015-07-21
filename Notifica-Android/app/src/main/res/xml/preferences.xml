@@ -5,12 +5,12 @@
         android:key="pref_key_storage_settings">
         <CheckBoxPreference
             android:key="pref_key_push_notify"
-            android:summary="Notify and update when new assignments and notices are posted, even when app is not running"
-            android:title="Push Notifications"
+            android:summary="Notify for any new assignment or notice"
+            android:title="Notifications"
             android:defaultValue="true" />
         <CheckBoxPreference
             android:key="pref_key_auto_update"
-            android:summary="Automatically update when app is started "
+            android:summary="Automatically update routine, assignments and notices when the app starts"
             android:title="Auto update on start"
             android:defaultValue="true" />
     </PreferenceCategory>
