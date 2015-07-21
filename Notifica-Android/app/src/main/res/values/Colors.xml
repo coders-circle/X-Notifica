@@ -5,6 +5,7 @@
     <color name="primaryText">#212121</color>
     <color name="secondaryText">#727272</color>
     <color name="divider">#B6B6B6</color>
+    <color name="selector_backGround">#ffe5e5e5</color>
     <color name="line_color">#19bc9c</color>
     <color name="line_color_dark">#ff14977d</color>
     <color name="line_color_red">#ffbc1111</color>

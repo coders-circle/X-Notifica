@@ -12,12 +12,15 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -29,27 +32,32 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     public static boolean logged_out = false;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private RecyclerView drawerRecyclerView;
     private String[] mPageTitles;
+    private DrawerAdapter drawerAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     public CustomSwipeRefreshLayout swipeRefreshLayout;
 
     public Menu menu;
+    private String name, roll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        SharedPreferences preferences = GetPreferences(this);
+        name = preferences.getString("user-name", "Unknown");
+        roll = preferences.getString("user-id", "ukn");
 
-        //ShowHashKey();
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         Database.DeleteExpired();
 
         mPageTitles = getResources().getStringArray(R.array.page_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerRecyclerView = (RecyclerView)findViewById(R.id.drawer_recyclerView);
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
@@ -57,26 +65,14 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 toolbar,               /* DrawerLayout object */
                 R.string.drawer_open,  /* "open drawer" description */
                 R.string.drawer_close  /* "close drawer" description */
-        ) {
+        );
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-            }
-        };
-
-
-        // Set the adapter for the list view
-        UpdateDrawer();
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        // Set the drawerAdapter for the list view
+        UpdateDrawer();
+
         setSupportActionBar(toolbar);
         toolbar.hideOverflowMenu();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -98,7 +94,6 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             new UpdateService.UpdateTask(this).execute();
         }
 
-        SharedPreferences preferences = GetPreferences(this);
         String token = preferences.getString("gcm_token", "");
         if (token == null || token.equals("")) {
             Intent intent = new Intent(this, GcmRegisterIntent.class);
@@ -125,13 +120,54 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 new UpdateService.UpdateTask(MainActivity.this).execute();
             }
         });
+
+
+        drawerRecyclerView.setHasFixedSize(true);
+        drawerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        final GestureDetector mGestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+
+        });
+
+        drawerRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+                View child = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+
+                if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
+                    int position = recyclerView.getChildPosition(child) - 1;
+                    selectItem(position);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView recyclerView, MotionEvent motionEvent) {
+
+            }
+        });
     }
+
+    private int[] icons={
+            R.mipmap.ic_routine,
+            R.mipmap.ic_assignments,
+            R.mipmap.ic_notice,
+            R.mipmap.ic_settings
+    };
 
     public void UpdateDrawer() {
         int new_assignment_cnt = 0;
         int new_notice_cnt = 0;
 
-        int selected = mDrawerList.getCheckedItemPosition();
+        int selected = 0;
+        if (drawerAdapter != null)
+            drawerAdapter.GetSelected();
 
         Iterator<Notice> noticeIterator = Notice.findAll(Notice.class);
         while (noticeIterator.hasNext()) {
@@ -145,12 +181,12 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                 new_assignment_cnt++;
         }
 
-        DrawerAdapter adapter = new DrawerAdapter(this, R.layout.drawer_list_item, mPageTitles);
-        adapter.setCount(1, new_assignment_cnt);
-        adapter.setCount(2, new_notice_cnt);
-        mDrawerList.setAdapter(adapter);
+        drawerAdapter = new DrawerAdapter(mPageTitles, icons, name, roll);
+        drawerAdapter.setCount(1, new_assignment_cnt);
+        drawerAdapter.setCount(2, new_notice_cnt);
+        drawerRecyclerView.setAdapter(drawerAdapter);
 
-        mDrawerList.setItemChecked(selected, true);
+        drawerAdapter.SetSelected(selected);
     }
 
     @Override
@@ -169,13 +205,6 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
         swipeRefreshLayout.setRefreshing(false);
         Database.DeleteExpired();
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
     }
 
     private Fragment routine_fragment = new RoutineFragment();
@@ -210,10 +239,10 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
                     .replace(R.id.content_frame, fragment)
                     .commitAllowingStateLoss();
         }
-        // Highlight the selected item, update the title, and close the drawer
-        mDrawerList.setItemChecked(position, true);
         setTitle(mPageTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        drawerAdapter.SetSelected(position);
+        drawerAdapter.notifyDataSetChanged();
+        mDrawerLayout.closeDrawers();
     }
 
     @Override
