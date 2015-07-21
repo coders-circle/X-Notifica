@@ -32,11 +32,14 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     private static boolean mLoaded = false;
     private static List<List<RoutineElement>> routine = new ArrayList<>();
 
+
     @Override
     public void onCreate(Bundle save)
     {
         super.onCreate(save);
         setRetainInstance(true);
+        mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
+        UpdateService.AddUpdateListener(this);
     }
 
 
@@ -46,15 +49,17 @@ public class RoutineFragment extends Fragment implements UpdateListener {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mViewPager != null)
+            outState.putInt("page-id" , mViewPager.getCurrentItem());
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Create the adapter that will return a fragment
-        mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
-
         mViewPager = (ViewPager) getActivity().findViewById(R.id.routine_fragment);
-        // Set up the ViewPager with the sections adapter.
-
         mViewPager.setAdapter(mDaysCollection);
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -86,7 +91,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         });
 
 
-        //PagerTitleStrip strip = (PagerTitleStrip) getActivity().findViewById(R.id.pager_tab_strip);
         PagerTabStrip strip =(PagerTabStrip) getActivity().findViewById(R.id.pager_tab_strip);
         strip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         strip.setDrawFullUnderline(true);
@@ -99,15 +103,12 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             mLoaded = true;
         }
 
-        // mViewPager.setCurrentItem(1);
         Calendar cal = Calendar.getInstance();
-        mViewPager.setCurrentItem(cal.get(Calendar.DAY_OF_WEEK));
+        int currentPos = cal.get(Calendar.DAY_OF_WEEK);
+        if (savedInstanceState != null)
+            currentPos = savedInstanceState.getInt("page-id", currentPos);
 
-        UpdateService.AddUpdateListener(this);
-
-
-        DayFragment page = (DayFragment)mViewPager.getAdapter().instantiateItem(mViewPager, mViewPager.getCurrentItem());
-        ((MainActivity)getActivity()).swipeRefreshLayout.setListView(page.mListView);
+        mViewPager.setCurrentItem(currentPos);
     }
 
     public void Refresh() {
@@ -115,12 +116,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             if (!this.isVisible())
                 return;
             mDaysCollection.notifyDataSetChanged();
-//            int i = mViewPager.getCurrentItem();
-//            mDaysCollection = new DaysCollectionPagerAdapter(getChildFragmentManager());
-//            mViewPager.setAdapter(mDaysCollection);
-//            mViewPager.invalidate();
-//            mViewPager.setCurrentItem(i);
-            //Toast.makeText(mActivity, "Routine Updated", Toast.LENGTH_SHORT).show();
         }
         catch (Exception ignore) {
         }
@@ -147,6 +142,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             View rootView = inflater.inflate(R.layout.fragment_routine_list, container, false);
 
             mListView = (ListView) rootView.findViewById(R.id.routine_list);
+
             registerForContextMenu(mListView);
 
             TextView holidayTextView = (TextView) rootView.findViewById(R.id.holiday_textview);
@@ -159,10 +155,10 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             mListView.setLongClickable(true);
             Bundle args = getArguments();
 
-//            Calendar c = Calendar.getInstance();
-//            int day = (c.get(Calendar.DAY_OF_WEEK)-1 + args.getInt(ARG_DAY))%7;
-
             int day = args.getInt(ARG_DAY)%7;
+            int currentPos = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1;
+            if (day==currentPos)
+                ((MainActivity)getActivity()).swipeRefreshLayout.setListView(mListView);
 
             final List<RoutineElement> rtn = routine.get(day);
             if (rtn.size() == 0)
@@ -294,12 +290,10 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                     return super.onContextItemSelected(item);
             }
         }
-
-
     }
 
 
-    class DaysCollectionPagerAdapter extends FragmentStatePagerAdapter {
+    public static class DaysCollectionPagerAdapter extends FragmentStatePagerAdapter {
 
         public DaysCollectionPagerAdapter(FragmentManager fm) {
             super(fm);

@@ -41,6 +41,14 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     public Menu menu;
     private String name, roll;
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (drawerAdapter != null)
+            outState.putInt("fragment-id" , drawerAdapter.GetSelected());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,14 +86,18 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        String notification_title = getIntent().getStringExtra("notification-title");
         int fragment_id;
-        if (notification_title == null)
-            fragment_id = 0;
-        else if (notification_title.equals("Assignment"))
-            fragment_id = 1;
-        else
-            fragment_id = 2;
+        if (savedInstanceState != null)
+            fragment_id = savedInstanceState.getInt("fragment-id", 0);
+        else {
+            String notification_title = getIntent().getStringExtra("notification-title");
+            if (notification_title == null)
+                fragment_id = 0;
+            else if (notification_title.equals("Assignment"))
+                fragment_id = 1;
+            else
+                fragment_id = 2;
+        }
         selectItem(fragment_id);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);

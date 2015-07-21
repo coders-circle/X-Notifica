@@ -35,7 +35,6 @@ public class AttendanceListActivity extends ActionBarActivity {
 
         TextView headingTextView = (TextView)findViewById(R.id.atlist_heading);
 
-        Calendar cal = Calendar.getInstance();
         String heading = mInfo.batch + " " + mInfo.faculty.name;
         if (!mInfo.group.equals(""))
             heading += " Group: " + mInfo.group;
