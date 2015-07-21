@@ -224,7 +224,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                 lastInfo = info;
                 lastElement = r;
             }
-            mListView.addFooterView(new View(getActivity()));
             RoutineAdapter adapter = new RoutineAdapter(getActivity(), infos);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

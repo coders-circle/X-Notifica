@@ -141,7 +141,8 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
                 if (child != null && mGestureDetector.onTouchEvent(motionEvent)) {
                     int position = recyclerView.getChildPosition(child) - 1;
-                    selectItem(position);
+                    if (position >= 0)
+                        selectItem(position);
                     return true;
                 }
                 return false;
