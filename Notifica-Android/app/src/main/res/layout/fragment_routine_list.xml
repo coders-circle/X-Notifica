@@ -14,8 +14,6 @@
         android:dividerHeight="10dp"
         android:listSelector="@android:color/transparent"
         android:cacheColorHint="@android:color/transparent"
-        android:headerDividersEnabled="true"
-        android:footerDividersEnabled="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/routine_list"

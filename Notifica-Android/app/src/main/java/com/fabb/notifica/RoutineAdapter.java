@@ -56,7 +56,7 @@ public class RoutineAdapter extends BaseAdapter {
         if (convertView==null) {
             if (info.isBreak) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.breaktime, parent, false);
+                convertView = inflater.inflate(R.layout.routine_item_break, parent, false);
             }
             else {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
