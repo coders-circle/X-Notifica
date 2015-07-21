@@ -374,3 +374,11 @@ input[type="checkbox"]{
 #addassignment {
     padding-bottom: 40px;
 }
+
+.modal-title{
+    text-transform: none!important;
+}
+
+#modal-reschedule-class > .modal-dialog > .modal-content{
+    
+}
