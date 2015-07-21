@@ -22,8 +22,19 @@ $("#pinned-notice").click(function(){
 });
 
 
-function RescheduleClass(classID){
-    prompt("New Start Time:", "");
+function openModal(modal_name) {
+        $(modal_name).modal('show');
+    }
+
+function RescheduleClass(classID,  start_time, subject){
+    var p_time_old = document.getElementById('modal-reschedule-class-label-time-old');
+    var p_subject = document.getElementById('modal-reschedule-class-label-subject');
+    var input_new_time = document.getElementById('modal-reschedule-class-input-time');
+    input_new_time.placeholder = "New time";
+    p_subject.innerHTML = subject;
+    p_time_old.innerHTML = 'Regular time - ' + start_time;
+    openModal('#modal-reschedule-class');
+    //prompt("New Start Time:", "");
 }
 
 function CancelClass(classID){
