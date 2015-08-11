@@ -59,167 +59,15 @@ p {
     box-shadow: 3px 3px 7px #ccc;
 }
 
-.floating-label-form-group {
-    border-bottom: 1px solid #ccc;
-}
-
-.form-group label {
-    margin-right: 20px;
-    margin-bottom: 0px;
-}
-
-.form-group select {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-right: 0px;
-    font-size: 1.2em;
-    background: transparent;
-    margin-top: 6px;
-    margin-left: 0px;
-}
-
-.select-group{
-    margin-top: 20px;
-}
 
 .toggle-badge-unseen{
     background: #f61f3d;
     position: absolute;
     top:1px;
     right: 1px;
-}
-
-
-/**************
-    Routine
-***************/
-
-.col-md-2-routine{
-    padding:5px;
-}
-
-.list-group-routine{
-    margin: 0px;
-}
-
-.list-group-item-routine{
-    margin-top:5px;
-    margin-bottom:10px;
-    padding-top:12px;
-    padding-bottom:12px;
-    font-family: "Open Sans", "Trebuchet MS";
-    background: #f4f4f4;
-    border-top: 2px solid #ddd;
-}
-
-.list-group-item-routine > p{
-    font-family: "Open Sans", "Trebuchet MS";
-    margin-bottom: 2px;
-    margin-top:2px;
-    color:#888;
-}
-
-.list-group-routine-today > .list-group-item{
-    background: #fff;
-    border-top: 2px solid #18bc9c;
-}
-
-.list-group-item-routine-break,
-.list-group-routine-today > .list-group-item-routine-break{
-    border-top:0;
-    color: #fff;
-}
-
-.list-group-routine-today  p{
-    color:#000;
-}
-
-.list-group-routine-today > h3{
-    color: #007d65;
-}
-
-.list-group-item-routine > p > small{
-    font-size:0.733em;
-}
-
-.badge-routine{
-    width:14px;
-    height:14px;
-    padding:0px;
-    padding-top:3px;
-    background-color: #ddd;
     font-size:0.6em;
-    text-align: center;
-    border-radius: 50%;
+    padding:4px;
 }
-.list-group-routine-today .badge-routine-p {
-    background-color: #f61f3d;
-}
-.list-group-routine-today .badge-routine-l{
-    background-color: #2765c0;
-}
-
-
-.list-group-item-cr-options{
-    text-align: right;
-}
-
-.list-group-item-cr-options > button{
-    background: transparent;
-    border:0;
-    color: #ddd;
-}
-.list-group-routine-today .list-group-item-cr-options > button{
-    color: #007d65;
-}
-.list-group-item-cr-options > button:hover{
-    color: #18bc9c;
-}
-
-.thinner {
-    margin:8px;
-    padding:0px;
-}
-
-.today .list-group-item {
-    border-top: 2px solid #18bc9c;
-}
-
-.nottoday .list-group-item {
-    background: #f7f7f7;
-    border-top: 2px solid #ddd;
-}
-
-.badge-menu-unseen{
-    position:absolute;
-    top:8px;
-    right:3px;
-    background: #f61f3d;
-}
-
-.period-time {
-    font-size: 0.78em;
-}
-
-.cr-options{
-    position:absolute;
-    bottom:0px;
-    right:0px;
-
-}
-
-.cr-options>button{
-    background: transparent;
-    border:0;
-}
-.cr-options>button:hover{
-    color:red;
-    background: transparent;
-    border:0;
-}
-
-
 
 /**************************
     Assignment & Notice
@@ -254,27 +102,53 @@ input[type="checkbox"]{
 .list-group-item-assignment,
 .list-group-item-notice{
     margin-bottom: 10px;
-    padding:40px 50px 30px 50px;
+    padding:30px;
+    padding-bottom:20px;
     border-top:2px solid;
     border-top-color: #18bc9c;
 }
+
+.assignment-details, .notice-details{
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.assignment-details{
+  line-height:1.5em;
+}
+
+
 
 .list-group-item-unseen{
     border-top:2px solid;
     border-top-color: #b61f3d!important;
 }
 
-
-.topcorner {
+.content-topright {
     position: absolute;
     right: 5px;
     top: 5px;
     color: #008080!important;
 }
 
-.collapse-group {
-    padding-top:15px;
+.content-topright > .btn{
+    padding: 3px 7px 3px 7px;
+    border-radius:0px;
+    border-color: transparent;
 }
+
+.content-topright > .btn:hover{
+    background: #ccc;
+}
+
+.badge-menu-unseen{
+    border:none !important;
+    font-size:0.777em;
+    padding: 2px 4px 2px 4px;
+
+    vertical-align: top;
+}
+
 
 .btn-add {
     width:50px;
@@ -283,38 +157,23 @@ input[type="checkbox"]{
     margin-right:10px;
     margin-bottom:10px;
     padding:0px;
-    padding-top:5px;
+    font-family: 'Open Sans Condensed';
+    vertical-align:middle;
     color:#fff;
     background: #18bc9c;
     border-radius: 25px;
-    font-size:2.0em;
+    font-size:2.4em;
     box-shadow: 3px 3px 7px #ccc;
+
 }
 
 .btn-add:hover{
   color:#fff;
   background-color:#10aa82;
 }
-.form {
-    margin:0;
-    padding:0;
-    padding-left:50px;
-    padding-right:50px;
-    background: #fff;
-    box-shadow: 3px 3px 7px #ccc;
-    transition: all .3s ease-in-out;
-}
 
-.in.form{
+.in.form-collapse{
     margin-bottom:20px;
-}
-
-.form > div > h3 {
-    margin-left:3px;
-    margin-top:30px;
-}
-.form > div > div > .btn {
-    margin-bottom: 30px;
 }
 
 /***********************
@@ -375,10 +234,11 @@ input[type="checkbox"]{
     padding-bottom: 40px;
 }
 
+
 .modal-title{
     text-transform: none!important;
 }
 
 #modal-reschedule-class > .modal-dialog > .modal-content{
-    
+
 }

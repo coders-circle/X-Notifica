@@ -5,6 +5,8 @@
 {% block bodystart %}{%include 'classroom/common/fb.html'%}{% endblock %}
 {% block head %}
 <link href = "{% static 'css/student.css' %}" type="text/css" rel="stylesheet">
+<link href = "{% static 'css/routine.css' %}" type="text/css" rel="stylesheet">
+<link href = "{% static 'css/form.css' %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block navbar_togglebtn %}
@@ -18,8 +20,8 @@
     <ul class="nav navbar-nav navbar-right">
         <li class="hidden"><a href="#page-top"></a></li>
         <li class="active"><a data-toggle="pill" href="#routine">Routine</a></li>
-        <li><a data-toggle="pill" href="#assignments">Assignments{% if unseen_assignments.count > 0 %}<span class="badge badge-menu-unseen" id="badge-menu-unseen-assignments">{{unseen_assignments.count}}</span>{% endif %}</a></li>
-        <li><a data-toggle="pill" href="#notices">Notices{% if unseen_notices.count > 0 %}<span class="badge badge-menu-unseen" id="badge-menu-unseen-notices">{{unseen_notices.count}}</span>{% endif %}</a></li>
+        <li><a data-toggle="pill" href="#assignments">Assignments{% if unseen_assignments.count > 0 %} <span class="badge badge-menu-unseen" id="badge-menu-unseen-assignments">{{unseen_assignments.count}}</span>{% endif %}</a></li>
+        <li><a data-toggle="pill" href="#notices">Notices{% if unseen_notices.count > 0 %} <span class="badge badge-menu-unseen" id="badge-menu-unseen-notices">{{unseen_notices.count}}</span>{% endif %}</a></li>
         <li class="dropdown ">
             <button class="btn btn-default dropdown-toggle" type="button" id="settingsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="fa fa-user fa-fw"></i> {%if firstname%}{{firstname}}{%endif%} <span class="caret"></span>

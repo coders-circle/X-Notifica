@@ -1,0 +1,42 @@
+.floating-label-form-group {
+    border-bottom: 1px solid #ccc;
+}
+
+.form-group label {
+    margin-right: 20px;
+    margin-bottom: 0px;
+}
+
+.form-group select {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 0px;
+    font-size: 1.2em;
+    background: transparent;
+    margin-top: 6px;
+    margin-left: 0px;
+}
+
+.select-group{
+    margin-top: 20px;
+}
+
+.form {
+    margin:0;
+    padding:0;
+    padding-left:50px;
+    padding-right:50px;
+    background: #fff;
+    box-shadow: 3px 3px 7px #ccc;
+    transition: all .3s ease-in-out;
+}
+
+
+.form > div > h3 {
+    margin-left:3px;
+    margin-top:30px;
+}
+.form > div > div > .btn {
+    margin-bottom: 30px;
+}

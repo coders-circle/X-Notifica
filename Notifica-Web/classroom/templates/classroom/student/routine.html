@@ -30,7 +30,7 @@
             </div>
             {% now 'w' as today %}
             {% for sn, day in daily_routine.items %}
-            <div class="col-md-2 col-md-2-routine">
+            <div class="col-md-2 col-routine">
                 <div class="list-group list-group-routine {% if today|add:'0' == forloop.counter0 %}list-group-routine-today{% endif %}">
                     <h3 class="list-group-title list-group-routine-title text-center">{{workingweek|item:forloop.counter0}}</h3>
                     {% for period in day %}

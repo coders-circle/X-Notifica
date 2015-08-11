@@ -1,114 +1,77 @@
 {% load customtags %}
 <div id="notices" class="tab-pane fade">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h2>Notices</h2>
-        <hr class="hr-dark">
-      </div>
-    </div>
-
-    {% if user.privilege == 1 %}
-    <div class="row">
-      <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#form-notice"><i class="fa fa-plus"></i></a></p>
-      <div class="col-lg-offset-2 col-lg-8 collapse-group">
-        <form class=" form collapse" method="post" name="newnotice" id="form-notice">
-          {% csrf_token %}
-          <div class="row control-group">
-            <h3> Post New Notice </h3>
-          </div>
-          <div class="row control-group">
-            <div class="col-md-4 form-group floating-label-form-group controls">
-              <label>Date</label>
-              <input type="text" name="date" class="form-control input-date" placeholder="Date" id="date-notice" required>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Notices</h2>
+                <hr class="hr-dark">
             </div>
-            <div class="form-group col-md-2 col-md-offset-1">
-                <div class="checkbox chekbox-pinned">
-                    <label><input id="pinned-notice" name="pinned" type="checkbox"> Pinned</label>
+        </div>
+
+        {% if user.privilege == 1 %}
+        <div class="row">
+            <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#collapse-form-notice">+</a></p>
+            <div class="col-md-offset-2 col-md-8 collapse-group">
+                <div class="collapse form-collapse" id="collapse-form-notice">
+                    {% include "classroom/student/forms/add_notice.html" %}
                 </div>
             </div>
-            <div class="form-group col-md-offset-1 col-md-4 select-group">
-              <label class="lab">Group: </label>
-              <select name="group" id="groups">
-                {% for value in grouplist %}
-                <option value="{{value}}">{{value}}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="row control-group">
-            <div class="form-group col-xs-12 floating-label-form-group controls">
-              <label>Summary</label>
-              <input type="text" name="summary" class="form-control" placeholder="Summary" id="summary" required>
-            </div>
-          </div>
-          <div class="row control-group">
-            <div class="form-group col-xs-12 floating-label-form-group controls">
-              <label>Details</label>
-              <textarea rows="3" name="details" class="form-control" placeholder="Details" id="detail" required></textarea>
-              <p class="help-block text-danger"></p>
-            </div>
-          </div>
-          <div class="row">
-              <div class="form-group col-xs-12 ">
-            <button name="post_notice" type="submit" class="btn btn-success btn-lg">Post</button>
         </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    {% endif %}
+        {% endif %}
 
-    <div class="row">
-      <div class="col-lg-offset-2 col-lg-8">
-        <div class="list-group list-group-notice">
-          {% for notice in events %}
-          <div class="list-group-item list-group-item-notice {% if notice.pk in unseen_notices %}list-group-item-unseen{% endif %}" {% if notice.pk in unseen_notices %}id="list-group-item-unseen-notice-{{notice.pk}}"{% endif %}>
-            <div class="topcorner">
-              {% if notice.date %}
-              <span class="notice-date">{{notice.date}}</span>
-              {%else%}
-              <a class="btn btn-sm">
-                <i class="fa fa-thumb-tack pin-icon"></i>
-              </a>
-              {% endif %}
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8">
+                <div class="list-group list-group-notice">
+                    {% for notice in events %}
+                    <div class="list-group-item list-group-item-notice {% if notice.pk in unseen_notices %}list-group-item-unseen{% endif %}" {% if notice.pk in unseen_notices %}id="list-group-item-unseen-notice-{{notice.pk}}"{% endif %}>
+                        <div class="content-topright">
+                            {% if notice.date %}
+                            <span class="notice-date">{{notice.date}}</span>
+                            {%else%}
+                            <a class="btn">
+                                <i class="fa fa-thumb-tack pin-icon"></i>
+                            </a>
+                            {% endif %}
 
-                {% if user.privilege == 1 %}
-                    <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-                    <a class="btn btn-share-on-fb" onclick="fb_share_open('Notice', '{{notice.summary|escapejs}}', '{{notice.poster|name_of_user}}', '{{notice.details|escapejs}}', '{{notice.date}}', '', '{{notice.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
-                {% endif %}
+                            {% if user.privilege == 1 %}
+                            <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
+                            <a class="btn btn-share-on-fb" onclick="fb_share_open('Notice', '{{notice.summary|escapejs}}', '{{notice.poster|name_of_user}}', '{{notice.details|escapejs}}', '{{notice.date}}', '', '{{notice.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
+                            {% endif %}
 
-              <a class="btn btn-sm" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}" href="javascript:SetNoticeSeen({{notice.pk}})">
-                <i class="fa fa-expand"></i>
-              </a>
+                            <a class="btn" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}" href="javascript:SetNoticeSeen({{notice.pk}})">
+                                <i class="fa fa-chevron-down"></i>
+                            </a>
+                        </div>
+
+                        <div data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}" onclick="javascript:SetNoticeSeen({{notice.pk}})" style="cursor:pointer;">
+                            <h4 class="list-group-item-heading notice-title">{{notice.summary}}</h4>
+                            <p class="list-group-item-text">
+                                <i><small>posted by: {{notice.poster|name_of_user}}</small></i>
+                            </p>
+                        </div>
+
+                        <div class="collapse-group">
+                            {% autoescape off %}
+                            <div class="collapse list-group-item-text notice-details" id="notice-detail{{forloop.counter}}">
+                                <hr>
+                                <p>
+                                    {{notice.details|urlizetrunc:50}}
+                                </p>
+                            </div>
+                            {% endautoescape %}
+                        </div>
+                    </div>
+                    {%empty%}
+                    <div class="list-group-item list-group-item-empty">
+                        <p>No recent notice found</p>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-
-            <h4 class="list-group-item-heading notice-title">{{notice.summary}}</h4>
-
-            <p class="list-group-item-text">
-              <small>posted by: {{notice.poster|name_of_user}}</small>
-            </p>
-            <div class="collapse-group">
-              {% autoescape off %}
-              <p class="collapse list-group-item-text notice-detail" id="notice-detail{{forloop.counter}}">
-                {{notice.details|urlizetrunc:50}}
-              </p>
-              {% endautoescape %}
-            </div>
-          </div>
-          {%empty%}
-          <div class="list-group-item list-group-item-empty">
-              <p>No recent notice found</p>
-          </div>
-          {% endfor %}
         </div>
-      </div>
     </div>
-
-  </div>
 </div>
 <div id="result"></div>
-
 <script>
     function DeleteNotice(pk) {
         $.post("{% url 'classroom:delete' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
@@ -117,27 +80,29 @@
             })
     }
     function SetNoticeSeen(pk) {
-        $.post("{% url 'classroom:set_post_seen' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
-            .done(function(data) {
-                var li = document.getElementById("list-group-item-unseen-notice-"+pk);
-                if(li){
-                    li.className = li.className.replace('list-group-item-unseen', '');
-                }
+        var li = document.getElementById("list-group-item-unseen-notice-"+pk);
+        if(li){
+            $.post("{% url 'classroom:set_post_seen' %}", { type:"notice", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') }).done(function(data) {
+                li.className = li.className.replace('list-group-item-unseen', '');
+                li.id = li.id.replace("list-group-item-unseen-notice-"+pk, '');
                 var nb = document.getElementById("badge-menu-unseen-notices");
-                var un = Number(nb.innerHTML);
-                if(un > 0){
-                    --un;
-                    nb.innerHTML = un;
-                }
-                if(un == 0){
-                    nb.style.display='none';
-                    var nab = document.getElementById("badge-menu-unseen-assignments");
-                    var uan = 0;
-                    if(nab){
-                        uan = Number(nab.innerHTML);
+                if(nb){
+                    var un = Number(nb.innerHTML);
+                    if(un > 0){
+                        --un;
+                        nb.innerHTML = un;
                     }
-                if(uan == 0) document.getElementById('toggle-badge-unseen').style.display='none';
+                    if(un == 0){
+                        nb.style.display='none';
+                        var nab = document.getElementById("badge-menu-unseen-assignments");
+                        var uan = 0;
+                        if(nab){
+                            uan = Number(nab.innerHTML);
+                        }
+                        if(uan == 0) document.getElementById('toggle-badge-unseen').style.display='none';
+                    }
                 }
             })
+        }
     }
 </script>
