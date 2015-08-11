@@ -10,10 +10,11 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/settings_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/primary"
         app:theme="@style/ToolbarTheme"
-        app:popupTheme="@style/Theme.AppCompat"/>
+        app:popupTheme="@style/Theme.AppCompat"
+        android:fitsSystemWindows="true"/>
 
     <FrameLayout
         android:id="@+id/settings_content_frame"

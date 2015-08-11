@@ -10,4 +10,5 @@
     <color name="line_color_dark">#ff14977d</color>
     <color name="line_color_red">#ffbc1111</color>
     <color name="line_color_dark_red">#ffb61f38</color>
+    <color name="test_color">#ffffffff</color>
 </resources>
