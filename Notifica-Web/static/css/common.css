@@ -47,6 +47,10 @@ body {
     overflow-x: hidden;
 }
 
+body.modal-open .ui-datepicker {
+    z-index: 1200 !important;
+}
+
 a, a:hover, a:focus, a:active, a.active {
     color: #000;
     outline: 0;
@@ -182,6 +186,28 @@ p {
     border-radius: 3px;
     transition: all .3s ease-in-out;
 }
+
+.btn-cancel {
+    margin-top: 15px;
+    padding-left:30px;
+    padding-right:30px;
+    color: #fff;
+    background: #f61f3d;
+    font-size: 20px;
+    border: solid 2px #f61f3d;
+    border-radius: 3px;
+    transition: all .3s ease-in-out;
+}
+
+.btn-cancel:focus,
+.btn-cancel:hover,
+.btn-cancel:active,
+.btn-cancel.active{
+    color:#fff;
+    background: #ba001a;
+    border: solid 2px #ba001a;
+}
+
 
 .btn-success:hover,
 .btn-success:focus,

@@ -9,13 +9,15 @@
         </div>
 
         {% if user.privilege == 1 %}
-        <div class="row">
-            <p class="text-right"><a class="btn btn-add" data-toggle="collapse" data-target="#collapse-form-notice">+</a></p>
-            <div class="col-md-offset-2 col-md-8 collapse-group">
-                <div class="collapse form-collapse" id="collapse-form-notice">
+        <div id="modal-add-notice" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
                     {% include "classroom/student/forms/add_notice.html" %}
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <p class="text-right"><a class="btn btn-add" data-toggle="modal" data-target="#modal-add-notice">+</a></p>
         </div>
         {% endif %}
 
