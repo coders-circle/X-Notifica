@@ -112,4 +112,13 @@ section.success {
 
 .btn-sign-in {
     margin-top:40px;
+    background: #00a08c;
+
+    border:none;
+}
+
+.btn-sign-in:hover,
+.btn-sign-in:active,
+.btn-sign-in:focus{
+    background: #18bc9c;
 }

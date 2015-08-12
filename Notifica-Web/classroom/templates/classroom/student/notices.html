@@ -17,12 +17,12 @@
             </div>
         </div>
         <div class="row">
-            <p class="text-right"><a class="btn btn-add" data-toggle="modal" data-target="#modal-add-notice">+</a></p>
+            <p class="text-right"><button class="btn btn-add" data-toggle="modal" data-target="#modal-add-notice">+</button></p>
         </div>
         {% endif %}
 
         <div class="row">
-            <div class="col-lg-offset-2 col-lg-8">
+            <div class="col-md-offset-2 col-md-8 col-sm-10 col-sm-offset-1">
                 <div class="list-group list-group-notice">
                     {% for notice in events %}
                     <div class="list-group-item list-group-item-notice {% if notice.pk in unseen_notices %}list-group-item-unseen{% endif %}" {% if notice.pk in unseen_notices %}id="list-group-item-unseen-notice-{{notice.pk}}"{% endif %}>
@@ -37,7 +37,6 @@
 
                             {% if user.privilege == 1 %}
                             <a class="btn btn-delete" href="javascript:DeleteNotice({{notice.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-                            <a class="btn btn-share-on-fb" onclick="fb_share_open('Notice', '{{notice.summary|escapejs}}', '{{notice.poster|name_of_user}}', '{{notice.details|escapejs}}', '{{notice.date}}', '', '{{notice.groups}}');" data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i></a>
                             {% endif %}
 
                             <a class="btn" data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}" href="javascript:SetNoticeSeen({{notice.pk}})">

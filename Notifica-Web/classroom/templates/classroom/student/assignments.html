@@ -17,13 +17,13 @@
             </div>
         </div>
         <div class="row">
-            <p class="text-right"><a class="btn btn-add" data-toggle="modal" data-target="#modal-add-assignment">+</a></p>
+            <p class="container-add-btn text-right"><button class="btn btn-add" data-toggle="modal" data-target="#modal-add-assignment">+</button></p>
         </div>
 
         {% endif %}
 
         <div class="row">
-            <div class="col-lg-offset-2 col-lg-8">
+            <div class="col-md-offset-2 col-md-8 col-sm-10 col-sm-offset-1">
                 <div class="list-group list-group-assignment">
                     {% for assignment in assignments %}
                     <div class="list-group-item list-group-item-assignment {% if assignment.pk in unseen_assignments %}list-group-item-unseen{% endif %}" {% if assignment.pk in unseen_assignments %}
@@ -37,10 +37,6 @@
                             {% endif %}
                             {% if user.privilege == 1 %}
                             <a class="btn btn-delete" href="javascript:DeleteAssignment({{assignment.pk}})" onclick="return confirm('Are you sure?');"><i class="fa fa-trash-o"></i></a>
-                            <a class="btn btn-share-on-fb"
-                                onclick="fb_share_open('Assignment', '{{assignment.summary}}', '{{assignment.poster|name_of_user}}', '{{assignment.details}}', '{{assignment.date}}', '{{assignment.subject}}', '{{assignment.groups}}');"
-                                data-toggle="modal" data-target="#fb_share_modal"><i class="fa fa-facebook-square"></i>
-                            </a>
                             {% endif %}
                             <a class="btn" data-toggle="collapse" data-target="#detail{{forloop.counter}}" href="javascript:SetAssignmentSeen({{assignment.pk}})">
                                 <i class="fa fa-chevron-down"></i>

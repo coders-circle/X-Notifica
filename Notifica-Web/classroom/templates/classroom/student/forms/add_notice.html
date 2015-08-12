@@ -8,12 +8,12 @@
             <label>Date</label>
             <input type="text" name="date" class="form-control input-date" placeholder="Date" id="date-notice" required>
         </div>
-        <div class="form-group col-md-2 col-md-offset-1">
+        <div class="form-group col-md-2 col-sm-6 col-md-offset-1">
             <div class="checkbox chekbox-pinned">
-                <label><input id="pinned-notice" name="pinned" type="checkbox"> Pinned</label>
+                <label><input id="pinned-notice" name="pinned" type="checkbox"> <strong>Pinned</strong></label>
             </div>
         </div>
-        <div class="form-group col-md-offset-1 col-md-4 select-group">
+        <div class="form-group col-md-offset-1 col-md-4 col-sm-6 select-group">
             <label class="lab">Group: </label>
             <select name="group" id="groups">
                 {% for value in grouplist %}
@@ -35,10 +35,10 @@
             <p class="help-block text-danger"></p>
         </div>
     </div>
-    <div class="row">
-        <div class="form-group col-xs-12 ">
-            <button name="post_notice" type="submit" class="btn btn-success btn-lg"><i class="fa fa-check"></i> Post</button>
-            <button type="button" data-dismiss="modal" class="btn btn-lg btn-cancel"><i class="fa fa-times"></i> Cancel</button>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 controls">
+            <button name="post_notice" type="submit" class="btn btn-success"><i class="fa fa-check"></i> Post</button>
+            <button type="button" data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
         </div>
     </div>
 </form>

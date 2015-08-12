@@ -16,6 +16,37 @@
     border-top: 2px solid #ddd;
 }
 
+.list-group-routine-sm > .list-group-item-routine{
+    margin-top:5px;
+    margin-bottom:10px;
+    padding-top:12px;
+    padding-bottom:12px;
+    font-family: "Open Sans", "Trebuchet MS";
+    background: #fff;
+    border-top: 2px solid #18bc9c;
+}
+.list-group-routine-sm > .list-group-item-routine > p{
+    color:#000;
+}
+
+.list-group-routine-sm >.list-group-item-routine .badge-routine-p {
+    background-color: #f61f3d;
+}
+.list-group-routine-sm >.list-group-item-routine .badge-routine-l{
+    background-color: #2765c0;
+}
+.list-group-routine-sm >.list-group-item-routine-break{
+    border-top:0;
+}
+
+
+
+.list-group-routine-sm{
+    padding-left: 5%;
+    padding-right:5%;
+}
+
+
 .list-group-item-routine > p{
     font-family: "Open Sans", "Trebuchet MS";
     margin-bottom: 2px;
@@ -117,4 +148,21 @@
     color:red;
     background: transparent;
     border:0;
+}
+
+.carousel-control{
+    margin-top: 50px;
+}
+
+.carousel-control.left > .glyphicon-chevron-left{
+    left:20%;
+}
+.carousel-control.right >  .glyphicon-chevron-right{
+    right:20%;
+}
+
+
+
+.carousel-control.right, .carousel-control.left {
+  background-image:none;
 }

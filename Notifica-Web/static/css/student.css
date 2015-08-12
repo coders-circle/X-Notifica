@@ -26,25 +26,6 @@ p {
     min-height: 400px;
 }
 
-.nav button:hover {
-    background: #3ac7ab;
-    color: #fff;
-}
-
-.nav button {
-    color: #fff;
-    background: #007d65;
-    text-transform: uppercase;
-    font-family: "Trebuchet MS" Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 15px;
-    padding-bottom: 15px;
-    margin: 0;
-    border: none;
-    border-radius: 0;
-}
-
 .list-group {
     padding: 0px;
     margin: 0px;
@@ -72,14 +53,6 @@ p {
 /**************************
     Assignment & Notice
 ***************************/
-.chekbox-pinned{
-    padding-top:25px;
-    font-size:1.25em;
-}
-input[type="checkbox"]{
-    vertical-align: baseline;
-    transform:scale(1.25, 1.25)!important;
-}
 
 .list-group-item-empty{
     background: transparent;
@@ -151,25 +124,26 @@ input[type="checkbox"]{
 
 
 .btn-add {
-    width:50px;
-    height:50px;
-    margin-top:0px;
-    margin-right:10px;
-    margin-bottom:10px;
-    padding:0px;
+    width: 2em;
+    height: 2em;
+    padding:0;
+    margin-right: 10px;
+    margin-bottom: 10px;
     font-family: 'Open Sans Condensed';
-    vertical-align:middle;
     color:#fff;
     background: #18bc9c;
-    border-radius: 25px;
-    font-size:2.4em;
+    border-radius: 50%;
+    font-size:1.5em;
     box-shadow: 3px 3px 7px #ccc;
-
+    outline: 0!important;
 }
 
+.btn-add:active,
+.btn-add:focus,
 .btn-add:hover{
   color:#fff;
   background-color:#10aa82;
+  outline: 0;
 }
 
 .in.form-collapse{
@@ -179,6 +153,11 @@ input[type="checkbox"]{
 /***********************
     Change Password
 ************************/
+
+.usersettings{
+    border-radius: 1px;
+}
+
 .usersettings,
 .usersettings > li,
 .usersettings > li > a {
@@ -192,25 +171,19 @@ input[type="checkbox"]{
 }
 
 .usersettings > li > a {
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 10px;
+    padding: 10px 20px;
     margin: 0px;
 }
 
 .usersettings > li > a:hover {
     color: #3ac7ab!important;
+    background: #eee!important;
 }
 
 .usersettings > li:active,
 .usersettings > li > a:active {
     background: #007d65!important;
     color: #fff!important;
-}
-
-.usersettings > li {
-    padding: 2px;
-    padding-top: 10px;
 }
 
 .form-changepass{
@@ -235,6 +208,6 @@ input[type="checkbox"]{
     text-transform: none!important;
 }
 
-#modal-reschedule-class > .modal-dialog > .modal-content{
-
+.modal-content{
+    overflow: hidden;
 }
