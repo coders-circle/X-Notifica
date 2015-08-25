@@ -255,7 +255,7 @@ public class LoginActivity extends Activity {
             editor.putBoolean("gcm_token_sent", false);
             editor.putBoolean("just-logged-in", true);
             editor.apply();
-            //UpdateService.Update(LoginActivity.this, updateResult);
+            UpdateService.Update(LoginActivity.this, updateResult);
 
             return true;
         }
@@ -266,7 +266,7 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
-                //UpdateService.FinishUpdate(updateResult);
+                UpdateService.FinishUpdate(updateResult);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             } else {

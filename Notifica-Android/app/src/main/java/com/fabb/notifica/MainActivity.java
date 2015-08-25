@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +34,6 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     private String[] mPageTitles;
     private DrawerAdapter drawerAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
-    public CustomSwipeRefreshLayout swipeRefreshLayout;
 
     public Menu menu;
     private String name, roll;
@@ -97,19 +95,15 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
             else
                 fragment_id = 2;
         }
-        selectItem(fragment_id);
 
-        swipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        selectItem(fragment_id);
 
         UpdateService.AddUpdateListener(this);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getBoolean("just-logged-in", true) || settings.getBoolean("pref_key_auto_update", true)) {
             new UpdateService.UpdateTask(this).execute();
-            swipeRefreshLayout.setRefreshing(true);
             settings.edit().putBoolean("just-logged-in", false).apply();
         }
-        else
-            swipeRefreshLayout.setRefreshing(false);
 
         String token = preferences.getString("gcm_token", "");
         if (token == null || token.equals("")) {
@@ -121,22 +115,6 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         if (token != null && !token.equals(""))
         if (!GetPreferences(this).getBoolean("gcm_token_sent", false))
             GcmRegisterIntent.sendRegistrationToServer(this,  preferences.getString("gcm_token", ""));
-
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        swipeRefreshLayout.setRefreshing(true);
-                                        new UpdateService.UpdateTask(MainActivity.this).execute();
-                                    }
-                                }
-        );
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new UpdateService.UpdateTask(MainActivity.this).execute();
-            }
-        });
-
 
         drawerRecyclerView.setHasFixedSize(true);
         drawerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -184,7 +162,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 
         int selected = 0;
         if (drawerAdapter != null)
-            drawerAdapter.GetSelected();
+            selected = drawerAdapter.GetSelected();
 
         Iterator<Notice> noticeIterator = Notice.findAll(Notice.class);
         while (noticeIterator.hasNext()) {
@@ -214,13 +192,12 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
 //        }
 
         if (hasUpdated) {
-            Toast.makeText(this, "Up-To-Date", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Up-To-Date", Toast.LENGTH_LONG).show();
             UpdateDrawer();
         }
         else
             Toast.makeText(this, "Couldn't update.\nCheck your internet connection.", Toast.LENGTH_LONG).show();
 
-        swipeRefreshLayout.setRefreshing(false);
         Database.DeleteExpired();
     }
 
@@ -229,8 +206,8 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
     private Fragment event_fragment = new NoticeFragment();
     private int lastItemSelected = 0;
     /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-        Fragment fragment;
+    private void selectItem(final int position) {
+        final Fragment fragment;
         switch (position) {
             case 0:
                 fragment = routine_fragment;
@@ -260,6 +237,7 @@ public class MainActivity extends ActionBarActivity implements UpdateListener {
         drawerAdapter.SetSelected(position);
         drawerAdapter.notifyDataSetChanged();
         mDrawerLayout.closeDrawers();
+
     }
 
     @Override

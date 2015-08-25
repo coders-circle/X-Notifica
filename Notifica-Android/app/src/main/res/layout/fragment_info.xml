@@ -10,22 +10,29 @@
     android:orientation="vertical"
     tools:context="com.fabb.notifica.AssignmentActivity">
 
-    <ExpandableListView
-        android:id="@+id/assignment_list"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="10dp"
-        android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"
-        android:headerDividersEnabled="true"
-        android:footerDividersEnabled="true"
-        android:childDivider="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:id="@+id/swipe_refresh_layout">
 
-    <TextView
-        android:id="@+id/empty_info_text_view"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <ExpandableListView
+            android:id="@+id/assignment_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="10dp"
+            android:listSelector="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:headerDividersEnabled="true"
+            android:footerDividersEnabled="true"
+            android:childDivider="@android:color/white" />
+
+        <TextView
+            android:id="@+id/empty_info_text_view"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

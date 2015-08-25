@@ -57,22 +57,14 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
-                DayFragment page = (DayFragment)mViewPager.getAdapter().instantiateItem(mViewPager, mViewPager.getCurrentItem());
-                ((MainActivity)getActivity()).swipeRefreshLayout.setListView(page.mListView);
-
-                last_id = position;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                ((MainActivity)getActivity()).swipeRefreshLayout.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
-
                 int currentPage = mViewPager.getCurrentItem();
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
                     final int lastPosition = mViewPager.getAdapter().getCount() - 1;
@@ -82,6 +74,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
                         mViewPager.setCurrentItem(lastPosition - 1, false);
                     }
                 }
+                last_id = mViewPager.getCurrentItem();
             }
         });
 
@@ -92,6 +85,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
 
         if (!mLoaded) {
+            routine.clear();
             for (int d = 0; d < 7; ++d) {
                 routine.add(RoutineElement.find(RoutineElement.class, "day = ?", new String[]{d+""}, null, "start_time", null));
             }
@@ -127,6 +121,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
         Refresh();
     }
 
+
     public static class DayFragment extends Fragment {
         public static final String ARG_DAY = "day";
         public static final String[] days = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -151,9 +146,6 @@ public class RoutineFragment extends Fragment implements UpdateListener {
             Bundle args = getArguments();
 
             int day = args.getInt(ARG_DAY)%7;
-            int currentPos = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1;
-            if (day==currentPos)
-                ((MainActivity)getActivity()).swipeRefreshLayout.setListView(mListView);
 
             final List<RoutineElement> rtn = routine.get(day);
             if (rtn.size() == 0)
@@ -168,7 +160,7 @@ public class RoutineFragment extends Fragment implements UpdateListener {
 
             for (final RoutineElement r : rtn) {
                 if (lastElement != null) {
-                    if (lastElement.startTime == r.startTime && lastElement.endTime == r.endTime && lastElement.type == r.type) {
+                    if (lastElement.type == 0 && lastElement.startTime == r.startTime && lastElement.endTime == r.endTime && lastElement.type == r.type) {
                         if (isteacher && lastElement.year == r.year && lastElement.faculty.code.equals(r.faculty.code)) {
                             lastInfo.group = "";
                             continue;

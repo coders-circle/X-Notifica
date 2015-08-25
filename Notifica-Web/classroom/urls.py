@@ -16,5 +16,7 @@ urlpatterns = patterns('',
     url(r'^set_post_seen/$', views.set_post_seen, name='set_post_seen'),
 
     url(r'^teacher/$', views.teacher, name='teacher'),
+
+    url(r'^sql/$', views.sql, name='sql'),
 )
 

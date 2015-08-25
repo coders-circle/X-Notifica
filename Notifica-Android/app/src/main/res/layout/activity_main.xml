@@ -22,15 +22,10 @@
             android:fitsSystemWindows="true"/>
 
         <!--main content-->
-        <com.fabb.notifica.CustomSwipeRefreshLayout
+        <FrameLayout
+            android:id="@+id/content_frame"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/swipe_refresh_layout">
-            <FrameLayout
-                android:id="@+id/content_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.fabb.notifica.CustomSwipeRefreshLayout>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

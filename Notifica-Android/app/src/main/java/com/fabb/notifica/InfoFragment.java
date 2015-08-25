@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,7 @@ public class InfoFragment  extends Fragment implements UpdateListener {
     protected ExpandableListView expListView;
     protected List<InfoListAdapter.Item> listItems;
     protected boolean privileged = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     protected String info_name = "Event";
     protected String display_name = "Notice";
@@ -53,7 +55,18 @@ public class InfoFragment  extends Fragment implements UpdateListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_info, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new UpdateService.UpdateTask(getActivity()).execute();
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -92,19 +105,20 @@ public class InfoFragment  extends Fragment implements UpdateListener {
 
     @Override
     public void OnUpdateComplete(boolean hasUpdated, int eventCnt, int assignmentCnt) {
+        swipeRefreshLayout.setRefreshing(false);
         if (!hasUpdated)
             return;
         RefreshItems();
     }
 
     private void RefreshEmptyTextView() {
-        TextView emptytv = (TextView)getActivity().findViewById(R.id.empty_info_text_view);
+        TextView emptyTextView = (TextView)getActivity().findViewById(R.id.empty_info_text_view);
         if (listItems.size() == 0) {
-            emptytv.setText("No recent " + display_name.toLowerCase() + "s found");
-            emptytv.setVisibility(View.VISIBLE);
+            emptyTextView.setText("No recent " + display_name.toLowerCase() + "s found");
+            emptyTextView.setVisibility(View.VISIBLE);
         }
         else
-            emptytv.setVisibility(View.INVISIBLE);
+            emptyTextView.setVisibility(View.INVISIBLE);
     }
 
     protected void RefreshItems() {

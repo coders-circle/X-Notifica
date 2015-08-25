@@ -9,6 +9,7 @@ from django.db.models import Q
 from .models import *
 from .mobile_views import DeletePassed, GetUser
 from .forms import *
+from .sqlgenerator import GetAllSql
 from helpers import hm_to_int
 
 from collections import defaultdict
@@ -23,6 +24,9 @@ def redirect_user(user):
         return redirect('classroom:authority')
     else:
         return None
+
+def sql(request):
+    return HttpResponse(GetAllSql(), content_type="text/plain")
 
 def index(request):
     context = {}
