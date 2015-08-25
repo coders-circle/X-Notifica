@@ -1,0 +1,73 @@
+.floating-label-form-group {
+    border-bottom: 1px solid #ccc;
+}
+
+.form-group label {
+    margin-right: 20px;
+    margin-bottom: 0px;
+}
+
+.form-group select {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 8px;
+    padding-right: 0px;
+    font-size: 1em;
+    background: transparent;
+    margin-top: 6px;
+    margin-left: 0px;
+}
+
+.select-group{
+    margin-top: 20px;
+}
+
+.form {
+    margin:0;
+    padding:0;
+    margin-left:40px;
+    margin-right:40px;
+    background: #fff;
+    overflow: hidden!important;
+}
+
+
+.form > div > h3 {
+    margin-top:10px;
+    margin-left:4px;
+}
+
+.form>div>div>.btn{
+    margin:10px;
+    min-width: 100px;
+}
+
+.floating-label-form-group {
+    position: relative;
+    margin-bottom: 0;
+    padding-bottom: .5em;
+    border-bottom: 1px solid #eee;
+}
+
+.floating-label-form-group input,
+.floating-label-form-group textarea {
+    font-size: 1em;
+}
+
+.floating-label-form-group textarea{
+    max-height:600px;
+    min-height:200px;
+    resize:vertical;
+}
+
+.chekbox-pinned{
+    padding-top:20px;
+    vertical-align: text-bottom;
+}
+.control-group{
+    margin-top: 10px;
+    margin-bottom:10px;
+}
+.control{
+    margin-bottom: 0px;
+}

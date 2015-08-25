@@ -1,0 +1,44 @@
+<form class="form form-notice" method="post" name="newnotice" id="form-notice">
+    {% csrf_token %}
+    <div class="row control-group">
+        <h3> Post New Notice </h3>
+    </div>
+    <div class="row control-group">
+        <div class="col-md-4 form-group floating-label-form-group controls">
+            <label>Date</label>
+            <input type="text" name="date" class="form-control input-date" placeholder="Date" id="date-notice" required>
+        </div>
+        <div class="form-group col-md-2 col-sm-6 col-md-offset-1">
+            <div class="checkbox chekbox-pinned">
+                <label><input id="pinned-notice" name="pinned" type="checkbox"> <strong>Pinned</strong></label>
+            </div>
+        </div>
+        <div class="form-group col-md-offset-1 col-md-4 col-sm-6 select-group">
+            <label class="lab">Group: </label>
+            <select name="group" id="groups">
+                {% for value in grouplist %}
+                <option value="{{value}}">{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+            <label>Summary</label>
+            <input type="text" name="summary" class="form-control" placeholder="Summary" id="summary" required>
+        </div>
+    </div>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+            <label>Details</label>
+            <textarea rows="3" name="details" class="form-control" placeholder="Details" id="detail" required></textarea>
+            <p class="help-block text-danger"></p>
+        </div>
+    </div>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 controls">
+            <button name="post_notice" type="submit" class="btn btn-success"><i class="fa fa-check"></i> Post</button>
+            <button type="button" data-dismiss="modal" class="btn btn-danger"><i class="fa fa-times"></i> Cancel</button>
+        </div>
+    </div>
+</form>

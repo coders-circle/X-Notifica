@@ -8,7 +8,8 @@
 
 
 
-    <TextView android:text="Select group to post notices" android:layout_width="wrap_content"
+    <TextView android:text="Select group to post notices"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Spinner

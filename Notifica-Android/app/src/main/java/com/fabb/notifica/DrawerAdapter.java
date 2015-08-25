@@ -75,10 +75,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             if (position == selectedItem+1) {
                 int color = Color.parseColor("#FD4444");
                 if (position == 2)
-                    color = Color.parseColor("#98CB01");
+                    color = Color.parseColor("#388E3C");
                 else if (position == 3)
-                    color = Color.parseColor("#33B4E3");
+                    color = Color.parseColor("#3F51B4");
                 holder.row_title.setTextColor(color);
+                holder.row_icon.setColorFilter(Color.parseColor("#FFFFFF"));
                 holder.row_icon.setColorFilter(color);
                 holder.itemView.setSelected(true);
             }

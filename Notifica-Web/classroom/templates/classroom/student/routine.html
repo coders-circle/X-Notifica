@@ -28,9 +28,65 @@
                     </div>
                 </div>
             </div>
+
+            <div id="routine-sm" class="carousel slide hidden-md hidden-lg hidden-xl" data-interval="false">
+                <div class="carousel-inner" role="listbox">
+                    {% now 'w' as today %}
+                    {% for sn, day in daily_routine.items %}
+                    <div class="item {% if today|add:'0' == forloop.counter0 %}active{% endif %}">
+                        <div class="container">
+                            <div class="list-group list-group-routine-sm {% if today|add:'0' == forloop.counter0 %}list-group-routine-today{% endif %}">
+                                <h3 class="list-group-title list-group-routine-title">{{workingweek|item:forloop.counter0}}</h3>
+                                {% for period in day %}
+                                {% if period.prevelem.start_time != period.start_time %}
+                                {% if period.gap > 0 %}
+                                <div class="list-group-item list-group-item-routine list-group-item-routine-break">
+                                    <p class="list-group-item-text">{{period.gap}} min break</p>
+                                </div>
+                                {%endif%}
+                                <div class="list-group-item list-group-item-routine">
+                                    {% if period.class_type == 0 %}
+                                    <span class="badge badge-routine badge-routine-l">L</span>
+                                    {% else %}
+                                    <span class="badge badge-routine badge-routine-p">P</span>
+                                    {% endif %}
+                                    <p class="list-group-item-text"><small>{{period.start_time}} to {{period.end_time}}</small></p>
+                                    <p class="list-group-item-text"><strong>{{period.subject}}</strong></p>
+                                    <p class="list-group-item-text"><small>{{period.teachers.all | join:', '}}</small></p>
+                                    {% if period.remarks %}
+                                    <p class="list-group-item-text"><small><strong>{{period.remarks}}</strong></small></p>
+                                    {% endif %}
+                                    {% if period.nextelem.start_time == period.start_time %}
+                                    <hr>
+                                    <p class="list-group-item-text"><small>{{period.nextelem.start_time}} to {{period.end_time}}</small></p>
+                                    <p class="list-group-item-text"><strong>{{period.nextelem.subject}}</strong></p>
+                                    <p class="list-group-item-text"><small>{{period.nextelem.teachers.all | join:', '}}</small></p>
+                                    {% if period.nextelem.remarks %}
+                                    <p class="list-group-item-text"><small>{{period.nextelem.remarks}}</small></p>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <a class="left carousel-control" href="#routine-sm" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#routine-sm" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+
             {% now 'w' as today %}
             {% for sn, day in daily_routine.items %}
-            <div class="col-md-2 col-md-2-routine">
+            <div class="col-md-2 hidden-sm hidden-xs col-routine">
                 <div class="list-group list-group-routine {% if today|add:'0' == forloop.counter0 %}list-group-routine-today{% endif %}">
                     <h3 class="list-group-title list-group-routine-title text-center">{{workingweek|item:forloop.counter0}}</h3>
                     {% for period in day %}
@@ -50,27 +106,15 @@
                         <p class="list-group-item-text"><strong>{{period.subject}}</strong></p>
                         <p class="list-group-item-text"><small>{{period.teachers.all | join:', '}}</small></p>
                         {% if period.remarks %}
-                        <p class="list-group-item-text"><small>{{period.remarks}}</small></p>
-                        {% endif %}
-                        {% if user.privilege == 1 %}
-                        <div class="list-group-item-cr-options">
-                            <button onclick="CancelClass({{period.pk}});" title=" remove this class "><i class="fa fa-times"></i></button>
-                            <button onclick="RescheduleClass({{period.pk}}, '{{period.start_time}}', '{{period.subject}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
-                        </div>
+                        <p class="list-group-item-text"><small><strong>{{period.remarks}}</strong></small></p>
                         {% endif %}
                         {% if period.nextelem.start_time == period.start_time %}
                         <hr>
                         <p class="list-group-item-text"><small>{{period.nextelem.start_time}} to {{period.end_time}}</small></p>
                         <p class="list-group-item-text"><strong>{{period.nextelem.subject}}</strong></p>
                         <p class="list-group-item-text"><small>{{period.nextelem.teachers.all | join:', '}}</small></p>
-                        {% if period.remarks %}
+                        {% if period.nextelem.remarks %}
                         <p class="list-group-item-text"><small>{{period.nextelem.remarks}}</small></p>
-                        {% endif %}
-                        {% if user.privilege == 1 %}
-                        <div class="list-group-item-cr-options">
-                            <button onclick="CancelClass({{period.nextelem.pk}});" title=" remove this class "><i class="fa fa-times"></i></button>
-                            <button onclick="RescheduleClass({{period.nextelem.pk}}, '{{period.nextelem.start_time}}', '{{period.nextelem.subject}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
-                        </div>
                         {% endif %}
                         {% endif %}
                     </div>
@@ -82,3 +126,8 @@
         </div>
     </div>
 </div>
+
+<!--div class="list-group-item-cr-options">
+    <button onclick="CancelClass({{period.nextelem.pk}});" title=" remove this class "><i class="fa fa-times"></i></button>
+    <button onclick="RescheduleClass({{period.nextelem.pk}}, '{{period.nextelem.start_time}}', '{{period.nextelem.subject}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
+</div-->

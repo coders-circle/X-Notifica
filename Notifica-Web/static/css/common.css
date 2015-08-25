@@ -47,6 +47,10 @@ body {
     overflow-x: hidden;
 }
 
+body.modal-open .ui-datepicker {
+    z-index: 1200 !important;
+}
+
 a, a:hover, a:focus, a:active, a.active {
     color: #000;
     outline: 0;
@@ -71,7 +75,11 @@ p {
 }
 
 /* for large screen */
-@media(min-width:768px) {
+@media(min-width:768px){
+    .nav button{
+        padding-top: 15px!important;
+        padding-bottom: 15px!important;
+    }
     .navbar-fixed-top {
         padding: 20px 0;
         transition: all .3s ease-in-out;
@@ -80,10 +88,10 @@ p {
         font-size: 2em;
         transition: all .3s;
     }
-/*
+
     .navbar-fixed-top.navbar-shrink {
-        height: 70px;
-        padding: 10px 0;
+        height: 60px;
+        padding: 5px 0;
     }
 
     .navbar-fixed-top.navbar-shrink .navbar-brand {
@@ -96,7 +104,7 @@ p {
         margin-top:8px;
         margin-right: 6px;
     }
-*/
+
 }
 
 .img-navbar-logo{
@@ -162,35 +170,6 @@ p {
     color: #18bc9c!important;
 }
 
-.btn-info {
-    margin-top: 15px;
-    padding-left:30px;
-    padding-right:30px;
-    font-size: 20px;
-    border-radius: 3px;
-    transition: all .3s ease-in-out;
-}
-
-.btn-success {
-    margin-top: 15px;
-    padding-left:30px;
-    padding-right:30px;
-    color: #fff;
-    background: #18bc9c;
-    font-size: 20px;
-    border: solid 2px #18bc9c;
-    border-radius: 3px;
-    transition: all .3s ease-in-out;
-}
-
-.btn-success:hover,
-.btn-success:focus,
-.btn-success:active,
-.btn-success.active{
-    background: #109a79;
-    border: solid 2px #10aa89;
-}
-
 .floating-label-form-group {
     position: relative;
     margin-bottom: 0;
@@ -211,20 +190,11 @@ p {
     z-index: 1;
 }
 
-.floating-label-form-group textarea{
-    max-height:600px;
-    min-height:200px;
-    resize:vertical;
-}
-
 .floating-label-form-group label {
     position: relative;
-    top: 2em;
+    top: 1em;
     margin: 0;
-    font-size: .85em;
-    -webkit-transition: top .3s ease,opacity .3s ease;
-    -moz-transition: top .3s ease,opacity .3s ease;
-    -ms-transition: top .3s ease,opacity .3s ease;
+    font-size: .8em;
     transition: top .3s ease,opacity .3s ease;
     opacity: 0;
     line-height: 1.764705882em;
@@ -242,6 +212,7 @@ p {
 .floating-label-form-group-with-value label {
     top: 0;
     opacity: 1;
+    color: #007d65;
 }
 
 .floating-label-form-group-with-focus label {
@@ -317,6 +288,34 @@ footer .footer-below {
     color: #fff;
 }
 
+.nav button:hover {
+    background: #3ac7ab;
+    color: #fff;
+}
+
+.nav button {
+    display:block;
+    padding:10px 15px;
+    padding-top:10px;
+    padding-bottom:10px;
+    line-height: 20px;
+    list-style: none;
+    color: #fff;
+    background: #007d65;
+    text-transform: uppercase;
+    font-family: "Trebuchet MS" Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border-radius: 0;
+    border: none;
+    box-sizing: content-box;
+    outline: 0;
+    text-align: left;
+}
+
+
 .footer-above  p{
     font-size:16px;
+}
+
+.btn{
+    border-radius:1px;
 }
