@@ -30,7 +30,7 @@
             </div>
 
             <div id="routine-sm" class="carousel slide hidden-md hidden-lg hidden-xl" data-interval="false">
-                <div class="carousel-inner" role="listbox">
+                <div id="carousel-inner-routine-sm" class="carousel-inner" role="listbox">
                     {% now 'w' as today %}
                     {% for sn, day in daily_routine.items %}
                     <div class="item {% if today|add:'0' == forloop.counter0 %}active{% endif %}">

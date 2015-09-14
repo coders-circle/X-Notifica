@@ -6,6 +6,7 @@ urlpatterns = patterns('',
     url(r'^home/$', views.index, name='home'),
     url(r'^logout/$', views.logout_user, name='logout'),
     url(r'^student/$', views.student, name='student'),
+    url(r'^user_settings/$', views.user_settings, name='user_settings'),
 
     url(r'^authority/$', views.authority, name='authority'),
     url(r'^authority/(?P<batch>\d+)/$', views.authority, name='authority'),
@@ -17,4 +18,3 @@ urlpatterns = patterns('',
 
     url(r'^teacher/$', views.teacher, name='teacher'),
 )
-

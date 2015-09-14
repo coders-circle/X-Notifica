@@ -82,6 +82,61 @@ section.success {
     background: #00A686;
 }
 
+
+.floating-label-form-group {
+    position: relative;
+    margin-bottom: 0;
+    padding-bottom: .5em;
+    border-bottom: 1px solid #eee;
+}
+
+.floating-label-form-group input,
+.floating-label-form-group textarea {
+    position: relative;
+    padding-right: 0;
+    padding-left: 0;
+    background: 0 0;
+    font-size: 1.5em;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none!important;
+    z-index: 1;
+}
+
+.floating-label-form-group label {
+    position: relative;
+    top: 1em;
+    margin: 0;
+    font-size: .8em;
+    transition: top .3s ease,opacity .3s ease;
+    opacity: 0;
+    line-height: 1.764705882em;
+    display: block;
+    z-index: 0;
+    vertical-align: middle;
+    vertical-align: baseline;
+}
+
+.floating-label-form-group::not(:first-child) {
+    padding-left: 14px;
+    border-left: 1px solid #eee;
+}
+
+.floating-label-form-group-with-value label {
+    top: 0;
+    opacity: 1;
+    color: #007d65;
+}
+
+.floating-label-form-group-with-focus label {
+    color: #18bc9c;
+}
+
+form .row:first-child .floating-label-form-group {
+    border-top: 1px solid #eee;
+}
+
+
 @media(min-width:768px) {
 
     header .intro-text .name {

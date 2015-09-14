@@ -50,6 +50,10 @@ def index(request):
 
     return render(request, 'classroom/index.html', context)
 
+def user_settings(request):
+    context = {}
+    return render(request, 'classroom/user_settings.html', context)
+
 def change_password(request):
     user = request.user
     context = {'oldpass':request.POST.get("oldpass"), "newpass":request.POST.get("newpass"), "renewpass":request.POST.get("renewpass")}
