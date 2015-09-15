@@ -79,9 +79,13 @@ def delete(request):
     # TODO: check privilege
 
     if request.POST.get("type") == "assignment":
-        Assignment.objects.get(pk=request.POST.get("pk")).delete()
+        assignment = Assignment.objects.get(pk=request.POST.get("pk"))
+        assignment.cancelled = True
+        assignment.save()
     elif request.POST.get("type") == "notice":
-        Notice.objects.get(pk=request.POST.get("pk")).delete()
+        notice = Notice.objects.get(pk=request.POST.get("pk"))
+        notice.cancelled = True
+        notice.save()
     return HttpResponse('')
 
 def set_post_seen(request):
