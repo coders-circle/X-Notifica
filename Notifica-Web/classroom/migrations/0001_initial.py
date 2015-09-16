@@ -14,127 +14,239 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Assignment',
+            name='Attendance',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('summary', models.TextField()),
-                ('details', models.TextField()),
-                ('batch', models.IntegerField(null=True, default=None, blank=True)),
-                ('groups', models.CharField(null=True, max_length=10, default='', blank=True)),
-                ('date', models.DateField()),
-                ('modified_at', models.DateTimeField(auto_now=True)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Event',
+            name='AttendanceGroup',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('summary', models.TextField()),
-                ('details', models.TextField()),
-                ('batch', models.IntegerField(null=True, default=None, blank=True)),
-                ('groups', models.CharField(null=True, max_length=10, default='', blank=True)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('date', models.DateField()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Authority',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('name', models.CharField(max_length=50)),
+            ],
+            options={
+                'verbose_name_plural': 'Authorities',
+            },
+        ),
+        migrations.CreateModel(
+            name='Class',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('batch', models.IntegerField()),
+                ('code', models.CharField(max_length=15)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Course',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('code', models.CharField(unique=True, max_length=20)),
+                ('name', models.CharField(max_length=50)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
             ],
+            options={
+                'ordering': ['faculty'],
+            },
         ),
         migrations.CreateModel(
             name='Faculty',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(max_length=5)),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('code', models.CharField(unique=True, max_length=5)),
                 ('name', models.CharField(max_length=30)),
+                ('modified_at', models.DateTimeField(auto_now=True)),
             ],
             options={
                 'verbose_name_plural': 'Faculties',
             },
         ),
         migrations.CreateModel(
-            name='Routine',
+            name='GcmRegistration',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('batch', models.IntegerField()),
-                ('groups', models.CharField(max_length=10, default='AB')),
-                ('faculty', models.ForeignKey(to='classroom.Faculty')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('device_id', models.TextField(default='')),
+                ('token', models.TextField()),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='RoutineElement',
+            name='Notice',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('title', models.CharField(max_length=150)),
+                ('details', models.TextField()),
+                ('date', models.DateField(blank=True, null=True)),
+                ('cancelled', models.BooleanField(default=False)),
+                ('posted_at', models.DateTimeField(auto_now_add=True)),
+                ('modified_at', models.DateTimeField(auto_now=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Routine',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('start', models.DateField()),
+                ('end', models.DateField()),
+                ('dynamic', models.BooleanField(default=False)),
+                ('pclass', models.ForeignKey(to='classroom.Class')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='RoutineSlot',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('day', models.IntegerField(choices=[(0, 'Sunday'), (1, 'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday')])),
                 ('start_time', models.CharField(max_length=6)),
                 ('end_time', models.CharField(max_length=6)),
                 ('class_type', models.IntegerField(choices=[(0, 'Lecture'), (1, 'Practical')])),
+                ('remarks', models.CharField(default='', max_length=100, blank=True)),
+                ('modified_at', models.DateTimeField(auto_now=True)),
+                ('course', models.ForeignKey(to='classroom.Course')),
                 ('routine', models.ForeignKey(to='classroom.Routine')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Section',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+                ('code', models.CharField(max_length=5)),
+                ('pclass', models.ForeignKey(to='classroom.Class')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Setting',
+            fields=[
+                ('key', models.CharField(serialize=False, primary_key=True, unique=True, max_length=20)),
+                ('value', models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
             name='Student',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('name', models.CharField(max_length=50)),
                 ('roll', models.IntegerField()),
-                ('batch', models.IntegerField()),
-                ('group', models.CharField(max_length=2, default='A')),
-                ('privilege', models.IntegerField(choices=[(0, 'Normal'), (1, 'Representative')], default=0)),
+                ('privilege', models.IntegerField(default=0, choices=[(0, 'Normal'), (1, 'Representative')])),
                 ('updated_at', models.DateTimeField(default=classroom.models.DefaultDateTime)),
-                ('faculty', models.ForeignKey(to='classroom.Faculty')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Subject',
-            fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(max_length=7)),
-                ('name', models.CharField(max_length=50)),
-                ('faculty', models.ForeignKey(to='classroom.Faculty')),
+                ('modified_at', models.DateTimeField(auto_now=True)),
+                ('section', models.ForeignKey(to='classroom.Section')),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
             name='Teacher',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
                 ('name', models.CharField(max_length=50)),
                 ('updated_at', models.DateTimeField(default=classroom.models.DefaultDateTime)),
+                ('modified_at', models.DateTimeField(auto_now=True)),
                 ('faculty', models.ForeignKey(to='classroom.Faculty')),
-                ('subjects', models.ManyToManyField(to='classroom.Subject')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('user', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'ordering': ['faculty'],
+            },
+        ),
+        migrations.CreateModel(
+            name='UnseenNotice',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
             ],
         ),
-        migrations.AddField(
-            model_name='routineelement',
-            name='subject',
-            field=models.ForeignKey(to='classroom.Subject'),
+        migrations.CreateModel(
+            name='Assignment',
+            fields=[
+                ('notice_ptr', models.OneToOneField(serialize=False, to='classroom.Notice', parent_link=True, primary_key=True, auto_created=True)),
+                ('link', models.URLField()),
+            ],
+            bases=('classroom.notice',),
         ),
         migrations.AddField(
-            model_name='routineelement',
+            model_name='unseennotice',
+            name='notice',
+            field=models.ForeignKey(to='classroom.Notice'),
+        ),
+        migrations.AddField(
+            model_name='unseennotice',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='routineslot',
+            name='sections',
+            field=models.ManyToManyField(to='classroom.Section'),
+        ),
+        migrations.AddField(
+            model_name='routineslot',
+            name='teachers',
+            field=models.ManyToManyField(to='classroom.Teacher', blank=True),
+        ),
+        migrations.AddField(
+            model_name='notice',
+            name='course',
+            field=models.ForeignKey(default=None, to='classroom.Course', blank=True, null=True),
+        ),
+        migrations.AddField(
+            model_name='notice',
+            name='poster',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='notice',
+            name='sections',
+            field=models.ManyToManyField(to='classroom.Section'),
+        ),
+        migrations.AddField(
+            model_name='course',
+            name='faculty',
+            field=models.ForeignKey(to='classroom.Faculty'),
+        ),
+        migrations.AddField(
+            model_name='class',
+            name='faculty',
+            field=models.ForeignKey(to='classroom.Faculty'),
+        ),
+        migrations.AddField(
+            model_name='authority',
+            name='faculty',
+            field=models.ForeignKey(to='classroom.Faculty'),
+        ),
+        migrations.AddField(
+            model_name='authority',
+            name='user',
+            field=models.OneToOneField(to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='attendancegroup',
+            name='course',
+            field=models.ForeignKey(to='classroom.Course'),
+        ),
+        migrations.AddField(
+            model_name='attendancegroup',
+            name='sections',
+            field=models.ManyToManyField(to='classroom.Section'),
+        ),
+        migrations.AddField(
+            model_name='attendancegroup',
             name='teacher',
             field=models.ForeignKey(to='classroom.Teacher'),
         ),
         migrations.AddField(
-            model_name='event',
-            name='faculty',
-            field=models.ForeignKey(default=None, null=True, to='classroom.Faculty', blank=True),
+            model_name='attendance',
+            name='attendance_group',
+            field=models.ForeignKey(to='classroom.AttendanceGroup'),
         ),
         migrations.AddField(
-            model_name='event',
-            name='poster',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='assignment',
-            name='faculty',
-            field=models.ForeignKey(default=None, null=True, to='classroom.Faculty', blank=True),
-        ),
-        migrations.AddField(
-            model_name='assignment',
-            name='poster',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='assignment',
-            name='subject',
-            field=models.ForeignKey(to='classroom.Subject'),
+            model_name='attendance',
+            name='student',
+            field=models.ForeignKey(to='classroom.Student'),
         ),
     ]

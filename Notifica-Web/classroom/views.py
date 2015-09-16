@@ -25,8 +25,8 @@ def redirect_user(user):
     else:
         return None
 
-def sql(request):
-    return HttpResponse(GetAllSql(), content_type="text/plain")
+# def sql(request):
+#     return HttpResponse(GetAllSql(), content_type="text/plain")
 
 def index(request):
     context = {}
@@ -54,6 +54,10 @@ def index(request):
 
     return render(request, 'classroom/index.html', context)
 
+def user_settings(request):
+    context = {}
+    return render(request, 'classroom/user_settings.html', context)
+
 def change_password(request):
     user = request.user
     context = {'oldpass':request.POST.get("oldpass"), "newpass":request.POST.get("newpass"), "renewpass":request.POST.get("renewpass")}
@@ -70,90 +74,105 @@ def change_password(request):
     user.save()
     return {'password_changed':True}
 
-def delete(request):
-    if request.method != "POST":
-        return redirect('classroom:index')
-    if not request.user.is_authenticated():
-        return HttpResponse('')
+# def delete(request):
+#     if request.method != "POST":
+#         return redirect('classroom:index')
+#     if not request.user.is_authenticated():
+#         return HttpResponse('')
+# 
+#     # TODO: check privilege
+# 
+#     if request.POST.get("type") == "assignment":
+#         assignment = Assignment.objects.get(pk=request.POST.get("pk"))
+#         assignment.cancelled = True
+#         assignment.save()
+#     elif request.POST.get("type") == "notice":
+#         notice = Notice.objects.get(pk=request.POST.get("pk"))
+#         notice.cancelled = True
+#         notice.save()
+#     return HttpResponse('')
+# 
+# def set_post_seen(request):
+#     if request.method != "POST":
+#         return redirect('classroom:index')
+#     if not request.user.is_authenticated():
+#         return HttpResponse('')
+# 
+#     UnseenNotice.objects.filter(user=request.user, notice__pk=request.POST.get("pk")).delete()
+#     return HttpResponse('')
+# 
+# 
+# def post_assignment(request):
+#     context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
+#                "summary":request.POST.get("summary"), "details":request.POST.get("details"), "pinned":request.POST.get("pinned")}
+#     if not request.user.is_authenticated():
+#         return {}
+# 
+#     assignment = Assignment()
+# 
+#     user_type, user = GetUser(request.user)
+#     if user_type == "Student":
+#         assignment.faculty = user.faculty
+#         assignment.batch = user.batch
+#     elif user_type == "Teacher":
+#         context.update({"faculty":request.POST.get("faculty"), "batch":request.POST.get("batch")})
+#         assignment.faculty = Faculty.objects.get(code=context["faculty"])
+#         assignment.batch = context["batch"]
+# 
+#     assignment.groups = "" if context["group"] == "All" else context["group"]
+#     assignment.poster = request.user
+#     assignment.subject = Subject.objects.get(code=context["subject"])
+#     assignment.summary = context["summary"]
+#     assignment.details = context["details"]
+#     assignment.date = context["date"] if not context["pinned"] else None
+#     assignment.save()
+# 
+#     return {'assignment_posted':True}
 
-    # TODO: check privilege
+# def post_notice(request):
+#     context = {"date":request.POST.get("date"), "group":request.POST.get("group"),
+#                "summary":request.POST.get("summary"), "details":request.POST.get("details")}
+#     if not request.user.is_authenticated():
+#         return {}
+# 
+#     notice = Notice()
+# 
+#     user_type, user = GetUser(request.user)
+#     if user_type == "Student":
+#         notice.faculty = user.faculty
+#         notice.batch = user.batch
+#     elif user_type == "Teacher":
+#         context.update({"faculty":request.POST.get("faculty"), "batch":request.POST.get("batch")})
+#         notice.faculty = Faculty.objects.get(code=context["faculty"])
+#         notice.batch = context["batch"]
+# 
+#     notice.groups = "" if context["group"] == "All" else context["group"]
+#     notice.poster = request.user
+#     notice.summary = context["summary"]
+#     notice.details = context["details"]
+#     notice.date = context["date"] if context["date"] != "" else None
+#     notice.save()
+# 
+#     return {'notice_posted':True}
 
-    if request.POST.get("type") == "assignment":
-        assignment = Assignment.objects.get(pk=request.POST.get("pk"))
-        assignment.cancelled = True
-        assignment.save()
-    elif request.POST.get("type") == "notice":
-        notice = Notice.objects.get(pk=request.POST.get("pk"))
-        notice.cancelled = True
-        notice.save()
-    return HttpResponse('')
 
-def set_post_seen(request):
-    if request.method != "POST":
-        return redirect('classroom:index')
-    if not request.user.is_authenticated():
-        return HttpResponse('')
+def get_sections(class_):
+    sections = []
+    ss = class_.section_set.all()
+    for s in ss:
+        sections.append(s.code)
+    return sections
 
-    if request.POST.get("type") == "assignment":
-        UnseenAssignment.objects.filter(user=request.user, assignment__pk=request.POST.get("pk")).delete()
-    elif request.POST.get("type") == "notice":
-        UnseenNotice.objects.filter(user=request.user, notice__pk=request.POST.get("pk")).delete()
-    return HttpResponse('')
-
-
-def post_assignment(request):
-    context = {"date":request.POST.get("date"), "subject":request.POST.get("subject"), "group":request.POST.get("group"),
-               "summary":request.POST.get("summary"), "details":request.POST.get("details"), "pinned":request.POST.get("pinned")}
-    if not request.user.is_authenticated():
-        return {}
-
-    assignment = Assignment()
-
-    user_type, user = GetUser(request.user)
-    if user_type == "Student":
-        assignment.faculty = user.faculty
-        assignment.batch = user.batch
-    elif user_type == "Teacher":
-        context.update({"faculty":request.POST.get("faculty"), "batch":request.POST.get("batch")})
-        assignment.faculty = Faculty.objects.get(code=context["faculty"])
-        assignment.batch = context["batch"]
-
-    assignment.groups = "" if context["group"] == "All" else context["group"]
-    assignment.poster = request.user
-    assignment.subject = Subject.objects.get(code=context["subject"])
-    assignment.summary = context["summary"]
-    assignment.details = context["details"]
-    assignment.date = context["date"] if not context["pinned"] else None
-    assignment.save()
-
-    return {'assignment_posted':True}
-
-def post_notice(request):
-    context = {"date":request.POST.get("date"), "group":request.POST.get("group"),
-               "summary":request.POST.get("summary"), "details":request.POST.get("details")}
-    if not request.user.is_authenticated():
-        return {}
-
-    notice = Notice()
-
-    user_type, user = GetUser(request.user)
-    if user_type == "Student":
-        notice.faculty = user.faculty
-        notice.batch = user.batch
-    elif user_type == "Teacher":
-        context.update({"faculty":request.POST.get("faculty"), "batch":request.POST.get("batch")})
-        notice.faculty = Faculty.objects.get(code=context["faculty"])
-        notice.batch = context["batch"]
-
-    notice.groups = "" if context["group"] == "All" else context["group"]
-    notice.poster = request.user
-    notice.summary = context["summary"]
-    notice.details = context["details"]
-    notice.date = context["date"] if context["date"] != "" else None
-    notice.save()
-
-    return {'notice_posted':True}
-
+def get_notices_assignments(notices):
+    ns = []
+    ass = []
+    for n in notices:
+        try:
+            x = n.assignment
+            ass.append(n.assignment)
+        except:
+            ns.append(n)
+    return ns, ass
 
 def student(request):
     if not request.user.is_authenticated():
@@ -165,35 +184,24 @@ def student(request):
         return redirect('classroom:index')
 
     context = {}
-    if request.method == "POST":
-        if 'post_assignment' in request.POST:
-            context.update(post_assignment(request))
-        elif 'post_notice' in request.POST:
-            context.update(post_notice(request))
-        elif 'change_password' in request.POST:
-            context.update(change_password(request))
-        return redirect('classroom:student')
+    # if request.method == "POST":
+    #     if 'post_assignment' in request.POST:
+    #         context.update(post_assignment(request))
+    #     elif 'post_notice' in request.POST:
+    #         context.update(post_notice(request))
+    #     elif 'change_password' in request.POST:
+    #         context.update(change_password(request))
+    #     return redirect('classroom:student')
 
     DeletePassed()
 
-    routine_object = Routine.objects.filter(batch=user.batch, faculty=user.faculty, groups__contains=user.group)
-    elements_objects = RoutineElement.objects.filter(routine=routine_object).order_by('start_time')
-    assignments_objects = Assignment.objects.filter(
-        Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
-        Q(faculty=user.faculty) | Q(faculty = None),
-        Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
-        cancelled = False
-    ).order_by('-modified_at')
-    events_objects = Notice.objects.filter(
-            Q(batch=user.batch) | Q(batch=None) | Q(batch=0),
-            Q(faculty=user.faculty) | Q(faculty = None),
-            Q(groups__contains=user.group) | Q(groups = None) | Q(groups=""),
-            cancelled = False
-        ).order_by('-modified_at')
+    elements_objects = RoutineSlot.objects.filter(sections=user.section).order_by('start_time')
+    notices_objects = Notice.objects.filter(sections=user.section, cancelled = False).order_by('-modified_at')
+    notices_objects, assignments_objects = get_notices_assignments(notices_objects)
 
-    subjects = set()
+    courses = set()
     for element in elements_objects:
-        subjects.add(element.subject)
+        courses.add(element.course)
 
     workingweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     routine = {}
@@ -225,13 +233,12 @@ def student(request):
 
     daily_routine.default_factory = None
 
-    context["unseen_assignments"] = UnseenAssignment.objects.filter(user=user.user, assignment__cancelled=False).values_list('assignment',flat=True)
     context["unseen_notices"] = UnseenNotice.objects.filter(user=user.user, notice__cancelled=False).values_list('notice',flat=True)
 
     names = user.name.split(' ')
-    context.update({'user':user, 'routine':routine, 'assignments':assignments_objects,
-                    'events':events_objects, 'workingweek':workingweek, 'firstname':names[0],
-                    'subjectlist':list(subjects), 'grouplist':['All', 'A', 'B'], 'daily_routine':daily_routine })
+    context.update({'user':user, 'routine':routine, 'notices':notices_objects, 'assignments':assignments_objects,
+                    'workingweek':workingweek, 'firstname':names[0],
+                    'courselist':list(courses), 'grouplist':get_sections(user.section.pclass), 'daily_routine':daily_routine })
     return render(request, 'classroom/student.html', context)
 
 

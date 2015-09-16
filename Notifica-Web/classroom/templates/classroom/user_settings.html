@@ -1,0 +1,41 @@
+{% extends 'classroom/base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block head %}
+<link href = "{% static 'css/form.css' %}" type="text/css" rel="stylesheet">
+<link href = "{% static 'css/user_settings.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block navbar %}
+<div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="hidden"><a href="#page-top"></a></li>
+        <li ><a href="/"><i class="fa fa-home"></i> Home</a></li>
+        <li class="active"><a><i class="fa fa-cogs"></i> Settings</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="container container-main">
+    <div class="row">
+        <ul class="nav nav-pills nav-stacked col-sm-3 col-md-3">
+            <li class="active"><a  href="#account-settings" data-toggle="tab"><i class="fa fa-users"></i> Account Settings</a></li>
+            <li><a  href="#misc-settings" data-toggle="tab"><i class="fa fa-puzzle-piece"></i> Misc</a></li>
+        </ul>
+        <div class="tab-content col-md-9 col-sm-9">
+            <div class="active tab-pane" id="account-settings">
+                {% include "classroom/common/change_pass.html" %}
+            </div>
+            <div class="tab-pane fade" id="misc-settings">
+                <p class="text-under-construction">Under Construction</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'js/student.js' %}"></script>
+{% endblock %}

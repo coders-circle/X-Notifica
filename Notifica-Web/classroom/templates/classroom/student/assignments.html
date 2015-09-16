@@ -44,10 +44,14 @@
                         </div>
 
                         <div data-toggle="collapse" data-target="#detail{{forloop.counter}}" onclick="javascript:SetAssignmentSeen({{assignment.pk}})" style="cursor:pointer;">
-                            <h4 class="list-group-item-heading">{{assignment.subject}}</h4>
+                            {% if assignment.course %}
+                            <h4 class="list-group-item-heading">{{assignment.course}}</h4>
                             <p class="list-group-item-text">
-                                {{assignment.summary}}
+                                {{assignment.title}}
                             </p>
+                            {% else %}
+                            <h4 class="list-group-item-heading">{{assignment.title}}</h4>
+                            {% endif %}
                             <p class="list-group-item-text">
                                 <i><small>posted by: {{assignment.poster|name_of_user}}</small></i>
                             </p>
@@ -75,39 +79,41 @@
     </div>
 </div>
 
+{% comment "hello" %}
 <script>
-function DeleteAssignment(pk) {
-    $.post("{% url 'classroom:delete' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
-        .done(function(data) {
-            location.reload();
-        });
-}
-
-function SetAssignmentSeen(pk) {
-    var li = document.getElementById("list-group-item-unseen-assignment-"+pk);
-    if(li){
-        $.post("{% url 'classroom:set_post_seen' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') }).done(function(data) {
-            li.className = li.className.replace('list-group-item-unseen', '');
-            li.id = li.id.replace("list-group-item-unseen-assignment-"+pk, '');
-            var nb = document.getElementById("badge-menu-unseen-assignments");
-            if(nb){
-                var un = Number(nb.innerHTML);
-                if(un > 0){
-                    --un;
-                    nb.innerHTML = un;
-                }
-
-                if(un == 0){
-                    nb.style.display='none';
-                    var nnb = document.getElementById("badge-menu-unseen-notices");
-                    var unn = 0;
-                    if(nnb){
-                        unn = Number(nnb.innerHTML);
-                    }
-                    if(unn == 0) document.getElementById('toggle-badge-unseen').style.display='none';
-                }
-            }
-        })
-    }
-}
+ function DeleteAssignment(pk) {
+     $.post("{% url 'classroom:delete' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') })
+         .done(function(data) {
+             location.reload();
+         });
+ }
+ 
+ function SetAssignmentSeen(pk) {
+     var li = document.getElementById("list-group-item-unseen-assignment-"+pk);
+     if(li){
+         $.post("{% url 'classroom:set_post_seen' %}", { type:"assignment", pk: pk, "csrfmiddlewaretoken": getCookie('csrftoken') }).done(function(data) {
+             li.className = li.className.replace('list-group-item-unseen', '');
+             li.id = li.id.replace("list-group-item-unseen-assignment-"+pk, '');
+             var nb = document.getElementById("badge-menu-unseen-assignments");
+             if(nb){
+                 var un = Number(nb.innerHTML);
+                 if(un > 0){
+                     --un;
+                     nb.innerHTML = un;
+                 }
+ 
+                 if(un == 0){
+                     nb.style.display='none';
+                     var nnb = document.getElementById("badge-menu-unseen-notices");
+                     var unn = 0;
+                     if(nnb){
+                         unn = Number(nnb.innerHTML);
+                     }
+                     if(unn == 0) document.getElementById('toggle-badge-unseen').style.display='none';
+                 }
+             }
+         })
+     }
+ }
 </script>
+{% endcomment %}

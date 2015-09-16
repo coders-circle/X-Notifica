@@ -1,0 +1,37 @@
+
+<form class="form form-changepass" method="post" name="changepass" id="form-changepass">
+    {% csrf_token %}
+    <div class="row control-group">
+        <h3> Change Password </h3>
+    </div>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+            <label>Old password</label>
+            <input type="password" name="oldpass" class="form-control" placeholder="Old password" id="oldpass" required data-validation-required-message="Please enter your old Password." value="{{oldpass}}">
+            {% if wrong_password %}
+            <p class="text-danger">Wrong Password</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+            <label>New password</label>
+            <input type="password" name="newpass" class="form-control" placeholder="New password" id="newpass" required data-validation-required-message="Please enter your new Password." value="{{newpass}}">
+            <p class="text-danger"></p>
+        </div>
+    </div>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group controls">
+            <label>Retype password</label>
+            <input type="password" name="renewpass" class="form-control" placeholder="Retype password" id="renewpass" required data-validation-required-message="Please enter your new Password." value="{{renewpass}}">
+            {% if wrong_retype_password %}
+            <p class="text-danger">This password doesn't match with above one.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <button name="change_password" type="submit" class="btn btn-success"><i class="fa fa-check"></i> Save changes</button>
+        </div>
+    </div>
+</form>

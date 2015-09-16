@@ -21,6 +21,24 @@ class Faculty(models.Model):
         return self.name
 
 
+# Class and sections
+class Class(models.Model):
+    batch = models.IntegerField()
+    faculty = models.ForeignKey(Faculty)
+    code = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.code
+
+
+class Section(models.Model):
+    code = models.CharField(max_length=5)
+    pclass = models.ForeignKey(Class)
+
+    def __str__(self):
+        return str(self.pclass) + " (" + self.code + ")"
+
+
 # Users:
 # - Authority
 # - Student
@@ -37,11 +55,13 @@ class Authority(models.Model):
     class Meta:
         verbose_name_plural = "Authorities"
 
+
 class Student(models.Model):
     
     # Student privileges
     # Normal: normal students
     # Representaive: CR's and GR's
+
     PRIVILEGE_NORMAL = 0
     PRIVILEGE_CR = 1
     Privileges = (
@@ -51,9 +71,7 @@ class Student(models.Model):
 
     name = models.CharField(max_length=50)
     roll = models.IntegerField()
-    faculty = models.ForeignKey(Faculty)
-    batch = models.IntegerField()                   # batch-year
-    group = models.CharField(max_length=2, default='A')
+    section = models.ForeignKey(Section)
     privilege = models.IntegerField(default=0, choices=Privileges)
     user = models.OneToOneField(User)
 
@@ -79,8 +97,8 @@ class Teacher(models.Model):
         ordering = ['faculty']
 
 
-# Subject
-class Subject(models.Model):
+# Course
+class Course(models.Model):
     code = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=50)
     faculty = models.ForeignKey(Faculty)
@@ -95,13 +113,13 @@ class Subject(models.Model):
 
 # Routine - made up of several RoutineElements
 class Routine(models.Model):
-    batch = models.IntegerField()
-    faculty = models.ForeignKey(Faculty)
-    groups = models.CharField(max_length=26, default='A')
-    modified_at = models.DateTimeField(auto_now=True)
+    pclass = models.ForeignKey(Class)
+    start = models.DateField()
+    end = models.DateField()
+    dynamic = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.batch) + "-" + self.faculty.code + "-" + self.groups
+        return str(self.pclass) + " Dynamic" if self.dynamic else ""
 
 
 # Days in a week as (number, day) pairs
@@ -116,7 +134,7 @@ Days = (
 )
 
 
-class RoutineElement(models.Model):
+class RoutineSlot(models.Model):
     
     # Class-Types: Lecture, Practical
     LECTURE_CLASS = 0
@@ -127,56 +145,44 @@ class RoutineElement(models.Model):
     )
 
     day = models.IntegerField(choices=Days)
-    subject = models.ForeignKey(Subject)
+    course = models.ForeignKey(Course)
     teachers = models.ManyToManyField(Teacher, blank=True)
     routine = models.ForeignKey(Routine)
     start_time = models.CharField(max_length=6)
     end_time = models.CharField(max_length=6)
     class_type = models.IntegerField(choices=ClassTypes)
     remarks = models.CharField(max_length=100, default="", blank=True)
+    sections = models.ManyToManyField(Section)
+    modified_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return str(self.routine) + " " + dict(Days).get(self.day) + " " + str(self.start_time)+" - "+str(self.end_time)
+        
+        return dict(Days).get(self.day) + " " + str(self.start_time) + " - " + str(self.end_time)
 
 
 # Assignment and Notice
-class Assignment(models.Model):
-    summary = models.TextField()
-    details = models.TextField()
-    poster = models.ForeignKey(User)
-    batch = models.IntegerField(blank=True, null=True, default=None)
-    faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
-    groups = models.CharField(max_length=26, blank=True, null=True, default="")
-    subject = models.ForeignKey(Subject)
-    date = models.DateField(verbose_name="date of submission", null=True, blank=True)
-    cancelled = models.BooleanField(default=False)
-    modified_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        super(Assignment, self).save(*args, **kwargs)
-        NewAssignment(self)
-
-    def __str__(self):
-        return self.summary
-
-
 class Notice(models.Model):
-    summary = models.TextField()
+    title = models.CharField(max_length=150)
     details = models.TextField()
     poster = models.ForeignKey(User)
-    batch = models.IntegerField(blank=True, null=True, default=None)
-    faculty = models.ForeignKey(Faculty, blank=True, null=True, default=None)
-    groups = models.CharField(max_length=26, blank=True, null=True, default="")
-    date = models.DateField(verbose_name="date of occurrence", null=True, blank=True)
+    sections = models.ManyToManyField(Section)
+    course = models.ForeignKey(Course, null=True, blank=True, default=None)
+    date = models.DateField(null=True, blank=True)
     cancelled = models.BooleanField(default=False)
+    posted_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        super(Notice, self).save(*args, **kwargs)
-        NewNotice(self)
+    # def save(self, *args, **kwargs):
+    #     super(Notice, self).save(*args, **kwargs)
+    #     NewNotice(self)
 
     def __str__(self):
-        return self.summary
+        return self.title
+
+
+class Assignment(Notice):
+    link = models.URLField(blank=True, default="")
+    # submissions
 
 
 # Settings and registrations
@@ -198,70 +204,63 @@ class GcmRegistration(models.Model):
 
 
 # Attendance
-class Attendance(models.Model):
-    faculty = models.ForeignKey(Faculty)
-    batch = models.IntegerField()
-    groups = models.CharField(max_length=26, blank=True, null=True, default="")
+class AttendanceGroup(models.Model):
     teacher = models.ForeignKey(Teacher)
+    course = models.ForeignKey(Course)
     date = models.DateField()
+    sections = models.ManyToManyField(Section)
 
     def __str__(self):
-        output = str(self.date) + " - " + str(self.batch) + " " + str(self.faculty.name)
-        if self.groups and self.groups != "":
-            output += " Group: " + self.groups
+        output = str(self.date) + " - " + str(self.course)
         return output
 
-class AttendanceElement(models.Model):
-    presence = models.BooleanField()
+class Attendance(models.Model):
     student = models.ForeignKey(Student)
-    attendance = models.ForeignKey(Attendance)
+    attendance_group = models.ForeignKey(AttendanceGroup)
 
     def __str__(self):
-        if self.presence:
-            return str(self.student.roll) + ". " + self.student.name + " - Present"
-        else:
-            return str(self.student.roll) + ". " + self.student.name + " - Absent"
+        return str(self.student.roll) + ". " + self.student.name
 
 from .notifications import Notify, GetStudents
 
 
 # Unseen notifications
-class UnseenAssignment(models.Model):
-    user = models.ForeignKey(User)
-    assignment = models.ForeignKey(Assignment)
-
-    def __str__(self):
-        return self.user.username + " - " + self.assignment.summary
+# class UnseenAssignment(models.Model):
+#     user = models.ForeignKey(User)
+#     assignment = models.ForeignKey(Assignment)
+# 
+#     def __str__(self):
+#         return self.user.username + " - " + self.assignment.summary
 
 class UnseenNotice(models.Model):
     user = models.ForeignKey(User)
     notice = models.ForeignKey(Notice)
 
     def __str__(self):
-        return self.user.username + " - " + self.notice.summary
+        return self.user.username + " - " + self.notice.title
 
 
-def NewAssignment(assignment):
-    students = GetStudents(assignment)
-    for student in students:
-        try:
-            UnseenAssignment.objects.get(user=student.user, assignment=assignment)
-        except:
-            unseen = UnseenAssignment()
-            unseen.user = student.user
-            unseen.assignment = assignment
-            unseen.save()
-    Notify(students, "Assignment", assignment)
-
-def NewNotice(notice):
-    students = GetStudents(notice)
-    for student in students:
-        try:
-            UnseenNotice.objects.get(user=student.user, notice=notice)
-        except:
-            unseen = UnseenNotice()
-            unseen.user = student.user
-            unseen.notice = notice
-            unseen.save()
-    Notify(students, "Notice", notice)
-
+# def NewAssignment(assignment):
+#     students = GetStudents(assignment)
+#     for student in students:
+#         try:
+#             UnseenAssignment.objects.get(user=student.user, assignment=assignment)
+#         except:
+#             unseen = UnseenAssignment()
+#             unseen.user = student.user
+#             unseen.assignment = assignment
+#             unseen.save()
+#     Notify(students, "Assignment", assignment)
+# 
+# def NewNotice(notice):
+#     students = GetStudents(notice)
+#     for student in students:
+#         try:
+#             UnseenNotice.objects.get(user=student.user, notice=notice)
+#         except:
+#             unseen = UnseenNotice()
+#             unseen.user = student.user
+#             unseen.notice = notice
+#             unseen.save()
+#     Notify(students, "Notice", notice)
+# 

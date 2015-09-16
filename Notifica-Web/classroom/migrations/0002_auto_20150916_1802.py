@@ -7,12 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('classroom', '0007_authority'),
+        ('classroom', '0001_initial'),
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='authority',
-            options={'verbose_name_plural': 'Authorities'},
+        migrations.AlterField(
+            model_name='assignment',
+            name='link',
+            field=models.URLField(blank=True, default=''),
         ),
     ]

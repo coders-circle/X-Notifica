@@ -22,16 +22,16 @@
 <div class="collapse navbar-collapse" id="notifica-navbar-collapse-1">
     <ul class="nav navbar-nav navbar-right">
         <li class="hidden"><a href="#page-top"></a></li>
-        <li class="active"><a data-toggle="pill" href="#routine">Routine</a></li>
-        <li><a data-toggle="pill" href="#assignments">Assignments{% if unseen_assignments.count > 0 %} <span class="badge badge-menu-unseen" id="badge-menu-unseen-assignments">{{unseen_assignments.count}}</span>{% endif %}</a></li>
-        <li><a data-toggle="pill" href="#notices">Notices{% if unseen_notices.count > 0 %} <span class="badge badge-menu-unseen" id="badge-menu-unseen-notices">{{unseen_notices.count}}</span>{% endif %}</a></li>
+        <li class="active"><a data-toggle="pill" href="#routine"><i class="fa fa-tasks"></i> Routine</a></li>
+        <li><a data-toggle="pill" href="#assignments"><i class="fa fa-edit"></i> Assignments{% if unseen_assignments.count > 0 %} <span class="badge badge-menu-unseen" id="badge-menu-unseen-assignments">{{unseen_assignments.count}}</span>{% endif %}</a></li>
+        <li><a data-toggle="pill" href="#notices"><i class="fa fa-envelope-o"></i> Notices{% if unseen_notices.count > 0 %} <span class="badge badge-menu-unseen" id="badge-menu-unseen-notices">{{unseen_notices.count}}</span>{% endif %}</a></li>
         <li>
             <div class="dropdown ">
                 <button data-toggle="dropdown" aria-haspopup="true">
                     <i class="fa fa-user fa-fw"></i> {%if firstname%}{{firstname}}{%endif%} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu usersettings" aria-labelledby="settingsMenu">
-                    <li><a data-toggle="pill" href="#changepass"><i class="fa fa-edit"></i> Change Password</a></li>
+                    <li><a href="/user_settings"><i class="fa fa-cogs"></i> Settings</a></li>
                     <li><a href="/logout"><i class="fa fa-sign-out"></i> Sign out</a></li>
                 </ul>
             </div>
@@ -41,11 +41,17 @@
 {% endblock %}
 
 {% block body %}
+<div id="modal-change-password" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            {% include "classroom/common/change_pass.html" %}
+        </div>
+    </div>
+</div>
 <div class="tab-content">
-  {% include "classroom/student/routine.html" %}
-  {% include "classroom/student/assignments.html" %}
-  {% include "classroom/student/notices.html" %}
-  {% include "classroom/student/changepass.html" %}
+    {% include "classroom/student/routine.html" %}
+    {% include "classroom/student/assignments.html" %}
+    {% include "classroom/student/notices.html" %}
 </div>
 {% endblock %}
 

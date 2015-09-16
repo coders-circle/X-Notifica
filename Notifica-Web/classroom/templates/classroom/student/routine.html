@@ -30,7 +30,7 @@
             </div>
 
             <div id="routine-sm" class="carousel slide hidden-md hidden-lg hidden-xl" data-interval="false">
-                <div class="carousel-inner" role="listbox">
+                <div id="carousel-inner-routine-sm" class="carousel-inner" role="listbox">
                     {% now 'w' as today %}
                     {% for sn, day in daily_routine.items %}
                     <div class="item {% if today|add:'0' == forloop.counter0 %}active{% endif %}">
@@ -51,7 +51,7 @@
                                     <span class="badge badge-routine badge-routine-p">P</span>
                                     {% endif %}
                                     <p class="list-group-item-text"><small>{{period.start_time}} to {{period.end_time}}</small></p>
-                                    <p class="list-group-item-text"><strong>{{period.subject}}</strong></p>
+                                    <p class="list-group-item-text"><strong>{{period.course}}</strong></p>
                                     <p class="list-group-item-text"><small>{{period.teachers.all | join:', '}}</small></p>
                                     {% if period.remarks %}
                                     <p class="list-group-item-text"><small><strong>{{period.remarks}}</strong></small></p>
@@ -59,7 +59,7 @@
                                     {% if period.nextelem.start_time == period.start_time %}
                                     <hr>
                                     <p class="list-group-item-text"><small>{{period.nextelem.start_time}} to {{period.end_time}}</small></p>
-                                    <p class="list-group-item-text"><strong>{{period.nextelem.subject}}</strong></p>
+                                    <p class="list-group-item-text"><strong>{{period.nextelem.course}}</strong></p>
                                     <p class="list-group-item-text"><small>{{period.nextelem.teachers.all | join:', '}}</small></p>
                                     {% if period.nextelem.remarks %}
                                     <p class="list-group-item-text"><small>{{period.nextelem.remarks}}</small></p>
@@ -103,7 +103,7 @@
                         <span class="badge badge-routine badge-routine-p">P</span>
                         {% endif %}
                         <p class="list-group-item-text"><small>{{period.start_time}} to {{period.end_time}}</small></p>
-                        <p class="list-group-item-text"><strong>{{period.subject}}</strong></p>
+                        <p class="list-group-item-text"><strong>{{period.course}}</strong></p>
                         <p class="list-group-item-text"><small>{{period.teachers.all | join:', '}}</small></p>
                         {% if period.remarks %}
                         <p class="list-group-item-text"><small><strong>{{period.remarks}}</strong></small></p>
@@ -111,7 +111,7 @@
                         {% if period.nextelem.start_time == period.start_time %}
                         <hr>
                         <p class="list-group-item-text"><small>{{period.nextelem.start_time}} to {{period.end_time}}</small></p>
-                        <p class="list-group-item-text"><strong>{{period.nextelem.subject}}</strong></p>
+                        <p class="list-group-item-text"><strong>{{period.nextelem.course}}</strong></p>
                         <p class="list-group-item-text"><small>{{period.nextelem.teachers.all | join:', '}}</small></p>
                         {% if period.nextelem.remarks %}
                         <p class="list-group-item-text"><small>{{period.nextelem.remarks}}</small></p>
@@ -129,5 +129,5 @@
 
 <!--div class="list-group-item-cr-options">
     <button onclick="CancelClass({{period.nextelem.pk}});" title=" remove this class "><i class="fa fa-times"></i></button>
-    <button onclick="RescheduleClass({{period.nextelem.pk}}, '{{period.nextelem.start_time}}', '{{period.nextelem.subject}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
+    <button onclick="RescheduleClass({{period.nextelem.pk}}, '{{period.nextelem.start_time}}', '{{period.nextelem.course}}');" title=" reschedule this class "><i class="fa fa-clock-o"></i></button>
 </div-->

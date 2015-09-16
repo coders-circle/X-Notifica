@@ -38,3 +38,8 @@ var cbpAnimatedHeader = (function() {
 	init();
 
 })();
+
+$('#routine-sm').on('swipe', function(){
+    //$('.carousel-control.left').trigger('click');
+    alert('hello');
+});

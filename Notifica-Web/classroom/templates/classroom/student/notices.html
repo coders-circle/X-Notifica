@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-offset-2 col-md-8 col-sm-10 col-sm-offset-1">
                 <div class="list-group list-group-notice">
-                    {% for notice in events %}
+                    {% for notice in notices %}
                     <div class="list-group-item list-group-item-notice {% if notice.pk in unseen_notices %}list-group-item-unseen{% endif %}" {% if notice.pk in unseen_notices %}id="list-group-item-unseen-notice-{{notice.pk}}"{% endif %}>
                         <div class="content-topright">
                             {% if notice.date %}
@@ -45,7 +45,7 @@
                         </div>
 
                         <div data-toggle="collapse" data-target="#notice-detail{{forloop.counter}}" onclick="javascript:SetNoticeSeen({{notice.pk}})" style="cursor:pointer;">
-                            <h4 class="list-group-item-heading notice-title">{{notice.summary}}</h4>
+                            <h4 class="list-group-item-heading notice-title">{{notice.title}}</h4>
                             <p class="list-group-item-text">
                                 <i><small>posted by: {{notice.poster|name_of_user}}</small></i>
                             </p>
@@ -72,6 +72,7 @@
         </div>
     </div>
 </div>
+{% comment "hello" %}
 <div id="result"></div>
 <script>
     function DeleteNotice(pk) {
@@ -107,3 +108,4 @@
         }
     }
 </script>
+{% endcomment %}
